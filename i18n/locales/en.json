@@ -44,6 +44,8 @@
     },
     "total": "Total",
     "of": "of",
-    "conforming": "Conforming"
+    "conforming": "Conforming",
+    "conformanceLevel": "Conformance level: {level} — {conforming} of {total} criteria met",
+    "criteriaMet": "{conforming} of {total} criteria met"
   }
 }

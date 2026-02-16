@@ -44,6 +44,8 @@
     },
     "total": "Totaal",
     "of": "van",
-    "conforming": "Voldoet"
+    "conforming": "Voldoet",
+    "conformanceLevel": "Conformiteitsniveau: {level} — {conforming} van {total} criteria voldaan",
+    "criteriaMet": "{conforming} van {total} criteria voldaan"
   }
 }
