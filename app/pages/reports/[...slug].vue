@@ -16,6 +16,17 @@ const { data: issues } = await useAsyncData(`issues-${reportPath.value}`, () =>
   queryCollection('issues').where('path', 'LIKE', `${reportPath.value}/%`).all()
 )
 
+const reportIssues = computed(() =>
+  (issues.value ?? [])
+    .filter(issue => issue.sc !== 'none')
+    .sort((a, b) => a.sc.localeCompare(b.sc, undefined, { numeric: true }))
+)
+
+const reportTips = computed(() =>
+  (issues.value ?? [])
+    .filter(issue => issue.sc === 'none')
+)
+
 const sharedPath = computed(() => `/shared/${report.value?.language ?? 'nl'}/about-this-report`)
 
 const { data: aboutThisReport } = await useAsyncData(`about-${sharedPath.value}`, () =>
@@ -45,6 +56,38 @@ const { data: aboutThisReport } = await useAsyncData(`about-${sharedPath.value}`
 
     <UPageSection :title="t('report.representativeSample')">
       <ReportSample :report="report" />
+    </UPageSection>
+
+    <UPageSection
+      v-if="reportIssues.length"
+      :title="t('report.issues')"
+    >
+      <UPageGrid>
+        <ReportIssue
+          v-for="(issue, i) in reportIssues"
+          :key="issue.path"
+          :issue="issue"
+          :index="i + 1"
+          :is-tip="false"
+          :report="report"
+        />
+      </UPageGrid>
+    </UPageSection>
+
+    <UPageSection
+      v-if="reportTips.length"
+      :title="t('report.tips')"
+    >
+      <UPageGrid>
+        <ReportIssue
+          v-for="(tip, i) in reportTips"
+          :key="tip.path"
+          :issue="tip"
+          :index="i + 1"
+          :is-tip="true"
+          :report="report"
+        />
+      </UPageGrid>
     </UPageSection>
 
     <UPageSection
