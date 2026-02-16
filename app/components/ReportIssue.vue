@@ -3,7 +3,6 @@ import type { IssuesCollectionItem, ReportsCollectionItem } from '@nuxt/content'
 
 const props = defineProps<{
   issue: IssuesCollectionItem
-  isTip?: boolean
   report: ReportsCollectionItem
 }>()
 
@@ -19,10 +18,7 @@ const samplePage = computed(() =>
     <h4 class="font-medium text-gray-950 dark:text-white">
       {{ issue.title }}
     </h4>
-    <p
-      v-if="!isTip"
-      class="mt-1 text-sm text-gray-600 dark:text-gray-400"
-    >
+    <p class="mt-1 text-sm text-gray-600 dark:text-gray-400">
       {{ t('report.severity') }}: {{ issue.severity }}
       &middot;
       {{ t('report.difficulty') }}: {{ issue.difficulty }}
@@ -30,12 +26,6 @@ const samplePage = computed(() =>
         &middot;
         {{ t('report.sample') }}: {{ samplePage.title }}
       </template>
-    </p>
-    <p
-      v-if="isTip && samplePage"
-      class="mt-1 text-sm text-gray-600 dark:text-gray-400"
-    >
-      {{ t('report.sample') }}: {{ samplePage.title }}
     </p>
     <div class="mt-3 prose dark:prose-invert">
       <ContentRenderer :value="issue" />

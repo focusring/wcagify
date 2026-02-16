@@ -176,15 +176,22 @@ const { data: aboutThisReport } = await useAsyncData(`about-${sharedPath.value}`
         <h2 class="text-2xl font-semibold text-gray-950 dark:text-white">
           {{ t('report.tips') }}
         </h2>
-        <div class="mt-6 space-y-8">
-          <ReportIssue
+        <ol class="mt-6 list-decimal list-outside space-y-8 pl-6">
+          <li
             v-for="tip in reportTips"
             :key="tip.path"
-            :issue="tip"
-            :report="report"
-            is-tip
-          />
-        </div>
+          >
+            <h3 class="font-medium text-gray-950 dark:text-white">
+              {{ tip.title }}
+            </h3>
+            <p class="mt-1 text-sm text-gray-600 dark:text-gray-400">
+              {{ t('report.difficulty') }}: {{ tip.difficulty }}
+            </p>
+            <div class="mt-3 prose dark:prose-invert">
+              <ContentRenderer :value="tip" />
+            </div>
+          </li>
+        </ol>
       </section>
     </template>
   </article>
