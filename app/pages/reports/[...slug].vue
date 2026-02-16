@@ -40,66 +40,110 @@ const { data: aboutThisReport } = await useAsyncData(`about-${sharedPath.value}`
 </script>
 
 <template>
-  <div v-if="report">
+  <article
+    v-if="report"
+    class="mx-auto max-w-prose"
+  >
     <ReportHeader :report="report" />
 
-    <UPageSection :title="t('report.executiveSummary')">
-      <ContentRenderer :value="report" />
-    </UPageSection>
+    <section class="mt-12">
+      <h2 class="text-2xl font-semibold text-gray-950 dark:text-white">
+        {{ t('report.executiveSummary') }}
+      </h2>
+      <div class="mt-4 prose dark:prose-invert">
+        <ContentRenderer :value="report" />
+      </div>
+    </section>
 
-    <UPageSection :title="t('report.resultsPerPrinciple')">
-      <ReportScorecard
-        :issues="issues ?? []"
-        :target-level="report.evaluation.targetLevel"
-        :wcag-version="report.evaluation.targetWcagVersion"
-      />
-    </UPageSection>
+    <hr class="my-12 border-gray-200 dark:border-gray-800">
 
-    <UPageSection
+    <section>
+      <h2 class="text-2xl font-semibold text-gray-950 dark:text-white">
+        {{ t('report.resultsPerPrinciple') }}
+      </h2>
+      <div class="mt-4">
+        <ReportScorecard
+          :issues="issues ?? []"
+          :target-level="report.evaluation.targetLevel"
+          :wcag-version="report.evaluation.targetWcagVersion"
+        />
+      </div>
+    </section>
+
+    <hr class="my-12 border-gray-200 dark:border-gray-800">
+
+    <section v-if="aboutThisReport">
+      <h2 class="text-2xl font-semibold text-gray-950 dark:text-white">
+        {{ t('report.aboutThisReport') }}
+      </h2>
+      <div class="mt-4 prose dark:prose-invert">
+        <ContentRenderer :value="aboutThisReport" />
+      </div>
+    </section>
+
+    <hr
       v-if="aboutThisReport"
-      :title="t('report.aboutThisReport')"
+      class="my-12 border-gray-200 dark:border-gray-800"
     >
-      <ContentRenderer :value="aboutThisReport" />
-    </UPageSection>
 
-    <UPageSection :title="t('report.scope')">
-      <ReportScope :report="report" />
-    </UPageSection>
+    <section>
+      <h2 class="text-2xl font-semibold text-gray-950 dark:text-white">
+        {{ t('report.scope') }}
+      </h2>
+      <div class="mt-4">
+        <ReportScope :report="report" />
+      </div>
+    </section>
 
-    <UPageSection :title="t('report.representativeSample')">
-      <ReportSample :report="report" />
-    </UPageSection>
+    <hr class="my-12 border-gray-200 dark:border-gray-800">
 
-    <UPageSection
-      v-if="reportIssues.length"
-      :title="t('report.issues')"
-    >
-      <UPageGrid>
-        <ReportIssue
-          v-for="(issue, i) in reportIssues"
-          :key="issue.path"
-          :issue="issue"
-          :index="i + 1"
-          :is-tip="false"
-          :report="report"
-        />
-      </UPageGrid>
-    </UPageSection>
+    <section>
+      <h2 class="text-2xl font-semibold text-gray-950 dark:text-white">
+        {{ t('report.representativeSample') }}
+      </h2>
+      <div class="mt-4">
+        <ReportSample :report="report" />
+      </div>
+    </section>
 
-    <UPageSection
-      v-if="reportTips.length"
-      :title="t('report.tips')"
-    >
-      <UPageGrid>
-        <ReportIssue
-          v-for="(tip, i) in reportTips"
-          :key="tip.path"
-          :issue="tip"
-          :index="i + 1"
-          :is-tip="true"
-          :report="report"
-        />
-      </UPageGrid>
-    </UPageSection>
-  </div>
+    <template v-if="reportIssues.length">
+      <hr class="my-12 border-gray-200 dark:border-gray-800">
+
+      <section>
+        <h2 class="text-2xl font-semibold text-gray-950 dark:text-white">
+          {{ t('report.issues') }}
+        </h2>
+        <div class="mt-6 space-y-8">
+          <ReportIssue
+            v-for="(issue, i) in reportIssues"
+            :key="issue.path"
+            :issue="issue"
+            :index="i + 1"
+            :is-tip="false"
+            :report="report"
+          />
+        </div>
+      </section>
+    </template>
+
+    <template v-if="reportTips.length">
+      <hr class="my-12 border-gray-200 dark:border-gray-800">
+
+      <section>
+        <h2 class="text-2xl font-semibold text-gray-950 dark:text-white">
+          {{ t('report.tips') }}
+        </h2>
+        <div class="mt-6 space-y-8">
+          <ReportIssue
+            v-for="(tip, i) in reportTips"
+            :key="tip.path"
+            :issue="tip"
+            :index="i + 1"
+            :is-tip="true"
+            :report="report"
+          />
+        </div>
+      </section>
+    </template>
+  </article>
 </template>

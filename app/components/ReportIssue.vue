@@ -46,39 +46,36 @@ const samplePage = computed(() =>
 </script>
 
 <template>
-  <UPageCard>
-    <template #title>
+  <article class="border-l-2 border-gray-200 pl-6 dark:border-gray-800">
+    <h3 class="text-lg font-medium text-gray-950 dark:text-white">
       {{ label }}
-    </template>
-
-    <template #description>
-      <div class="flex flex-wrap gap-2 mt-1">
-        <template v-if="!isTip">
-          <UBadge
-            :label="`${t('report.severity')}: ${issue.severity}`"
-            :color="severityColor"
-            variant="subtle"
-          />
-          <UBadge
-            :label="`${t('report.difficulty')}: ${issue.difficulty}`"
-            :color="difficultyColor"
-            variant="subtle"
-          />
-        </template>
+    </h3>
+    <div class="mt-2 flex flex-wrap gap-2">
+      <template v-if="!isTip">
         <UBadge
-          v-if="samplePage"
-          :label="samplePage.title"
-          color="neutral"
+          :label="`${t('report.severity')}: ${issue.severity}`"
+          :color="severityColor"
           variant="subtle"
         />
-      </div>
-    </template>
-
-    <ContentRenderer :value="issue" />
-
-    <template
+        <UBadge
+          :label="`${t('report.difficulty')}: ${issue.difficulty}`"
+          :color="difficultyColor"
+          variant="subtle"
+        />
+      </template>
+      <UBadge
+        v-if="samplePage"
+        :label="samplePage.title"
+        color="neutral"
+        variant="subtle"
+      />
+    </div>
+    <div class="mt-4 prose dark:prose-invert">
+      <ContentRenderer :value="issue" />
+    </div>
+    <p
       v-if="!isTip"
-      #footer
+      class="mt-4"
     >
       <UButton
         :to="criterionUri"
@@ -89,6 +86,6 @@ const samplePage = computed(() =>
         :aria-label="`${criterionName} (${t('report.externalLink')})`"
         class="p-0"
       />
-    </template>
-  </UPageCard>
+    </p>
+  </article>
 </template>

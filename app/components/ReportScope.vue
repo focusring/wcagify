@@ -9,9 +9,12 @@ const { t } = useI18n()
 </script>
 
 <template>
-  <UPageGrid>
-    <UPageCard :title="t('report.scopeItems')">
-      <ul class="list-disc list-inside space-y-1">
+  <div class="grid gap-8 sm:grid-cols-2">
+    <div>
+      <h3 class="text-lg font-medium text-gray-950 dark:text-white">
+        {{ t('report.scopeItems') }}
+      </h3>
+      <ul class="mt-2 list-disc list-inside space-y-1 text-sm text-gray-700 dark:text-gray-300">
         <li
           v-for="item in report.scope"
           :key="item"
@@ -19,13 +22,13 @@ const { t } = useI18n()
           {{ item }}
         </li>
       </ul>
-    </UPageCard>
+    </div>
 
-    <UPageCard
-      v-if="report.outOfScope?.length"
-      :title="t('report.notInScope')"
-    >
-      <ul class="list-disc list-inside space-y-1">
+    <div v-if="report.outOfScope?.length">
+      <h3 class="text-lg font-medium text-gray-950 dark:text-white">
+        {{ t('report.notInScope') }}
+      </h3>
+      <ul class="mt-2 list-disc list-inside space-y-1 text-sm text-gray-700 dark:text-gray-300">
         <li
           v-for="item in report.outOfScope"
           :key="item"
@@ -33,13 +36,16 @@ const { t } = useI18n()
           {{ item }}
         </li>
       </ul>
-    </UPageCard>
+    </div>
 
-    <UPageCard :title="t('report.accessibilitySupport')">
-      <p class="text-muted mb-3">
+    <div>
+      <h3 class="text-lg font-medium text-gray-950 dark:text-white">
+        {{ t('report.accessibilitySupport') }}
+      </h3>
+      <p class="mt-2 text-sm text-gray-500 dark:text-gray-400">
         {{ t('report.accessibilitySupportExplanation') }}
       </p>
-      <ul class="list-disc list-inside space-y-1">
+      <ul class="mt-2 list-disc list-inside space-y-1 text-sm text-gray-700 dark:text-gray-300">
         <li
           v-for="item in report.baseline"
           :key="item"
@@ -47,13 +53,16 @@ const { t } = useI18n()
           {{ item }}
         </li>
       </ul>
-    </UPageCard>
+    </div>
 
-    <UPageCard :title="t('report.technologiesUsed')">
-      <p class="text-muted mb-3">
+    <div>
+      <h3 class="text-lg font-medium text-gray-950 dark:text-white">
+        {{ t('report.technologiesUsed') }}
+      </h3>
+      <p class="mt-2 text-sm text-gray-500 dark:text-gray-400">
         {{ t('report.technologiesExplanation') }}
       </p>
-      <ul class="list-disc list-inside space-y-1">
+      <ul class="mt-2 list-disc list-inside space-y-1 text-sm text-gray-700 dark:text-gray-300">
         <li
           v-for="item in report.technologies"
           :key="item"
@@ -61,6 +70,6 @@ const { t } = useI18n()
           {{ item }}
         </li>
       </ul>
-    </UPageCard>
-  </UPageGrid>
+    </div>
+  </div>
 </template>
