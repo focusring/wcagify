@@ -39,6 +39,14 @@ const { data: aboutThisReport } = await useAsyncData(`about-${sharedPath.value}`
       />
     </UPageSection>
 
+    <UPageSection :title="t('report.scope')">
+      <ReportScope :report="report" />
+    </UPageSection>
+
+    <UPageSection :title="t('report.representativeSample')">
+      <ReportSample :report="report" />
+    </UPageSection>
+
     <UPageSection
       v-if="aboutThisReport"
       :title="t('report.aboutThisReport')"
