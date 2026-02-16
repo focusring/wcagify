@@ -8,7 +8,6 @@
   "report": {
     "accessibilityConformanceReportFor": "Accessibility Conformance Report for {title}",
     "title": "Title",
-    "reportFor": "Report for",
     "evaluatedBy": "Evaluated by",
     "commissionedBy": "Commissioned by",
     "target": "Target",
@@ -28,13 +27,9 @@
     "sample": "Sample",
     "representativeSample": "Representative sample",
     "issues": "Issues",
-    "issue": "Issue",
     "tips": "Tips",
-    "tip": "Tip",
-    "wcagCriterion": "WCAG criterion",
     "severity": "Severity",
     "difficulty": "Difficulty",
-    "allPages": "All pages",
     "url": "URL",
     "description": "Description",
     "externalLink": "External link",
@@ -44,9 +39,6 @@
       "understandable": "Understandable",
       "robust": "Robust"
     },
-    "total": "Total",
-    "of": "of",
-    "conforming": "Conforming",
     "conformanceLevel": "Conformance level: {level} — {conforming} of {total} criteria met",
     "criteriaMet": "{conforming} of {total} criteria met"
   }

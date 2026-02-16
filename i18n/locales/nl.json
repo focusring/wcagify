@@ -8,7 +8,6 @@
   "report": {
     "accessibilityConformanceReportFor": "Toegankelijkheidsrapport voor {title}",
     "title": "Titel",
-    "reportFor": "Rapport voor",
     "evaluatedBy": "Beoordeeld door",
     "commissionedBy": "In opdracht van",
     "target": "Doelstelling",
@@ -28,13 +27,9 @@
     "sample": "Steekproef",
     "representativeSample": "Representatieve steekproef",
     "issues": "Problemen",
-    "issue": "Probleem",
     "tips": "Tips",
-    "tip": "Tip",
-    "wcagCriterion": "WCAG-criterium",
     "severity": "Ernst",
     "difficulty": "Moeilijkheid",
-    "allPages": "Alle pagina's",
     "url": "URL",
     "description": "Beschrijving",
     "externalLink": "Externe link",
@@ -44,9 +39,6 @@
       "understandable": "Begrijpelijk",
       "robust": "Robuust"
     },
-    "total": "Totaal",
-    "of": "van",
-    "conforming": "Voldoet",
     "conformanceLevel": "Conformiteitsniveau: {level} — {conforming} van {total} criteria voldaan",
     "criteriaMet": "{conforming} van {total} criteria voldaan"
   }
