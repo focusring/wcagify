@@ -7,6 +7,7 @@
   },
   "report": {
     "accessibilityConformanceReportFor": "Accessibility Conformance Report for {title}",
+    "title": "Title",
     "reportFor": "Report for",
     "evaluatedBy": "Evaluated by",
     "commissionedBy": "Commissioned by",
