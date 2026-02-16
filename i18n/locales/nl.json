@@ -6,6 +6,7 @@
     "noReports": "Geen rapporten gevonden"
   },
   "report": {
+    "accessibilityConformanceReportFor": "Toegankelijkheidsrapport voor {title}",
     "reportFor": "Rapport voor",
     "evaluatedBy": "Beoordeeld door",
     "commissionedBy": "In opdracht van",
@@ -40,6 +41,7 @@
       "robust": "Robuust"
     },
     "total": "Totaal",
-    "of": "van"
+    "of": "van",
+    "conforming": "Voldoet"
   }
 }

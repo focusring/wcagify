@@ -6,6 +6,7 @@
     "noReports": "No reports found"
   },
   "report": {
+    "accessibilityConformanceReportFor": "Accessibility Conformance Report for {title}",
     "reportFor": "Report for",
     "evaluatedBy": "Evaluated by",
     "commissionedBy": "Commissioned by",
@@ -40,6 +41,7 @@
       "robust": "Robust"
     },
     "total": "Total",
-    "of": "of"
+    "of": "of",
+    "conforming": "Conforming"
   }
 }
