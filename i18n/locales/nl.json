@@ -35,6 +35,8 @@
     "severity": "Ernst",
     "difficulty": "Moeilijkheid",
     "allPages": "Alle pagina's",
+    "url": "URL",
+    "description": "Beschrijving",
     "externalLink": "Externe link",
     "principles": {
       "perceivable": "Waarneembaar",

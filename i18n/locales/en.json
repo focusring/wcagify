@@ -35,6 +35,8 @@
     "severity": "Severity",
     "difficulty": "Difficulty",
     "allPages": "All pages",
+    "url": "URL",
+    "description": "Description",
     "externalLink": "External link",
     "principles": {
       "perceivable": "Perceivable",

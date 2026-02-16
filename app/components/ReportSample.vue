@@ -1,38 +1,46 @@
 <script setup lang="ts">
 import type { ReportsCollectionItem } from '@nuxt/content'
+import type { TableColumn } from '@nuxt/ui'
 
 defineProps<{
   report: ReportsCollectionItem
 }>()
 
 const { t } = useI18n()
+
+type SamplePage = ReportsCollectionItem['sample'][number]
+
+const columns = computed<TableColumn<SamplePage>[]>(() => [
+  {
+    accessorKey: 'title',
+    header: t('report.title')
+  },
+  {
+    accessorKey: 'url',
+    header: t('report.url')
+  },
+  {
+    accessorKey: 'description',
+    header: t('report.description')
+  }
+])
 </script>
 
 <template>
-  <ul class="grid gap-4 sm:grid-cols-2">
-    <li
-      v-for="page in report.sample"
-      :key="page.id"
-      class="rounded-lg border border-gray-200 p-4 dark:border-gray-800"
-    >
-      <p class="font-medium text-gray-950 dark:text-white">
-        {{ page.title }}
-      </p>
-      <p
-        v-if="page.description"
-        class="mt-1 text-sm text-gray-500 dark:text-gray-400"
-      >
-        {{ page.description }}
-      </p>
+  <UTable
+    :data="report.sample"
+    :columns="columns"
+  >
+    <template #url-cell="{ row }">
       <UButton
-        :to="page.url"
-        :label="page.url"
+        :to="row.original.url"
+        :label="row.original.url"
         target="_blank"
         variant="link"
         trailing-icon="i-lucide-external-link"
-        :aria-label="`${page.title} (${t('report.externalLink')})`"
-        class="mt-2 p-0"
+        :aria-label="`${row.original.title} (${t('report.externalLink')})`"
+        class="p-0"
       />
-    </li>
-  </ul>
+    </template>
+  </UTable>
 </template>
