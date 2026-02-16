@@ -1,6 +1,6 @@
 <script setup lang="ts">
 const { t } = useI18n()
-const head = useLocaleHead({ addSeoAttributes: true })
+const head = useLocaleHead({ seo: true })
 
 useHead({
   meta: [
@@ -27,9 +27,9 @@ useSeoMeta({
   <UApp>
     <UHeader>
       <template #left>
-        <NuxtLink to="/">
+        <NuxtLinkLocale to="/">
           <AppLogo />
-        </NuxtLink>
+        </NuxtLinkLocale>
       </template>
 
       <template #right>

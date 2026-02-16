@@ -23,7 +23,7 @@ const { t } = useI18n()
           target="_blank"
           variant="link"
           trailing-icon="i-lucide-external-link"
-          :aria-label="t('report.externalLink')"
+          :aria-label="`${page.title} (${t('report.externalLink')})`"
           class="p-0"
         />
       </template>

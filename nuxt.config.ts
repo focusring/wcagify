@@ -1,5 +1,6 @@
 // https://nuxt.com/docs/api/configuration/nuxt-config
 export default defineNuxtConfig({
+
   modules: ['@nuxt/eslint', '@nuxt/ui', '@nuxt/content', 'nuxt-studio', '@nuxtjs/i18n'],
 
   devtools: {
@@ -11,8 +12,16 @@ export default defineNuxtConfig({
   routeRules: {
     '/': { prerender: true }
   },
-
   compatibilityDate: '2025-01-15',
+
+  eslint: {
+    config: {
+      stylistic: {
+        commaDangle: 'never',
+        braceStyle: '1tbs'
+      }
+    }
+  },
 
   i18n: {
     defaultLocale: 'nl',
@@ -35,15 +44,6 @@ export default defineNuxtConfig({
       useCookie: true,
       cookieKey: 'i18n_redirected',
       redirectOn: 'root'
-    }
-  },
-
-  eslint: {
-    config: {
-      stylistic: {
-        commaDangle: 'never',
-        braceStyle: '1tbs'
-      }
     }
   }
 })

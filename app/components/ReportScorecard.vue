@@ -33,7 +33,7 @@ const rows = computed(() => {
 
 type ScorecardRow = { principle: string, conforming: number, total: number }
 
-const columns: TableColumn<ScorecardRow>[] = [
+const columns = computed<TableColumn<ScorecardRow>[]>(() => [
   {
     accessorKey: 'principle',
     header: t('report.resultsPerPrinciple')
@@ -46,7 +46,7 @@ const columns: TableColumn<ScorecardRow>[] = [
     accessorKey: 'total',
     header: t('report.total')
   }
-]
+])
 </script>
 
 <template>

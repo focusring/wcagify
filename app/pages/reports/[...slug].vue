@@ -12,6 +12,11 @@ if (!report.value) {
   throw createError({ statusCode: 404, statusMessage: 'Report not found' })
 }
 
+useSeoMeta({
+  title: () => report.value ? `${report.value.title} - WCAGify` : 'WCAGify',
+  description: () => report.value?.description
+})
+
 const { data: issues } = await useAsyncData(`issues-${reportPath.value}`, () =>
   queryCollection('issues').where('path', 'LIKE', `${reportPath.value}/%`).all()
 )
@@ -48,6 +53,13 @@ const { data: aboutThisReport } = await useAsyncData(`about-${sharedPath.value}`
         :target-level="report.evaluation.targetLevel"
         :wcag-version="report.evaluation.targetWcagVersion"
       />
+    </UPageSection>
+
+    <UPageSection
+      v-if="aboutThisReport"
+      :title="t('report.aboutThisReport')"
+    >
+      <ContentRenderer :value="aboutThisReport" />
     </UPageSection>
 
     <UPageSection :title="t('report.scope')">
@@ -88,13 +100,6 @@ const { data: aboutThisReport } = await useAsyncData(`about-${sharedPath.value}`
           :report="report"
         />
       </UPageGrid>
-    </UPageSection>
-
-    <UPageSection
-      v-if="aboutThisReport"
-      :title="t('report.aboutThisReport')"
-    >
-      <ContentRenderer :value="aboutThisReport" />
     </UPageSection>
   </div>
 </template>
