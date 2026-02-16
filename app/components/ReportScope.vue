@@ -9,7 +9,7 @@ const { t } = useI18n()
 </script>
 
 <template>
-  <div class="grid gap-8 sm:grid-cols-2">
+  <div class="space-y-6">
     <div>
       <h3 class="text-lg font-medium text-gray-950 dark:text-white">
         {{ t('report.scopeItems') }}
