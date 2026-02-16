@@ -1,0 +1,29 @@
+{
+  "welcome": "Welkom bij WCAGify",
+  "description": "Een productieklare startertemplate aangedreven door Nuxt UI. Bouw mooie, toegankelijke en performante applicaties in minuten.",
+  "getStarted": "Aan de slag",
+  "useTemplate": "Gebruik template",
+  "features": {
+    "title": "Alles wat je nodig hebt om moderne Nuxt apps te bouwen",
+    "description": "Begin met een solide basis. Deze template bevat alle essentials voor het bouwen van productieklare applicaties met Nuxt UI.",
+    "productionReady": "Productieklaar vanaf dag één",
+    "productionReadyDesc": "Voorgeconfigureerd met TypeScript, ESLint, Tailwind CSS en alle best practices. Focus op het bouwen van features, niet op tooling.",
+    "beautiful": "Standaard mooi",
+    "beautifulDesc": "Maakt gebruik van Nuxt UI's designsysteem met automatische dark mode, consistente spacing en gepolijste componenten.",
+    "fast": "Razendsnel",
+    "fastDesc": "Geoptimaliseerd voor prestaties met SSR/SSG support, automatische code splitting en edge-ready deployment.",
+    "components": "100+ componenten inbegrepen",
+    "componentsDesc": "Toegang tot Nuxt UI's uitgebreide componentenbibliotheek. Van formulieren tot navigatie, alles is toegankelijk en responsief.",
+    "dx": "Developer experience first",
+    "dxDesc": "Auto-imports, hot module replacement en TypeScript support. Schrijf minder boilerplate en ship meer features.",
+    "scale": "Gebouwd voor schaal",
+    "scaleDesc": "Enterprise-ready architectuur met goede foutafhandeling, SEO-optimalisatie en ingebouwde beveiligingspraktijken."
+  },
+  "cta": {
+    "title": "Klaar om je volgende Nuxt app te bouwen?",
+    "description": "Sluit je aan bij duizenden developers die bouwen met Nuxt en Nuxt UI.",
+    "start": "Begin met bouwen",
+    "github": "Bekijk op GitHub"
+  },
+  "footer": "Gebouwd met Nuxt UI"
+}
