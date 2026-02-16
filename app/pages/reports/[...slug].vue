@@ -27,6 +27,38 @@ const reportIssues = computed(() =>
     .sort((a, b) => a.sc.localeCompare(b.sc, undefined, { numeric: true }))
 )
 
+const { scName, scUri } = useWcagData()
+
+const issuesBySc = computed(() => {
+  const groups: Array<{
+    sc: string
+    name: string
+    uri: string
+    issues: typeof reportIssues.value
+  }> = []
+  const seen = new Map<string, number>()
+  const wcagVersion = (report.value?.evaluation.targetWcagVersion ?? '2.2') as '2.0' | '2.1' | '2.2'
+  const language = (report.value?.language === 'nl' ? 'nl' : 'en') as 'en' | 'nl'
+
+  if (!report.value) return groups
+
+  for (const issue of reportIssues.value) {
+    const idx = seen.get(issue.sc)
+    if (idx !== undefined) {
+      groups[idx]!.issues.push(issue)
+    } else {
+      seen.set(issue.sc, groups.length)
+      groups.push({
+        sc: issue.sc,
+        name: scName(issue.sc, wcagVersion, language),
+        uri: scUri(issue.sc, wcagVersion, language),
+        issues: [issue]
+      })
+    }
+  }
+  return groups
+})
+
 const reportTips = computed(() =>
   (issues.value ?? [])
     .filter(issue => issue.sc === 'none')
@@ -106,22 +138,33 @@ const { data: aboutThisReport } = await useAsyncData(`about-${sharedPath.value}`
       </div>
     </section>
 
-    <template v-if="reportIssues.length">
+    <template v-if="issuesBySc.length">
       <hr class="my-12 border-gray-200 dark:border-gray-800">
 
       <section>
         <h2 class="text-2xl font-semibold text-gray-950 dark:text-white">
           {{ t('report.issues') }}
         </h2>
-        <div class="mt-6 space-y-8">
-          <ReportIssue
-            v-for="(issue, i) in reportIssues"
-            :key="issue.path"
-            :issue="issue"
-            :index="i + 1"
-            :is-tip="false"
-            :report="report"
-          />
+        <div
+          v-for="group in issuesBySc"
+          :key="group.sc"
+          class="mt-8"
+        >
+          <h3 class="text-lg font-medium text-gray-950 dark:text-white">
+            <a
+              :href="group.uri"
+              target="_blank"
+              class="hover:underline"
+            >{{ group.name }}</a>
+          </h3>
+          <div class="mt-4 space-y-8">
+            <ReportIssue
+              v-for="issue in group.issues"
+              :key="issue.path"
+              :issue="issue"
+              :report="report"
+            />
+          </div>
         </div>
       </section>
     </template>
@@ -135,12 +178,11 @@ const { data: aboutThisReport } = await useAsyncData(`about-${sharedPath.value}`
         </h2>
         <div class="mt-6 space-y-8">
           <ReportIssue
-            v-for="(tip, i) in reportTips"
+            v-for="tip in reportTips"
             :key="tip.path"
             :issue="tip"
-            :index="i + 1"
-            :is-tip="true"
             :report="report"
+            is-tip
           />
         </div>
       </section>
