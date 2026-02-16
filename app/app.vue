@@ -16,10 +16,10 @@ useHead({
 })
 
 useSeoMeta({
-  title: () => t('welcome'),
-  description: () => t('description'),
-  ogTitle: () => t('welcome'),
-  ogDescription: () => t('description')
+  title: () => t('app.title'),
+  description: () => t('app.description'),
+  ogTitle: () => t('app.title'),
+  ogDescription: () => t('app.description')
 })
 </script>
 
@@ -28,10 +28,8 @@ useSeoMeta({
     <UHeader>
       <template #left>
         <NuxtLink to="/">
-          <AppLogo class="w-auto h-6 shrink-0" />
+          <AppLogo />
         </NuxtLink>
-
-        <TemplateMenu />
       </template>
 
       <template #right>
@@ -39,7 +37,7 @@ useSeoMeta({
         <UColorModeButton />
 
         <UButton
-          to="https://github.com/nuxt-ui-templates/starter"
+          to="https://github.com/timdamen/wcagify"
           target="_blank"
           icon="i-simple-icons-github"
           aria-label="GitHub"
@@ -53,18 +51,18 @@ useSeoMeta({
       <NuxtPage />
     </UMain>
 
-    <USeparator icon="i-simple-icons-nuxtdotjs" />
+    <USeparator />
 
     <UFooter>
       <template #left>
         <p class="text-sm text-muted">
-          Built with Nuxt UI • © {{ new Date().getFullYear() }}
+          WCAGify &copy; {{ new Date().getFullYear() }}
         </p>
       </template>
 
       <template #right>
         <UButton
-          to="https://github.com/nuxt-ui-templates/starter"
+          to="https://github.com/timdamen/wcagify"
           target="_blank"
           icon="i-simple-icons-github"
           aria-label="GitHub"
