@@ -60,7 +60,7 @@ export function useWcagData() {
   }
 
   function scorecard(
-    issues: Array<{ sc: string }>,
+    issues: { sc: string }[],
     targetLevel: Level,
     wcagVersion: WcagVersion = '2.2'
   ): Scorecard {

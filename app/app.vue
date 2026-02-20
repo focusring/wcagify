@@ -11,7 +11,7 @@ useHead({
     ...(head.value.link || [])
   ],
   htmlAttrs: {
-    ...(head.value.htmlAttrs || {})
+    ...head.value.htmlAttrs
   }
 })
 

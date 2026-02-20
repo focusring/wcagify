@@ -14,7 +14,7 @@ WCAG accessibility tool built with Nuxt 4.
 
 - `pnpm dev` — start dev server
 - `pnpm build` — production build (SSR required for Studio)
-- `pnpm lint` — run ESLint
+- `pnpm lint` — run OXlint
 - `pnpm typecheck` — run type checking
 
 ## Project Structure
@@ -35,5 +35,6 @@ WCAG accessibility tool built with Nuxt 4.
 ## Conventions
 
 - Package manager: pnpm
-- ESLint: no trailing commas, 1tbs brace style
+- Linter: OXlint (correctness, suspicious, style rules)
+- Formatter: oxfmt
 - Components use `U` prefix (Nuxt UI)

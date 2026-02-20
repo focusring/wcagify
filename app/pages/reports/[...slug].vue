@@ -30,12 +30,12 @@ const reportIssues = computed(() =>
 const { scName, scUri } = useWcagData()
 
 const issuesBySc = computed(() => {
-  const groups: Array<{
+  const groups: {
     sc: string
     name: string
     uri: string
     issues: typeof reportIssues.value
-  }> = []
+  }[] = []
   const seen = new Map<string, number>()
   const wcagVersion = (report.value?.evaluation.targetWcagVersion ?? '2.2') as '2.0' | '2.1' | '2.2'
   const language = (report.value?.language === 'nl' ? 'nl' : 'en') as 'en' | 'nl'
