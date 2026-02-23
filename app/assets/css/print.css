@@ -4,6 +4,10 @@
     size: A4;
   }
 
+  .cover-page {
+    break-after: always;
+  }
+
   header,
   footer,
   main ~ hr {

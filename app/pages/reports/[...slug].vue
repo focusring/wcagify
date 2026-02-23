@@ -70,6 +70,7 @@ const { data: aboutThisReport } = await useAsyncData(`about-${sharedPath.value}`
 
 <template>
   <div v-if="report" class="mx-auto max-w-prose">
+    <ReportCoverPage :report="report" :issues="issues ?? []" />
     <ReportHeader :report="report" :issues="issues ?? []" />
 
     <section id="executive-summary" class="mt-12">
