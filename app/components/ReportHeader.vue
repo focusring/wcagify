@@ -1,11 +1,22 @@
 <script setup lang="ts">
-import type { ReportsCollectionItem } from '@nuxt/content'
+import type { IssuesCollectionItem, ReportsCollectionItem } from '@nuxt/content'
 
-defineProps<{
+const props = defineProps<{
   report: ReportsCollectionItem
+  issues: IssuesCollectionItem[]
 }>()
 
 const { t } = useI18n()
+const { scorecard } = useWcagData()
+
+const conformanceResult = computed(() => {
+  const data = scorecard(
+    props.issues,
+    props.report.evaluation.targetLevel as 'A' | 'AA' | 'AAA',
+    props.report.evaluation.targetWcagVersion as '2.0' | '2.1' | '2.2'
+  )
+  return t('report.criteriaMet', { conforming: data.conforming.all, total: data.totals.all })
+})
 </script>
 
 <template>
@@ -16,14 +27,6 @@ const { t } = useI18n()
     <dl class="mt-6 grid grid-cols-2 gap-x-8 gap-y-3 text-sm sm:grid-cols-3">
       <div>
         <dt class="text-gray-500 dark:text-gray-400">
-          {{ t('report.evaluatedBy') }}
-        </dt>
-        <dd class="mt-0.5 text-gray-950 dark:text-white">
-          {{ report.evaluation.evaluator }}
-        </dd>
-      </div>
-      <div>
-        <dt class="text-gray-500 dark:text-gray-400">
           {{ t('report.commissionedBy') }}
         </dt>
         <dd class="mt-0.5 text-gray-950 dark:text-white">
@@ -32,10 +35,10 @@ const { t } = useI18n()
       </div>
       <div>
         <dt class="text-gray-500 dark:text-gray-400">
-          {{ t('report.target') }}
+          {{ t('report.evaluatedBy') }}
         </dt>
         <dd class="mt-0.5 text-gray-950 dark:text-white">
-          {{ report.evaluation.target }}
+          {{ report.evaluation.evaluator }}
         </dd>
       </div>
       <div>
@@ -48,18 +51,26 @@ const { t } = useI18n()
       </div>
       <div>
         <dt class="text-gray-500 dark:text-gray-400">
-          {{ t('report.level') }}
+          {{ t('report.wcagVersion') }}
         </dt>
         <dd class="mt-0.5 text-gray-950 dark:text-white">
-          WCAG {{ report.evaluation.targetWcagVersion }} {{ report.evaluation.targetLevel }}
+          WCAG {{ report.evaluation.targetWcagVersion }}
         </dd>
       </div>
-      <div v-if="report.evaluation.specialRequirements">
+      <div>
         <dt class="text-gray-500 dark:text-gray-400">
-          {{ t('report.specialRequirements') }}
+          {{ t('report.conformanceTarget') }}
         </dt>
         <dd class="mt-0.5 text-gray-950 dark:text-white">
-          {{ report.evaluation.specialRequirements }}
+          {{ report.evaluation.targetLevel }}
+        </dd>
+      </div>
+      <div>
+        <dt class="text-gray-500 dark:text-gray-400">
+          {{ t('report.conformanceResult') }}
+        </dt>
+        <dd class="mt-0.5 text-gray-950 dark:text-white">
+          {{ conformanceResult }}
         </dd>
       </div>
     </dl>

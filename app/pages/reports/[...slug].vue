@@ -13,7 +13,7 @@ if (!report.value) {
 }
 
 useSeoMeta({
-  title: () => report.value ? `${report.value.title} - WCAGify` : 'WCAGify',
+  title: () => (report.value ? `${report.value.title} - WCAGify` : 'WCAGify'),
   description: () => report.value?.description
 })
 
@@ -23,7 +23,7 @@ const { data: issues } = await useAsyncData(`issues-${reportPath.value}`, () =>
 
 const reportIssues = computed(() =>
   (issues.value ?? [])
-    .filter(issue => issue.sc !== 'none')
+    .filter((issue) => issue.sc !== 'none')
     .sort((a, b) => a.sc.localeCompare(b.sc, undefined, { numeric: true }))
 )
 
@@ -59,10 +59,7 @@ const issuesBySc = computed(() => {
   return groups
 })
 
-const reportTips = computed(() =>
-  (issues.value ?? [])
-    .filter(issue => issue.sc === 'none')
-)
+const reportTips = computed(() => (issues.value ?? []).filter((issue) => issue.sc === 'none'))
 
 const sharedPath = computed(() => `/shared/${report.value?.language ?? 'nl'}/about-this-report`)
 
@@ -72,16 +69,10 @@ const { data: aboutThisReport } = await useAsyncData(`about-${sharedPath.value}`
 </script>
 
 <template>
-  <div
-    v-if="report"
-    class="mx-auto max-w-prose"
-  >
-    <ReportHeader :report="report" />
+  <div v-if="report" class="mx-auto max-w-prose">
+    <ReportHeader :report="report" :issues="issues ?? []" />
 
-    <section
-      id="executive-summary"
-      class="mt-12"
-    >
+    <section id="executive-summary" class="mt-12">
       <h2 class="text-2xl font-semibold text-gray-950 dark:text-white">
         {{ t('report.executiveSummary') }}
       </h2>
@@ -90,7 +81,7 @@ const { data: aboutThisReport } = await useAsyncData(`about-${sharedPath.value}`
       </div>
     </section>
 
-    <hr class="my-12 border-gray-200 dark:border-gray-800">
+    <hr class="my-12 border-gray-200 dark:border-gray-800" />
 
     <section id="scorecard">
       <h2 class="text-2xl font-semibold text-gray-950 dark:text-white">
@@ -105,12 +96,9 @@ const { data: aboutThisReport } = await useAsyncData(`about-${sharedPath.value}`
       </div>
     </section>
 
-    <hr class="my-12 border-gray-200 dark:border-gray-800">
+    <hr class="my-12 border-gray-200 dark:border-gray-800" />
 
-    <section
-      v-if="aboutThisReport"
-      id="about"
-    >
+    <section v-if="aboutThisReport" id="about">
       <h2 class="text-2xl font-semibold text-gray-950 dark:text-white">
         {{ t('report.aboutThisReport') }}
       </h2>
@@ -119,10 +107,7 @@ const { data: aboutThisReport } = await useAsyncData(`about-${sharedPath.value}`
       </div>
     </section>
 
-    <hr
-      v-if="aboutThisReport"
-      class="my-12 border-gray-200 dark:border-gray-800"
-    >
+    <hr v-if="aboutThisReport" class="my-12 border-gray-200 dark:border-gray-800" />
 
     <section id="scope">
       <h2 class="text-2xl font-semibold text-gray-950 dark:text-white">
@@ -133,7 +118,7 @@ const { data: aboutThisReport } = await useAsyncData(`about-${sharedPath.value}`
       </div>
     </section>
 
-    <hr class="my-12 border-gray-200 dark:border-gray-800">
+    <hr class="my-12 border-gray-200 dark:border-gray-800" />
 
     <section id="sample">
       <h2 class="text-2xl font-semibold text-gray-950 dark:text-white">
@@ -145,23 +130,15 @@ const { data: aboutThisReport } = await useAsyncData(`about-${sharedPath.value}`
     </section>
 
     <template v-if="issuesBySc.length">
-      <hr class="my-12 border-gray-200 dark:border-gray-800">
+      <hr class="my-12 border-gray-200 dark:border-gray-800" />
 
       <section id="issues">
         <h2 class="text-2xl font-semibold text-gray-950 dark:text-white">
           {{ t('report.issues') }}
         </h2>
-        <div
-          v-for="group in issuesBySc"
-          :key="group.sc"
-          class="mt-8"
-        >
+        <div v-for="group in issuesBySc" :key="group.sc" class="mt-8">
           <h3 class="text-lg font-medium text-gray-950 dark:text-white">
-            <a
-              :href="group.uri"
-              target="_blank"
-              class="hover:underline"
-            >{{ group.name }}</a>
+            <a :href="group.uri" target="_blank" class="hover:underline">{{ group.name }}</a>
           </h3>
           <div class="mt-4 space-y-8">
             <ReportIssue
@@ -176,17 +153,14 @@ const { data: aboutThisReport } = await useAsyncData(`about-${sharedPath.value}`
     </template>
 
     <template v-if="reportTips.length">
-      <hr class="my-12 border-gray-200 dark:border-gray-800">
+      <hr class="my-12 border-gray-200 dark:border-gray-800" />
 
       <section id="tips">
         <h2 class="text-2xl font-semibold text-gray-950 dark:text-white">
           {{ t('report.tips') }}
         </h2>
         <ol class="mt-6 list-decimal list-outside space-y-8 pl-6">
-          <li
-            v-for="tip in reportTips"
-            :key="tip.path"
-          >
+          <li v-for="tip in reportTips" :key="tip.path">
             <h3 class="font-medium text-gray-950 dark:text-white">
               {{ tip.title }}
             </h3>
