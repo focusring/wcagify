@@ -72,13 +72,16 @@ const { data: aboutThisReport } = await useAsyncData(`about-${sharedPath.value}`
 </script>
 
 <template>
-  <article
+  <div
     v-if="report"
     class="mx-auto max-w-prose"
   >
     <ReportHeader :report="report" />
 
-    <section class="mt-12">
+    <section
+      id="executive-summary"
+      class="mt-12"
+    >
       <h2 class="text-2xl font-semibold text-gray-950 dark:text-white">
         {{ t('report.executiveSummary') }}
       </h2>
@@ -89,7 +92,7 @@ const { data: aboutThisReport } = await useAsyncData(`about-${sharedPath.value}`
 
     <hr class="my-12 border-gray-200 dark:border-gray-800">
 
-    <section>
+    <section id="scorecard">
       <h2 class="text-2xl font-semibold text-gray-950 dark:text-white">
         {{ t('report.resultsPerPrinciple') }}
       </h2>
@@ -104,7 +107,10 @@ const { data: aboutThisReport } = await useAsyncData(`about-${sharedPath.value}`
 
     <hr class="my-12 border-gray-200 dark:border-gray-800">
 
-    <section v-if="aboutThisReport">
+    <section
+      v-if="aboutThisReport"
+      id="about"
+    >
       <h2 class="text-2xl font-semibold text-gray-950 dark:text-white">
         {{ t('report.aboutThisReport') }}
       </h2>
@@ -118,7 +124,7 @@ const { data: aboutThisReport } = await useAsyncData(`about-${sharedPath.value}`
       class="my-12 border-gray-200 dark:border-gray-800"
     >
 
-    <section>
+    <section id="scope">
       <h2 class="text-2xl font-semibold text-gray-950 dark:text-white">
         {{ t('report.scope') }}
       </h2>
@@ -129,7 +135,7 @@ const { data: aboutThisReport } = await useAsyncData(`about-${sharedPath.value}`
 
     <hr class="my-12 border-gray-200 dark:border-gray-800">
 
-    <section>
+    <section id="sample">
       <h2 class="text-2xl font-semibold text-gray-950 dark:text-white">
         {{ t('report.representativeSample') }}
       </h2>
@@ -141,7 +147,7 @@ const { data: aboutThisReport } = await useAsyncData(`about-${sharedPath.value}`
     <template v-if="issuesBySc.length">
       <hr class="my-12 border-gray-200 dark:border-gray-800">
 
-      <section>
+      <section id="issues">
         <h2 class="text-2xl font-semibold text-gray-950 dark:text-white">
           {{ t('report.issues') }}
         </h2>
@@ -172,7 +178,7 @@ const { data: aboutThisReport } = await useAsyncData(`about-${sharedPath.value}`
     <template v-if="reportTips.length">
       <hr class="my-12 border-gray-200 dark:border-gray-800">
 
-      <section>
+      <section id="tips">
         <h2 class="text-2xl font-semibold text-gray-950 dark:text-white">
           {{ t('report.tips') }}
         </h2>
@@ -194,5 +200,5 @@ const { data: aboutThisReport } = await useAsyncData(`about-${sharedPath.value}`
         </ol>
       </section>
     </template>
-  </article>
+  </div>
 </template>
