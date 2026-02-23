@@ -4,6 +4,7 @@ import type { IssuesCollectionItem, ReportsCollectionItem } from '@nuxt/content'
 const props = defineProps<{
   issue: IssuesCollectionItem
   report: ReportsCollectionItem
+  scName: string
 }>()
 
 const { t } = useI18n()
@@ -18,15 +19,24 @@ const samplePage = computed(() =>
     <h4 class="font-medium text-gray-950 dark:text-white">
       {{ issue.title }}
     </h4>
-    <p class="mt-1 text-sm text-gray-600 dark:text-gray-400">
-      {{ t('report.severity') }}: {{ issue.severity }}
-      &middot;
-      {{ t('report.difficulty') }}: {{ issue.difficulty }}
-      <template v-if="samplePage">
-        &middot;
-        {{ t('report.sample') }}: {{ samplePage.title }}
-      </template>
-    </p>
+    <dl class="mt-1 flex flex-wrap gap-x-4 gap-y-1 text-sm text-gray-600 dark:text-gray-400">
+      <div class="flex gap-1">
+        <dt>{{ t('report.successCriterion') }}:</dt>
+        <dd>{{ scName }}</dd>
+      </div>
+      <div class="flex gap-1">
+        <dt>{{ t('report.severity') }}:</dt>
+        <dd>{{ issue.severity }}</dd>
+      </div>
+      <div class="flex gap-1">
+        <dt>{{ t('report.difficulty') }}:</dt>
+        <dd>{{ issue.difficulty }}</dd>
+      </div>
+      <div v-if="samplePage" class="flex gap-1">
+        <dt>{{ t('report.sample') }}:</dt>
+        <dd>{{ samplePage.title }}</dd>
+      </div>
+    </dl>
     <div class="mt-3 prose dark:prose-invert">
       <ContentRenderer :value="issue" />
     </div>

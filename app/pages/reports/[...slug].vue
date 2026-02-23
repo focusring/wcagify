@@ -165,6 +165,7 @@ const { data: aboutThisReport } = await useAsyncData(`about-${sharedPath.value}`
               :key="issue.path"
               :issue="issue"
               :report="report"
+              :sc-name="group.name"
             />
           </div>
         </div>
