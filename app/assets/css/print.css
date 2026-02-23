@@ -1,0 +1,42 @@
+@media print {
+  @page {
+    margin: 20mm;
+    size: A4;
+  }
+
+  header,
+  footer,
+  main ~ hr {
+    display: none !important;
+  }
+
+  main hr {
+    display: none;
+  }
+
+  main {
+    padding: 0 !important;
+  }
+
+  section {
+    break-before: page;
+  }
+
+  #executive-summary {
+    break-before: auto;
+  }
+
+  article {
+    break-inside: avoid;
+  }
+
+  table {
+    break-inside: avoid;
+  }
+
+  h2,
+  h3,
+  h4 {
+    break-after: avoid;
+  }
+}
