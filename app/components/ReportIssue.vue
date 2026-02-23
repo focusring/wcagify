@@ -14,7 +14,7 @@ const samplePage = computed(() =>
 </script>
 
 <template>
-  <article>
+  <article :id="`issue-${issue.path.split('/').pop()}`">
     <h4 class="font-medium text-gray-950 dark:text-white">
       {{ issue.title }}
     </h4>

@@ -136,6 +136,25 @@ const { data: aboutThisReport } = await useAsyncData(`about-${sharedPath.value}`
         <h2 class="text-2xl font-semibold text-gray-950 dark:text-white">
           {{ t('report.issues') }}
         </h2>
+
+        <nav class="mt-4">
+          <div v-for="group in issuesBySc" :key="`toc-${group.sc}`" class="mt-3">
+            <h3 class="text-sm font-medium text-gray-950 dark:text-white">
+              {{ group.name }}
+            </h3>
+            <ol class="mt-1 list-decimal list-inside text-sm">
+              <li v-for="issue in group.issues" :key="issue.path">
+                <a
+                  :href="`#issue-${issue.path.split('/').pop()}`"
+                  class="text-green-600 hover:underline dark:text-green-400"
+                >
+                  {{ issue.title }}
+                </a>
+              </li>
+            </ol>
+          </div>
+        </nav>
+
         <div v-for="group in issuesBySc" :key="group.sc" class="mt-8">
           <h3 class="text-lg font-medium text-gray-950 dark:text-white">
             <a :href="group.uri" target="_blank" class="hover:underline">{{ group.name }}</a>
