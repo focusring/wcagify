@@ -3,6 +3,10 @@ export default defineNuxtConfig({
 
   modules: ['@nuxt/ui', '@nuxt/content', 'nuxt-studio', '@nuxtjs/i18n'],
 
+  runtimeConfig: {
+    weasyprintUrl: 'https://magnificent-encouragement-production.up.railway.app'
+  },
+
   devtools: {
     enabled: true
   },

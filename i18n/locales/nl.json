@@ -46,6 +46,7 @@
     "result": "Resultaat",
     "total": "Totaal",
     "conformanceLevel": "Conformiteitsniveau: {level} — {conforming} van {total} criteria voldaan",
-    "criteriaMet": "{conforming} van {total} criteria voldaan"
+    "criteriaMet": "{conforming} van {total} criteria voldaan",
+    "downloadPdf": "Download PDF"
   }
 }

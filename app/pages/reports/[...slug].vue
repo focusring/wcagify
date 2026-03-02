@@ -66,12 +66,42 @@ const sharedPath = computed(() => `/shared/${report.value?.language ?? 'nl'}/abo
 const { data: aboutThisReport } = await useAsyncData(`about-${sharedPath.value}`, () =>
   queryCollection('shared').path(sharedPath.value).first()
 )
+
+const isGeneratingPdf = ref(false)
+
+async function downloadPdf() {
+  isGeneratingPdf.value = true
+  try {
+    const response = await $fetch<Blob>(`/api${reportPath.value}.pdf`, {
+      responseType: 'blob'
+    })
+    const url = URL.createObjectURL(response)
+    const link = document.createElement('a')
+    link.href = url
+    link.download = `${report.value?.title ?? 'report'}.pdf`
+    document.body.appendChild(link)
+    link.click()
+    document.body.removeChild(link)
+    URL.revokeObjectURL(url)
+  } finally {
+    isGeneratingPdf.value = false
+  }
+}
 </script>
 
 <template>
   <div v-if="report" class="mx-auto max-w-prose">
     <ReportCoverPage :report="report" :issues="issues ?? []" />
     <ReportHeader :report="report" :issues="issues ?? []" />
+
+    <div class="mt-4 flex justify-end print:hidden">
+      <UButton
+        :label="t('report.downloadPdf')"
+        icon="i-lucide-download"
+        :loading="isGeneratingPdf"
+        @click="downloadPdf"
+      />
+    </div>
 
     <section id="executive-summary" class="mt-12">
       <h2 class="text-2xl font-semibold text-gray-950 dark:text-white">

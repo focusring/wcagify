@@ -46,6 +46,7 @@
     "result": "Result",
     "total": "Total",
     "conformanceLevel": "Conformance level: {level} — {conforming} of {total} criteria met",
-    "criteriaMet": "{conforming} of {total} criteria met"
+    "criteriaMet": "{conforming} of {total} criteria met",
+    "downloadPdf": "Download PDF"
   }
 }
