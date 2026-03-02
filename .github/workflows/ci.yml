@@ -27,6 +27,9 @@ jobs:
       - name: Install dependencies
         run: pnpm install
 
+      - name: Build packages
+        run: pnpm --filter @wcagify/core build && pnpm --filter create-wcagify build
+
       - name: Lint
         run: pnpm run lint
 

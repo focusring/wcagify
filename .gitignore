@@ -13,6 +13,10 @@ node_modules
 logs
 *.log
 
+# VitePress
+docs/.vitepress/cache
+docs/.vitepress/dist
+
 # Misc
 .DS_Store
 .fleet

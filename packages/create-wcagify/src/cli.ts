@@ -1,0 +1,5 @@
+console.log('create-wcagify — scaffold a new WCAGify project')
+console.log('')
+console.log('Usage: create-wcagify [project-name]')
+console.log('')
+console.log('This CLI is under development.')

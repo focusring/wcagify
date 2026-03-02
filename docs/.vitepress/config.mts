@@ -1,0 +1,54 @@
+import tailwindcss from '@tailwindcss/vite'
+import { defineConfig } from 'vitepress'
+
+export default defineConfig({
+  vite: {
+    plugins: [tailwindcss()]
+  },
+  title: 'WCAGify',
+  description: 'Documentation for WCAGify — the WCAG accessibility audit tool',
+  lang: 'en-US',
+  cleanUrls: true,
+
+  head: [
+    ['meta', { name: 'theme-color', content: '#16a34a' }],
+    ['meta', { name: 'og:type', content: 'website' }]
+  ],
+
+  themeConfig: {
+    nav: [
+      { text: 'Guide', link: '/guide/getting-started' },
+      { text: 'Reference', link: '/reference/configuration' }
+    ],
+
+    sidebar: {
+      '/guide/': [
+        {
+          text: 'Introduction',
+          items: [
+            { text: 'Getting Started', link: '/guide/getting-started' },
+            { text: 'Reports', link: '/guide/reports' },
+            { text: 'Issues', link: '/guide/issues' }
+          ]
+        }
+      ],
+      '/reference/': [
+        {
+          text: 'Reference',
+          items: [{ text: 'Configuration', link: '/reference/configuration' }]
+        }
+      ]
+    },
+
+    socialLinks: [{ icon: 'github', link: 'https://github.com/example/wcagify' }],
+
+    footer: {
+      message: 'Released under the MIT License.',
+      copyright: 'Created with 🫶🏼 by <a href="https://focusring.io" target="_blank" rel="noopener">focusring.io</a>'
+    },
+
+    search: {
+      provider: 'local'
+    }
+  }
+})

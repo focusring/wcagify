@@ -1,0 +1,305 @@
+@media print {
+  @page {
+    margin: 20mm;
+    size: A4;
+
+    @top-center {
+      content: 'WCAGify';
+      font-size: 9pt;
+      color: #6b7280;
+    }
+
+    @bottom-center {
+      content: counter(page);
+      font-size: 9pt;
+      color: #6b7280;
+    }
+  }
+
+  @page :first {
+    @top-center {
+      content: none;
+    }
+
+    @bottom-center {
+      content: none;
+    }
+  }
+
+  * {
+    print-color-adjust: exact;
+    -webkit-print-color-adjust: exact;
+  }
+
+  body {
+    font-size: 11pt;
+    line-height: 1.5;
+    color: #111827 !important;
+    background: white !important;
+  }
+
+  h1 {
+    font-size: 22pt;
+    line-height: 1.2;
+    color: #111827 !important;
+  }
+
+  h2 {
+    font-size: 16pt;
+    line-height: 1.3;
+    color: #111827 !important;
+    margin-top: 0;
+  }
+
+  section > h2 {
+    padding-bottom: 6pt;
+    border-bottom: 1.5pt solid #d1d5db;
+  }
+
+  h3 {
+    font-size: 13pt;
+    line-height: 1.3;
+    color: #111827 !important;
+  }
+
+  h4 {
+    font-size: 11pt;
+    line-height: 1.4;
+    color: #111827 !important;
+  }
+
+  p,
+  li,
+  dd,
+  dt,
+  td,
+  th {
+    font-size: 11pt;
+    line-height: 1.5;
+  }
+
+  .cover-page {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    min-height: 100%;
+    break-after: always;
+  }
+
+  .cover-page dt {
+    color: #6b7280 !important;
+    font-size: 10pt;
+  }
+
+  .cover-page dd {
+    color: #111827 !important;
+    font-size: 13pt;
+    font-weight: 500;
+  }
+
+  header,
+  footer {
+    display: none !important;
+  }
+
+  main ~ * {
+    display: none !important;
+  }
+
+  main hr {
+    display: none;
+  }
+
+  main {
+    padding: 0 !important;
+  }
+
+  main > div {
+    max-width: none !important;
+  }
+
+  section {
+    break-before: page;
+  }
+
+  #executive-summary {
+    break-before: auto;
+  }
+
+  article {
+    break-inside: auto;
+    padding-bottom: 10pt;
+    margin-bottom: 10pt;
+    border-bottom: 0.5pt solid #e5e7eb;
+  }
+
+  article:last-child {
+    border-bottom: none;
+    padding-bottom: 0;
+    margin-bottom: 0;
+  }
+
+  article > dl {
+    break-inside: avoid;
+  }
+
+  h2,
+  h3,
+  h4 {
+    break-after: avoid;
+  }
+
+  p,
+  li,
+  dd {
+    orphans: 3;
+    widows: 3;
+  }
+
+  table {
+    break-inside: auto;
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 10pt;
+  }
+
+  thead {
+    display: table-header-group;
+  }
+
+  th {
+    background-color: #f3f4f6 !important;
+    font-weight: 600;
+    text-align: left;
+    padding: 8pt 10pt;
+    border: 0.75pt solid #d1d5db;
+    color: #111827 !important;
+  }
+
+  td {
+    padding: 6pt 10pt;
+    border: 0.75pt solid #e5e7eb;
+    vertical-align: top;
+    color: #374151 !important;
+  }
+
+  tbody tr:nth-child(even) td {
+    background-color: #f9fafb !important;
+  }
+
+  tr {
+    break-inside: avoid;
+  }
+
+  a {
+    color: #007f45 !important;
+    text-decoration: none;
+  }
+
+  a[href^='http']::after {
+    content: ' (' attr(href) ')';
+    font-size: 9pt;
+    color: #6b7280 !important;
+    word-break: break-all;
+  }
+
+  a[href^='#']::after {
+    content: none;
+  }
+
+  td a[href^='http']::after {
+    content: none;
+  }
+
+  nav {
+    break-inside: auto;
+    background-color: #f9fafb !important;
+    padding: 12pt 16pt;
+    border: 0.75pt solid #e5e7eb;
+    border-radius: 4pt;
+    margin-top: 12pt;
+  }
+
+  nav > div {
+    break-inside: avoid;
+  }
+
+  nav h3 {
+    font-size: 11pt;
+    border-bottom: none;
+    padding-bottom: 0;
+    margin-top: 8pt;
+  }
+
+  nav > div:first-child h3 {
+    margin-top: 0;
+  }
+
+  nav ol {
+    margin-top: 2pt;
+  }
+
+  nav a::after {
+    content: none !important;
+  }
+
+  .prose {
+    max-width: none !important;
+    color: #374151 !important;
+  }
+
+  .prose pre {
+    background-color: #f3f4f6 !important;
+    padding: 10pt;
+    border: 0.5pt solid #e5e7eb;
+    border-radius: 3pt;
+    font-size: 9pt;
+    line-height: 1.4;
+    white-space: pre-wrap;
+    word-wrap: break-word;
+    overflow: visible !important;
+    break-inside: auto;
+  }
+
+  .prose code {
+    font-size: 9pt;
+    background-color: #f3f4f6 !important;
+    padding: 1pt 3pt;
+    border-radius: 2pt;
+  }
+
+  .prose pre code {
+    background: none !important;
+    padding: 0;
+  }
+
+  .prose img {
+    max-width: 100%;
+    break-inside: avoid;
+  }
+
+  .prose blockquote {
+    border-left: 3pt solid #d1d5db;
+    padding-left: 12pt;
+    color: #4b5563 !important;
+    margin: 8pt 0;
+    font-style: italic;
+  }
+
+  .prose ul,
+  .prose ol {
+    padding-left: 18pt;
+  }
+
+  dl {
+    color: #4b5563 !important;
+  }
+
+  dt {
+    color: #6b7280 !important;
+  }
+
+  dd {
+    color: #111827 !important;
+  }
+}
