@@ -20,12 +20,12 @@ WCAG accessibility tool — pnpm monorepo.
 - `pnpm typecheck` — run type checking
 - `pnpm docs:dev` — start docs dev server
 - `pnpm docs:build` — build docs
-- `pnpm --filter @wcagify/core build` — build core package
+- `pnpm --filter wcagify build` — build core package
 - `pnpm --filter create-wcagify build` — build CLI package
 
 ## Project Structure
 
-- `packages/wcagify/` — core engine (@wcagify/core): WCAG data, types, schemas
+- `packages/wcagify/` — core engine (wcagify): WCAG data, types, schemas
 - `packages/create-wcagify/` — CLI scaffolding tool (create-wcagify)
 - `playground/` — Nuxt app (@wcagify/playground)
   - `playground/app/` — Vue app (pages, components, assets)

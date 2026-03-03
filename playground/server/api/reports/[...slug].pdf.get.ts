@@ -1,5 +1,5 @@
 import { queryCollection } from '@nuxt/content/server'
-import { generateReportPdf } from '../../services/pdf'
+import { generateReportPdf } from 'wcagify/pdf'
 
 export default defineEventHandler(async (event) => {
   const raw = getRouterParam(event, 'slug.pdf')

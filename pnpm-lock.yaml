@@ -66,9 +66,6 @@ importers:
       '@nuxtjs/i18n':
         specifier: ^10.2.3
         version: 10.2.3(@vue/compiler-dom@3.5.28)(db0@0.3.4(better-sqlite3@12.6.2))(eslint@10.0.0(jiti@2.6.1))(ioredis@5.9.3)(magicast@0.5.2)(rollup@4.57.1)(vue@3.5.28(typescript@5.9.3))
-      '@wcagify/core':
-        specifier: workspace:*
-        version: link:../packages/wcagify
       better-sqlite3:
         specifier: ^12.6.2
         version: 12.6.2
@@ -81,6 +78,9 @@ importers:
       tailwindcss:
         specifier: ^4.1.18
         version: 4.1.18
+      wcagify:
+        specifier: workspace:*
+        version: link:../packages/wcagify
     devDependencies:
       typescript:
         specifier: ^5.9.3

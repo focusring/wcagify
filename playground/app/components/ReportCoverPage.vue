@@ -7,10 +7,10 @@ const props = defineProps<{
 }>()
 
 const { t } = useI18n()
-const { scorecard } = useWcagData()
+const { conformanceSummary } = useWcagData()
 
 const conformanceResult = computed(() => {
-  const data = scorecard(
+  const data = conformanceSummary(
     props.issues,
     props.report.evaluation.targetLevel as 'A' | 'AA' | 'AAA',
     props.report.evaluation.targetWcagVersion as '2.0' | '2.1' | '2.2'

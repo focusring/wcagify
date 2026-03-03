@@ -23,3 +23,17 @@ export interface Scorecard {
   conforming: PrincipleCounts & { all: number }
   totals: PrincipleCounts & { all: number }
 }
+
+export interface SamplePage {
+  title: string
+  id: string
+  url: string
+  description: string
+}
+
+export interface IssueGroup<T extends { sc: string }> {
+  sc: string
+  name: string
+  uri: string
+  issues: T[]
+}

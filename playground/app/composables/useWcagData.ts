@@ -1,5 +1,27 @@
-import { scUri, scName, scorecard } from '@wcagify/core'
+import {
+  scUri,
+  scName,
+  scorecard,
+  conformanceSummary,
+  PRINCIPLES,
+  filterIssues,
+  sortIssuesBySc,
+  filterTips,
+  groupIssuesBySc,
+  resolveSamplePage
+} from 'wcagify'
 
 export function useWcagData() {
-  return { scUri, scName, scorecard }
+  return {
+    scUri,
+    scName,
+    scorecard,
+    conformanceSummary,
+    PRINCIPLES,
+    filterIssues,
+    sortIssuesBySc,
+    filterTips,
+    groupIssuesBySc,
+    resolveSamplePage
+  }
 }

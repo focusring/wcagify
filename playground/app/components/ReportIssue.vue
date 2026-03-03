@@ -8,10 +8,9 @@ const props = defineProps<{
 }>()
 
 const { t } = useI18n()
+const { resolveSamplePage } = useWcagData()
 
-const samplePage = computed(() =>
-  props.report.sample.find((page) => page.id === props.issue.sample)
-)
+const samplePage = computed(() => resolveSamplePage(props.report.sample, props.issue.sample))
 </script>
 
 <template>

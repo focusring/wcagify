@@ -33,6 +33,8 @@ function getScEntry(sc: string, wcagVersion: WcagVersion, language: Language): S
   ] as ScEntry | undefined
 }
 
+export const PRINCIPLES = ['perceivable', 'operable', 'understandable', 'robust'] as const
+
 export function scUri(
   sc: string,
   wcagVersion: WcagVersion = '2.2',
@@ -91,5 +93,17 @@ export function scorecard(
       robust: totals.robust - failedPerPrinciple.robust
     },
     totals
+  }
+}
+
+export function conformanceSummary(
+  issues: { sc: string }[],
+  targetLevel: Level,
+  wcagVersion: WcagVersion = '2.2'
+): Scorecard & { isFullyConforming: boolean } {
+  const data = scorecard(issues, targetLevel, wcagVersion)
+  return {
+    ...data,
+    isFullyConforming: data.conforming.all === data.totals.all
   }
 }

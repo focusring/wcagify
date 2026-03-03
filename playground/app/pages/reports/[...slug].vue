@@ -21,51 +21,15 @@ const { data: issues } = await useAsyncData(`issues-${reportPath.value}`, () =>
   queryCollection('issues').where('path', 'LIKE', `${reportPath.value}/%`).all()
 )
 
-const reportIssues = computed(() =>
-  (issues.value ?? [])
-    .filter((issue) => issue.sc !== 'none')
-    .sort((a, b) => a.sc.localeCompare(b.sc, undefined, { numeric: true }))
-)
-
-const { scName, scUri } = useWcagData()
+const { groupIssuesBySc, filterTips } = useWcagData()
 
 const issuesBySc = computed(() => {
-  const groups: {
-    sc: string
-    name: string
-    uri: string
-    issues: typeof reportIssues.value
-  }[] = []
-  const seen = new Map<string, number>()
   const wcagVersion = (report.value?.evaluation.targetWcagVersion ?? '2.2') as '2.0' | '2.1' | '2.2'
   const language = (report.value?.language === 'nl' ? 'nl' : 'en') as 'en' | 'nl'
-
-  if (!report.value) return groups
-
-  for (const issue of reportIssues.value) {
-    const idx = seen.get(issue.sc)
-    if (idx !== undefined) {
-      groups[idx]!.issues.push(issue)
-    } else {
-      seen.set(issue.sc, groups.length)
-      groups.push({
-        sc: issue.sc,
-        name: scName(issue.sc, wcagVersion, language),
-        uri: scUri(issue.sc, wcagVersion, language),
-        issues: [issue]
-      })
-    }
-  }
-  return groups
+  return groupIssuesBySc(issues.value ?? [], wcagVersion, language)
 })
 
-const reportTips = computed(() => (issues.value ?? []).filter((issue) => issue.sc === 'none'))
-
-const sharedPath = computed(() => `/shared/${report.value?.language ?? 'nl'}/about-this-report`)
-
-const { data: aboutThisReport } = await useAsyncData(`about-${sharedPath.value}`, () =>
-  queryCollection('shared').path(sharedPath.value).first()
-)
+const reportTips = computed(() => filterTips(issues.value ?? []))
 
 const isGeneratingPdf = ref(false)
 
@@ -129,16 +93,18 @@ async function downloadPdf() {
 
     <hr class="my-12 border-gray-200 dark:border-gray-800" />
 
-    <section v-if="aboutThisReport" id="about">
+    <section id="about">
       <h2 class="text-2xl font-semibold text-gray-950 dark:text-white">
         {{ t('report.aboutThisReport') }}
       </h2>
       <div class="mt-4 prose dark:prose-invert">
-        <ContentRenderer :value="aboutThisReport" />
+        <p v-for="(paragraph, i) in t('report.aboutThisReportText').split('\n\n')" :key="i">
+          {{ paragraph }}
+        </p>
       </div>
     </section>
 
-    <hr v-if="aboutThisReport" class="my-12 border-gray-200 dark:border-gray-800" />
+    <hr class="my-12 border-gray-200 dark:border-gray-800" />
 
     <section id="scope">
       <h2 class="text-2xl font-semibold text-gray-950 dark:text-white">

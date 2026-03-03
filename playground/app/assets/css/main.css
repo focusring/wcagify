@@ -1,6 +1,6 @@
 @import 'tailwindcss';
 @import '@nuxt/ui';
-@import './print.css';
+@import 'wcagify/print.css';
 
 @theme static {
   --font-sans: 'Public Sans', sans-serif;

@@ -1,6 +1,26 @@
-// https://nuxt.com/docs/api/configuration/nuxt-config
+import { dirname } from 'node:path'
+import { createRequire } from 'node:module'
+import { defineNuxtModule } from '@nuxt/kit'
+
+const wcagifyI18n = defineNuxtModule({
+  setup(_options, nuxt) {
+    const require = createRequire(import.meta.url)
+    const localesDir = dirname(require.resolve('wcagify/locales/en'))
+
+    nuxt.hook('i18n:registerModule', (register) => {
+      register({
+        langDir: localesDir,
+        locales: [
+          { code: 'nl', file: 'nl.json' },
+          { code: 'en', file: 'en.json' }
+        ]
+      })
+    })
+  }
+})
+
 export default defineNuxtConfig({
-  modules: ['@nuxt/ui', '@nuxt/content', 'nuxt-studio', '@nuxtjs/i18n', '@nuxt/icon'],
+  modules: ['@nuxt/ui', '@nuxt/content', 'nuxt-studio', '@nuxtjs/i18n', '@nuxt/icon', wcagifyI18n],
 
   runtimeConfig: {
     weasyprintUrl: 'https://magnificent-encouragement-production.up.railway.app'

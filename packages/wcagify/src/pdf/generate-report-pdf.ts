@@ -3,7 +3,7 @@ import { generatePdf } from './weasyprint-client'
 
 type LocalFetch = (url: string, init?: RequestInit) => Promise<Response>
 
-interface ReportPdfOptions {
+export interface ReportPdfOptions {
   slug: string
   filename: string
   weasyprintUrl: string

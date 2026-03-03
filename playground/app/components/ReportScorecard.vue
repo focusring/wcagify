@@ -8,17 +8,15 @@ const props = defineProps<{
 }>()
 
 const { t } = useI18n()
-const { scorecard } = useWcagData()
+const { conformanceSummary, PRINCIPLES } = useWcagData()
 
 const data = computed(() =>
-  scorecard(
+  conformanceSummary(
     props.issues,
     props.targetLevel as 'A' | 'AA' | 'AAA',
     props.wcagVersion as '2.0' | '2.1' | '2.2'
   )
 )
-
-const principles = ['perceivable', 'operable', 'understandable', 'robust'] as const
 </script>
 
 <template>
@@ -50,7 +48,7 @@ const principles = ['perceivable', 'operable', 'understandable', 'robust'] as co
       </thead>
       <tbody>
         <tr
-          v-for="principle in principles"
+          v-for="principle in PRINCIPLES"
           :key="principle"
           class="border-b border-gray-100 dark:border-gray-900"
         >

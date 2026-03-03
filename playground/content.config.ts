@@ -1,26 +1,18 @@
 import { defineContentConfig, defineCollection } from '@nuxt/content'
-import { reportSchema, issueSchema } from '@wcagify/core'
+import { reportSchema, issueSchema, contentSources } from 'wcagify'
 
 export default defineContentConfig({
   collections: {
     reports: defineCollection({
       type: 'page',
-      source: 'reports/**/index.md',
+      source: contentSources.reports,
       schema: reportSchema
     }),
 
     issues: defineCollection({
       type: 'page',
-      source: {
-        include: 'reports/**/*.md',
-        exclude: ['reports/**/index.md']
-      },
+      source: contentSources.issues,
       schema: issueSchema
-    }),
-
-    shared: defineCollection({
-      type: 'page',
-      source: 'shared/**/*.md'
     })
   }
 })

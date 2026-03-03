@@ -1,8 +1,10 @@
 {
-  "name": "@wcagify/core",
+  "name": "wcagify",
   "version": "0.1.0",
   "files": [
-    "dist"
+    "dist",
+    "locales",
+    "print.css"
   ],
   "type": "module",
   "main": "./dist/index.js",
@@ -12,7 +14,15 @@
       "types": "./dist/index.d.ts",
       "import": "./dist/index.js",
       "default": "./src/index.ts"
-    }
+    },
+    "./pdf": {
+      "types": "./dist/pdf/index.d.ts",
+      "import": "./dist/pdf/index.js",
+      "default": "./src/pdf/index.ts"
+    },
+    "./locales/en": "./locales/en.json",
+    "./locales/nl": "./locales/nl.json",
+    "./print.css": "./print.css"
   },
   "scripts": {
     "build": "tsdown",
