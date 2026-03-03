@@ -46,9 +46,7 @@ const isSaas = ref(false)
               SaaS <small class="align-super text-xs text-(--vp-c-text-2)">(Soon)</small>
             </span>
           </div>
-          <ul
-            class="mt-2 list-none space-y-1 p-0 text-lg leading-relaxed text-(--vp-c-text-2)"
-          >
+          <ul class="mt-2 list-none space-y-1 p-0 text-lg leading-relaxed text-(--vp-c-text-2)">
             <template v-if="!isSaas">
               <li class="font-semibold text-(--vp-c-brand-1)">Free forever.</li>
               <li class="font-semibold text-(--vp-c-brand-1)">Open source.</li>
@@ -113,45 +111,33 @@ const isSaas = ref(false)
         <div
           class="rounded-xl border border-[var(--vp-c-border)] bg-[var(--vp-c-bg-soft)] p-7 transition-colors hover:border-[var(--vp-c-brand-1)]"
         >
-          <h3 class="mb-2 text-base font-bold text-[var(--vp-c-text-1)]">
-            Markdown-driven
-          </h3>
+          <h3 class="mb-2 text-base font-bold text-[var(--vp-c-text-1)]">Markdown-driven</h3>
           <p class="m-0 text-sm leading-relaxed text-[var(--vp-c-text-2)]">
-            Write audit findings in markdown. WCAGify turns them into
-            structured, navigable reports.
+            Write audit findings in markdown. WCAGify turns them into structured, navigable reports.
           </p>
         </div>
         <div
           class="rounded-xl border border-[var(--vp-c-border)] bg-[var(--vp-c-bg-soft)] p-7 transition-colors hover:border-[var(--vp-c-brand-1)]"
         >
-          <h3 class="mb-2 text-base font-bold text-[var(--vp-c-text-1)]">
-            WCAG 2.2 aligned
-          </h3>
+          <h3 class="mb-2 text-base font-bold text-[var(--vp-c-text-1)]">WCAG 2.2 aligned</h3>
           <p class="m-0 text-sm leading-relaxed text-[var(--vp-c-text-2)]">
-            Issues reference success criteria directly, keeping your reports
-            standards-compliant.
+            Issues reference success criteria directly, keeping your reports standards-compliant.
           </p>
         </div>
         <div
           class="rounded-xl border border-[var(--vp-c-border)] bg-[var(--vp-c-bg-soft)] p-7 transition-colors hover:border-[var(--vp-c-brand-1)]"
         >
-          <h3 class="mb-2 text-base font-bold text-[var(--vp-c-text-1)]">
-            Multi-language
-          </h3>
+          <h3 class="mb-2 text-base font-bold text-[var(--vp-c-text-1)]">Multi-language</h3>
           <p class="m-0 text-sm leading-relaxed text-[var(--vp-c-text-2)]">
-            Built-in support for Dutch and English with easy extensibility for
-            additional locales.
+            Built-in support for Dutch and English with easy extensibility for additional locales.
           </p>
         </div>
         <div
           class="rounded-xl border border-[var(--vp-c-border)] bg-[var(--vp-c-bg-soft)] p-7 transition-colors hover:border-[var(--vp-c-brand-1)]"
         >
-          <h3 class="mb-2 text-base font-bold text-[var(--vp-c-text-1)]">
-            PDF export
-          </h3>
+          <h3 class="mb-2 text-base font-bold text-[var(--vp-c-text-1)]">PDF export</h3>
           <p class="m-0 text-sm leading-relaxed text-[var(--vp-c-text-2)]">
-            Export accessible PDFs with cover pages, running headers, and page
-            numbers.
+            Export accessible PDFs with cover pages, running headers, and page numbers.
           </p>
         </div>
       </div>
