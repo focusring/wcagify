@@ -18,7 +18,8 @@ export default defineConfig({
   themeConfig: {
     logo: {
       light: '/wcagify-dark.svg',
-      dark: '/wcagify-light.svg'
+      dark: '/wcagify-light.svg',
+      alt: 'WCAGify'
     },
 
     siteTitle: false,
