@@ -1,3 +1,3 @@
 <template>
-  <span class="text-xl font-bold text-highlighted">WCAGify</span>
+  <Icon name="logo:wcagify" class="shrink-0 size-28 text-black dark:text-white" />
 </template>
