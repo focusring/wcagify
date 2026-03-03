@@ -15,6 +15,10 @@
   --vp-button-brand-hover-bg: var(--vp-c-brand-2);
 }
 
+.VPNavBarTitle .logo {
+  height: 28px;
+}
+
 .dark {
   --vp-c-brand-1: var(--color-brand-light);
   --vp-c-brand-2: var(--color-brand);

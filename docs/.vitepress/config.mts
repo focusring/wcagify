@@ -5,17 +5,23 @@ export default defineConfig({
   vite: {
     plugins: [tailwindcss()]
   },
-  title: 'WCAGify',
   description: 'Documentation for WCAGify — the WCAG accessibility audit tool',
   lang: 'en-US',
   cleanUrls: true,
 
   head: [
+    ['link', { rel: 'icon', type: 'image/svg+xml', href: '/wcagify.svg' }],
     ['meta', { name: 'theme-color', content: '#16a34a' }],
     ['meta', { name: 'og:type', content: 'website' }]
   ],
 
   themeConfig: {
+    logo: {
+      light: '/wcagify-dark.svg',
+      dark: '/wcagify-light.svg'
+    },
+
+    siteTitle: false,
     nav: [
       { text: 'Guide', link: '/guide/getting-started' },
       { text: 'Reference', link: '/reference/configuration' }
