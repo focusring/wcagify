@@ -10,7 +10,7 @@ const isSaas = ref(false)
     <section class="flex min-h-[calc(100vh-64px)] items-center py-16">
       <div class="grid w-full grid-cols-1 items-center gap-10 lg:grid-cols-2">
         <div>
-          <h1 class="mb-4 font-bold tracking-widest text-[var(--vp-c-brand-1)]">
+          <h1 class="mb-4 text-sm font-bold tracking-widest uppercase text-[var(--vp-c-brand-1)]">
             WCAGify
             <br />
             <span
