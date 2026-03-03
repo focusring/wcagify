@@ -1,6 +1,6 @@
 // https://nuxt.com/docs/api/configuration/nuxt-config
 export default defineNuxtConfig({
-  modules: ['@nuxt/ui', '@nuxt/content', 'nuxt-studio', '@nuxtjs/i18n'],
+  modules: ['@nuxt/ui', '@nuxt/content', 'nuxt-studio', '@nuxtjs/i18n', '@nuxt/icon' ],
 
   runtimeConfig: {
     weasyprintUrl: 'https://magnificent-encouragement-production.up.railway.app'
@@ -31,6 +31,14 @@ export default defineNuxtConfig({
   },
 
   compatibilityDate: '2025-01-15',
+
+    icon: {
+    customCollections: [
+      { prefix: 'logo', 
+        dir: './app/assets/logo' 
+      }
+    ],
+  },
 
   i18n: {
     defaultLocale: 'nl',
