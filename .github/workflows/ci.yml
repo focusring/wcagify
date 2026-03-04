@@ -24,7 +24,7 @@ jobs:
       - name: Build packages
         run: pnpm --filter @focusring/wcagify build && pnpm --filter create-wcagify build
 
-      - run: nuxt prepare
+      - run: pnpm nuxt prepare
         working-directory: playground
 
       - run: pnpm lint
