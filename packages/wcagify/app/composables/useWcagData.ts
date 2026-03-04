@@ -9,7 +9,7 @@ import {
   filterTips,
   groupIssuesBySc,
   resolveSamplePage
-} from 'wcagify'
+} from '@focusring/wcagify'
 
 export function useWcagData() {
   return {

@@ -1,5 +1,5 @@
 {
-  "name": "wcagify",
+  "name": "@focusring/wcagify",
   "version": "0.1.0",
   "files": [
     "dist",

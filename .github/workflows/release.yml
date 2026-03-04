@@ -27,7 +27,7 @@ jobs:
       - run: pnpm install --ignore-scripts
 
       - name: Build wcagify
-        run: pnpm --filter wcagify build
+        run: pnpm --filter @focusring/wcagify build
 
       - name: Build create-wcagify
         run: pnpm --filter create-wcagify build

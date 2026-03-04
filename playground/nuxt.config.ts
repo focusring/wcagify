@@ -1,4 +1,4 @@
-import { defineWcagifyConfig } from 'wcagify'
+import { defineWcagifyConfig } from '@focusring/wcagify'
 
 export default defineNuxtConfig(
   defineWcagifyConfig({

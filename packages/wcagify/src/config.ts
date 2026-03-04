@@ -10,7 +10,7 @@ export function defineWcagifyConfig(userConfig: NuxtConfig = {}): NuxtConfig {
 
   return {
     ...userConfig,
-    extends: ['wcagify/layer', ...userExtends],
+    extends: ['@focusring/wcagify/layer', ...userExtends],
     compatibilityDate: userConfig.compatibilityDate ?? '2025-01-15'
   }
 }
