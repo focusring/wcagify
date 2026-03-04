@@ -1,14 +1,14 @@
 ---
-title: WCAG audit Example Website
-description: Accessibility audit for Example Website according to WCAG 2.1 level AA.
+title: WCAG audit <%= projectName %>
+description: Accessibility audit for <%= projectName %> according to WCAG 2.1 level AA.
 language: en
 evaluation:
-  evaluator: WCAGify
-  commissioner: Example Organisation
-  target: Example Website
+  evaluator: Your Name
+  commissioner: Client Name
+  target: <%= projectName %>
   targetLevel: AA
   targetWcagVersion: '2.1'
-  date: '2025-01-15'
+  date: '<%= date %>'
   specialRequirements: None
 scope:
   - https://example.com
@@ -40,4 +40,4 @@ sample:
     description: Overview of all products
 ---
 
-This is an example report for a WCAG accessibility audit of Example Website.
+This is an example report for a WCAG accessibility audit of <%= projectName %>.

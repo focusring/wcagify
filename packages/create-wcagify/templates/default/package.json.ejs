@@ -1,0 +1,21 @@
+{
+  "name": "<%= projectName %>",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "build": "nuxt build",
+    "dev": "nuxt dev",
+    "preview": "nuxt preview",
+    "postinstall": "nuxt prepare",
+    "typecheck": "nuxt typecheck"
+  },
+  "dependencies": {
+    "@focusring/wcagify": "<%= wcagifyVersion %>",
+    "@nuxt/content": "^3.11.2",
+    "nuxt": "^4.3.1"
+  },
+  "devDependencies": {
+    "typescript": "^5.9.3",
+    "vue-tsc": "^3.2.4"
+  }
+}

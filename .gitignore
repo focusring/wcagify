@@ -19,6 +19,7 @@ docs/.vitepress/dist
 
 # Misc
 .DS_Store
+.tmp
 .fleet
 .idea
 
