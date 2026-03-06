@@ -1,7 +1,8 @@
 import { basename } from 'node:path'
 import { pathToFileURL } from 'node:url'
 import { Command } from 'commander'
-import { create, type CreateOptions } from './create.js'
+import { create } from './create.js'
+import type { CreateOptions } from './create.js'
 import { CLI_VERSION } from './version.js'
 
 const program = new Command()

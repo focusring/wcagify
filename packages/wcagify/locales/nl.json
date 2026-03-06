@@ -49,5 +49,23 @@
     "conformanceLevel": "Conformiteitsniveau: {level} — {conforming} van {total} criteria voldaan",
     "criteriaMet": "{conforming} van {total} criteria voldaan",
     "downloadPdf": "Download PDF"
+  },
+  "settings": {
+    "title": "Instellingen",
+    "tagline": "Pas je WCAGify-ervaring aan",
+    "appearance": "Weergave",
+    "theme": "Thema",
+    "themeSystem": "Systeem",
+    "themeLight": "Licht",
+    "themeDark": "Donker",
+    "accentColor": "Accentkleur",
+    "backgroundShade": "Achtergrondtint",
+    "clearColor": "Kleur wissen",
+    "languageSection": "Taal",
+    "language": "Taal",
+    "keyboardShortcutsSection": "Sneltoetsen",
+    "keyboardShortcuts": "Sneltoetsen inschakelen",
+    "keyboardShortcutsDescription": "Toon sneltoetsindicatoren in de interface",
+    "back": "terug"
   }
 }

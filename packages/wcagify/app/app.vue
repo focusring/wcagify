@@ -1,6 +1,10 @@
 <script setup lang="ts">
+import { onKeyStroke } from '@vueuse/core'
+
 const { t } = useI18n()
 const head = useLocaleHead({ seo: true })
+const localePath = useLocalePath()
+const kbdEnabled = useKeyboardShortcutsEnabled()
 
 useHead({
   meta: [{ name: 'viewport', content: 'width=device-width, initial-scale=1' }],
@@ -16,6 +20,15 @@ useSeoMeta({
   ogTitle: () => t('app.title'),
   ogDescription: () => t('app.description')
 })
+
+onKeyStroke(',', (e: KeyboardEvent) => {
+  if (!kbdEnabled.value) return
+  const target = e.target as HTMLElement
+  if (target.tagName === 'INPUT' || target.tagName === 'TEXTAREA' || target.isContentEditable)
+    return
+  e.preventDefault()
+  navigateTo(localePath('/settings'))
+})
 </script>
 
 <template>
@@ -28,8 +41,22 @@ useSeoMeta({
       </template>
 
       <template #right>
-        <LocaleSwitcher />
-        <UColorModeButton />
+        <UButton
+          :to="localePath('/settings')"
+          :label="t('settings.title').toLowerCase()"
+          :aria-keyshortcuts="kbdEnabled ? ',' : undefined"
+          color="neutral"
+          variant="ghost"
+        >
+          <template #trailing>
+            <kbd
+              data-kbd-hint
+              aria-hidden="true"
+              class="ms-1 inline-flex items-center justify-center size-5 text-xs text-muted bg-elevated border border-default rounded font-mono"
+              >,</kbd
+            >
+          </template>
+        </UButton>
       </template>
     </UHeader>
 
@@ -59,3 +86,9 @@ useSeoMeta({
     </UFooter>
   </UApp>
 </template>
+
+<style>
+[data-kbd='false'] [data-kbd-hint] {
+  display: none;
+}
+</style>

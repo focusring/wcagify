@@ -10,7 +10,7 @@ const commands = {
   pnpm: ['pnpm create wcagify my-audits', 'cd my-audits', 'pnpm dev'],
   npm: ['npm create wcagify my-audits', 'cd my-audits', 'npm run dev'],
   yarn: ['yarn create wcagify my-audits', 'cd my-audits', 'yarn dev'],
-  bun: ['bun create wcagify my-audits', 'cd my-audits', 'bun dev'],
+  bun: ['bun create wcagify my-audits', 'cd my-audits', 'bun dev']
 }
 
 function onTabKeydown(event: KeyboardEvent) {
@@ -34,8 +34,9 @@ function onTabKeydown(event: KeyboardEvent) {
       newIndex = pms.length - 1
       break
     }
-    default:
+    default: {
       return
+    }
   }
 
   event.preventDefault()
@@ -87,7 +88,8 @@ function onTabKeydown(event: KeyboardEvent) {
               class="text-lg font-semibold"
               :class="isSaas ? 'text-(--vp-c-brand-1)' : 'text-(--vp-c-text-2)'"
             >
-              Cloud-hosted (<abbr title="Software as a Service">SaaS</abbr>) <small class="align-super text-xs text-(--vp-c-text-2)">Soon 🔮</small>
+              Cloud-hosted (<abbr title="Software as a Service">SaaS</abbr>)
+              <small class="align-super text-xs text-(--vp-c-text-2)">Soon 🔮</small>
             </span>
           </div>
           <ul class="mt-2 list-none space-y-1 p-0 text-lg leading-relaxed">
@@ -137,12 +139,18 @@ function onTabKeydown(event: KeyboardEvent) {
           <div
             class="w-full overflow-hidden rounded-xl border border-[var(--vp-c-border)] bg-[var(--vp-c-bg-soft)]"
           >
-            <div
-              class="flex items-center gap-4 border-b border-(--vp-c-border) px-5 py-2.5"
-            >
-              <span id="quickstart-label" class="text-[0.8125rem] font-semibold tracking-wider uppercase text-(--vp-c-brand-1)">Quick start</span>
+            <div class="flex items-center gap-4 border-b border-(--vp-c-border) px-5 py-2.5">
+              <span
+                id="quickstart-label"
+                class="text-[0.8125rem] font-semibold tracking-wider uppercase text-(--vp-c-brand-1)"
+                >Quick start</span
+              >
               <span class="text-(--vp-c-border)" aria-hidden="true">|</span>
-              <div role="tablist" aria-labelledby="quickstart-label" class="flex items-center gap-4">
+              <div
+                role="tablist"
+                aria-labelledby="quickstart-label"
+                class="flex items-center gap-4"
+              >
                 <button
                   v-for="pm in pms"
                   :id="`tab-${pm}`"
@@ -152,7 +160,11 @@ function onTabKeydown(event: KeyboardEvent) {
                   :aria-controls="`tabpanel-${pm}`"
                   :tabindex="activePm === pm ? 0 : -1"
                   class="text-[0.8125rem] font-semibold tracking-wider uppercase transition-colors"
-                  :class="activePm === pm ? 'text-(--vp-c-brand-1)' : 'text-(--vp-c-text-3) hover:text-(--vp-c-text-2)'"
+                  :class="
+                    activePm === pm
+                      ? 'text-(--vp-c-brand-1)'
+                      : 'text-(--vp-c-text-3) hover:text-(--vp-c-text-2)'
+                  "
                   @click="activePm = pm"
                   @keydown="onTabKeydown"
                 >

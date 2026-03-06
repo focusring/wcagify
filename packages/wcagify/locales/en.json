@@ -49,5 +49,23 @@
     "conformanceLevel": "Conformance level: {level} — {conforming} of {total} criteria met",
     "criteriaMet": "{conforming} of {total} criteria met",
     "downloadPdf": "Download PDF"
+  },
+  "settings": {
+    "title": "Settings",
+    "tagline": "Customize your WCAGify experience",
+    "appearance": "Appearance",
+    "theme": "Theme",
+    "themeSystem": "System",
+    "themeLight": "Light",
+    "themeDark": "Dark",
+    "accentColor": "Accent color",
+    "backgroundShade": "Background shade",
+    "clearColor": "Clear color",
+    "languageSection": "Language",
+    "language": "Language",
+    "keyboardShortcutsSection": "Keyboard shortcuts",
+    "keyboardShortcuts": "Enable keyboard shortcuts",
+    "keyboardShortcutsDescription": "Show keyboard shortcut indicators throughout the interface",
+    "back": "back"
   }
 }

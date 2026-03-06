@@ -37,18 +37,18 @@ const nuxtConfig = {
   },
 
   i18n: {
-    defaultLocale: 'nl',
+    defaultLocale: 'en',
     strategy: 'prefix_except_default',
     locales: [
-      {
-        code: 'nl',
-        name: 'Nederlands',
-        language: 'nl-NL'
-      },
       {
         code: 'en',
         name: 'English',
         language: 'en-US'
+      },
+      {
+        code: 'nl',
+        name: 'Nederlands',
+        language: 'nl-NL'
       }
     ],
     detectBrowserLanguage: {

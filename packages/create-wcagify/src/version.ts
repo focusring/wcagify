@@ -7,7 +7,7 @@ const pkg = JSON.parse(readFileSync(join(__dirname, '..', 'package.json'), 'utf8
   version: string
 }
 
-export const CLI_VERSION = pkg.version
+const CLI_VERSION = pkg.version
 
 const WCAGIFY_FALLBACK_VERSION = '0.1.0'
 
@@ -17,7 +17,7 @@ interface NpmVersionResponse {
   }
 }
 
-export async function fetchLatestWcagifyVersion(): Promise<string> {
+async function fetchLatestWcagifyVersion(): Promise<string> {
   try {
     const controller = new AbortController()
     const timeoutId = setTimeout(() => controller.abort(), 5000)
@@ -36,3 +36,5 @@ export async function fetchLatestWcagifyVersion(): Promise<string> {
     return WCAGIFY_FALLBACK_VERSION
   }
 }
+
+export { CLI_VERSION, fetchLatestWcagifyVersion }

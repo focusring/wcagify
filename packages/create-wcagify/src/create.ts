@@ -2,7 +2,7 @@ import { existsSync, mkdirSync, readdirSync, rmSync, statSync, writeFileSync } f
 import { dirname, join } from 'node:path'
 import { fileURLToPath } from 'node:url'
 import { spawn } from 'node:child_process'
-import * as p from '@clack/prompts'
+import { cancel, confirm, intro, isCancel, log, outro, spinner, text } from '@clack/prompts'
 import ejs from 'ejs'
 import pc from 'picocolors'
 
@@ -18,11 +18,11 @@ function createSafeSpinner(): SafeSpinner {
   const isTTY = process.stdout.isTTY && process.stdin.isTTY
 
   if (isTTY) {
-    const spinner = p.spinner()
+    const s = spinner()
     return {
-      start: (msg?: string) => spinner.start(msg),
-      stop: (msg?: string) => spinner.stop(msg),
-      message: (msg?: string) => spinner.message(msg)
+      start: (msg?: string) => s.start(msg),
+      stop: (msg?: string) => s.stop(msg),
+      message: (msg?: string) => s.message(msg)
     }
   }
 
@@ -36,7 +36,7 @@ function createSafeSpinner(): SafeSpinner {
 const __dirname = dirname(fileURLToPath(import.meta.url))
 const templatesDir = join(__dirname, '..', 'templates')
 
-export interface CreateOptions {
+interface CreateOptions {
   name?: string
   git?: boolean
   install?: boolean
@@ -125,13 +125,13 @@ function validateProjectName(value: string): string | undefined {
   return undefined
 }
 
-export async function create(options: CreateOptions = {}): Promise<void> {
-  const spinner = createSafeSpinner()
+async function create(options: CreateOptions = {}): Promise<void> {
+  const s = createSafeSpinner()
 
   try {
-    let projectName: string
-    let initGit: boolean
-    let runInstall: boolean
+    let projectName = ''
+    let initGit = true
+    let runInstall = true
 
     if (options.name !== undefined) {
       projectName = options.name
@@ -140,44 +140,44 @@ export async function create(options: CreateOptions = {}): Promise<void> {
 
       const validationError = validateProjectName(projectName)
       if (validationError) {
-        p.log.error(validationError)
+        log.error(validationError)
         process.exit(1)
       }
     } else {
-      p.intro(pc.cyan('Create a new WCAGify project'))
+      intro(pc.cyan('Create a new WCAGify project'))
 
-      const projectNameResult = await p.text({
+      const projectNameResult = await text({
         message: 'What is your project name?',
         placeholder: 'my-audit',
         validate: validateProjectName
       })
 
-      if (p.isCancel(projectNameResult)) {
-        p.cancel('Operation cancelled')
+      if (isCancel(projectNameResult)) {
+        cancel('Operation cancelled')
         process.exit(0)
       }
 
       projectName = projectNameResult
 
-      const initGitResult = await p.confirm({
+      const initGitResult = await confirm({
         message: 'Initialize a git repository?',
         initialValue: true
       })
 
-      if (p.isCancel(initGitResult)) {
-        p.cancel('Operation cancelled')
+      if (isCancel(initGitResult)) {
+        cancel('Operation cancelled')
         process.exit(0)
       }
 
       initGit = initGitResult
 
-      const runInstallResult = await p.confirm({
+      const runInstallResult = await confirm({
         message: 'Run pnpm install after scaffolding?',
         initialValue: true
       })
 
-      if (p.isCancel(runInstallResult)) {
-        p.cancel('Operation cancelled')
+      if (isCancel(runInstallResult)) {
+        cancel('Operation cancelled')
         process.exit(0)
       }
 
@@ -187,14 +187,14 @@ export async function create(options: CreateOptions = {}): Promise<void> {
     const targetDir = join(process.cwd(), projectName)
 
     if (existsSync(targetDir)) {
-      p.log.error(`Directory "${projectName}" already exists`)
+      log.error(`Directory "${projectName}" already exists`)
       process.exit(1)
     }
 
     mkdirSync(targetDir, { recursive: true })
     trackPath(targetDir)
 
-    spinner.start('Creating project...')
+    s.start('Creating project...')
 
     const latestWcagify = await fetchLatestWcagifyVersion()
     const wcagifyVersion = `^${latestWcagify}`
@@ -212,33 +212,33 @@ export async function create(options: CreateOptions = {}): Promise<void> {
 
     await renderTemplatesRecursively(templateDir, targetDir, templateData)
 
-    spinner.stop('Project created')
+    s.stop('Project created')
 
     if (initGit) {
-      spinner.start('Initializing git repository...')
+      s.start('Initializing git repository...')
       try {
         await runCommand('git', ['init'], targetDir)
-        spinner.stop('Git repository initialized')
+        s.stop('Git repository initialized')
       } catch {
-        spinner.stop('Failed to initialize git repository')
-        p.log.warn('Git initialization failed. You can run "git init" manually.')
+        s.stop('Failed to initialize git repository')
+        log.warn('Git initialization failed. You can run "git init" manually.')
       }
     }
 
     if (runInstall) {
-      spinner.start('Installing dependencies (this may take a while)...')
+      s.start('Installing dependencies (this may take a while)...')
       try {
         await runCommand('pnpm', ['install'], targetDir)
-        spinner.stop('Dependencies installed')
+        s.stop('Dependencies installed')
       } catch {
-        spinner.stop('Failed to install dependencies')
-        p.log.warn('Dependency installation failed. You can run "pnpm install" manually.')
+        s.stop('Failed to install dependencies')
+        log.warn('Dependency installation failed. You can run "pnpm install" manually.')
       }
     }
 
     createdPaths.length = 0
 
-    p.outro(pc.green('Project created successfully!'))
+    outro(pc.green('Project created successfully!'))
 
     console.log('')
     console.log(pc.cyan('Next steps:'))
@@ -249,16 +249,19 @@ export async function create(options: CreateOptions = {}): Promise<void> {
     console.log(`  ${pc.dim('$')} pnpm dev`)
     console.log('')
   } catch (error) {
-    spinner.stop('Failed')
+    s.stop('Failed')
 
     if (createdPaths.length > 0) {
-      p.log.warn('Cleaning up partial files...')
+      log.warn('Cleaning up partial files...')
       cleanup()
-      p.log.info('Cleanup complete')
+      log.info('Cleanup complete')
     }
 
     const message = error instanceof Error ? error.message : 'Unknown error occurred'
-    p.log.error(message)
+    log.error(message)
     process.exit(1)
   }
 }
+
+export { create }
+export type { CreateOptions }
