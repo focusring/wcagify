@@ -1,31 +1,26 @@
 import { defineCollection } from '@nuxt/content'
 import { reportSchema, issueSchema } from './schemas'
 
-const contentSources = {
-  reports: {
-    include: '**/index.md',
-    prefix: '/reports'
-  },
-  issues: {
-    include: '**/*.md',
-    exclude: ['**/index.md'],
-    prefix: '/reports'
-  }
-}
-
-function defineWcagifyCollections(reportsCwd: string) {
+function defineWcagifyCollections() {
   return {
     reports: defineCollection({
       type: 'page' as const,
-      source: { ...contentSources.reports, cwd: reportsCwd },
+      source: {
+        include: 'reports/**/index.md',
+        prefix: '/reports'
+      },
       schema: reportSchema
     }),
     issues: defineCollection({
       type: 'page' as const,
-      source: { ...contentSources.issues, cwd: reportsCwd },
+      source: {
+        include: 'reports/**/*.md',
+        exclude: ['reports/**/index.md'],
+        prefix: '/reports'
+      },
       schema: issueSchema
     })
   }
 }
 
-export { contentSources, defineWcagifyCollections }
+export { defineWcagifyCollections }

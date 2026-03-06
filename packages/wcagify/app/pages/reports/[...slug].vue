@@ -141,10 +141,7 @@ async function downloadPdf() {
             </h3>
             <ol class="mt-1 list-decimal list-inside text-sm">
               <li v-for="issue in group.issues" :key="issue.path">
-                <a
-                  :href="`#issue-${issue.path.split('/').pop()}`"
-                  class="text-primary"
-                >
+                <a :href="`#issue-${issue.path.split('/').pop()}`" class="text-primary">
                   {{ issue.title }}
                 </a>
               </li>

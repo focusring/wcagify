@@ -12,17 +12,25 @@ const { data: reports } = await useAsyncData('reports', () => queryCollection('r
 const search = ref('')
 const view = useCookie<'grid' | 'table'>('wcagify-reports-view', { default: () => 'table' })
 const table = useTemplateRef('table')
+const sorting = ref([{ id: 'evaluation_date', desc: true }])
 
 const filteredReports = computed(() => {
   if (!reports.value) return []
   if (!search.value) return reports.value
   const query = search.value.toLowerCase()
-  return reports.value.filter(report =>
-    report.title.toLowerCase().includes(query)
-    || report.evaluation.commissioner.toLowerCase().includes(query)
-    || report.evaluation.evaluator.toLowerCase().includes(query)
+  return reports.value.filter(
+    (report) =>
+      report.title.toLowerCase().includes(query) ||
+      report.evaluation.commissioner.toLowerCase().includes(query) ||
+      report.evaluation.evaluator.toLowerCase().includes(query)
   )
 })
+
+function sortIcon(isSorted: false | 'asc' | 'desc') {
+  if (isSorted === 'asc') return 'i-lucide-arrow-up-narrow-wide'
+  if (isSorted === 'desc') return 'i-lucide-arrow-down-wide-narrow'
+  return 'i-lucide-arrow-up-down'
+}
 
 function formatDate(date: string) {
   return new Date(date).toLocaleDateString(locale.value, {
@@ -42,9 +50,7 @@ const columns = computed<TableColumn<ReportsCollectionItem>[]>(() => [
         color: 'neutral',
         variant: 'ghost',
         label: t('report.title'),
-        icon: isSorted
-          ? (isSorted === 'asc' ? 'i-lucide-arrow-up-narrow-wide' : 'i-lucide-arrow-down-wide-narrow')
-          : 'i-lucide-arrow-up-down',
+        icon: sortIcon(isSorted),
         class: '-mx-2.5',
         onClick: () => column.toggleSorting(column.getIsSorted() === 'asc')
       })
@@ -66,9 +72,7 @@ const columns = computed<TableColumn<ReportsCollectionItem>[]>(() => [
         color: 'neutral',
         variant: 'ghost',
         label: t('report.date'),
-        icon: isSorted
-          ? (isSorted === 'asc' ? 'i-lucide-arrow-up-narrow-wide' : 'i-lucide-arrow-down-wide-narrow')
-          : 'i-lucide-arrow-up-down',
+        icon: sortIcon(isSorted),
         class: '-mx-2.5',
         onClick: () => column.toggleSorting(column.getIsSorted() === 'asc')
       })
@@ -84,9 +88,9 @@ const columns = computed<TableColumn<ReportsCollectionItem>[]>(() => [
 
 const columnLabels = computed<Record<string, string>>(() => ({
   title: t('report.title'),
-  'evaluation_commissioner': t('report.commissionedBy'),
-  'evaluation_evaluator': t('report.evaluatedBy'),
-  'evaluation_date': t('report.date'),
+  evaluation_commissioner: t('report.commissionedBy'),
+  evaluation_evaluator: t('report.evaluatedBy'),
+  evaluation_date: t('report.date'),
   targetLevel: t('report.target')
 }))
 </script>
@@ -113,17 +117,22 @@ const columnLabels = computed<Record<string, string>>(() => ({
           <div class="ml-auto flex items-center gap-1">
             <UDropdownMenu
               v-if="view === 'table'"
-              :items="table?.tableApi?.getAllColumns().filter(column => column.getCanHide()).map(column => ({
-                label: columnLabels[column.id] || column.id,
-                type: 'checkbox' as const,
-                checked: column.getIsVisible(),
-                onUpdateChecked(checked: boolean) {
-                  column.toggleVisibility(checked)
-                },
-                onSelect(e: Event) {
-                  e.preventDefault()
-                }
-              }))"
+              :items="
+                table?.tableApi
+                  ?.getAllColumns()
+                  .filter((column) => column.getCanHide())
+                  .map((column) => ({
+                    label: columnLabels[column.id] || column.id,
+                    type: 'checkbox' as const,
+                    checked: column.getIsVisible(),
+                    onUpdateChecked(checked: boolean) {
+                      column.toggleVisibility(checked)
+                    },
+                    onSelect(e: Event) {
+                      e.preventDefault()
+                    }
+                  }))
+              "
               :content="{ align: 'end' as const }"
             >
               <UButton
@@ -191,6 +200,7 @@ const columnLabels = computed<Record<string, string>>(() => ({
         <UTable
           ref="table"
           v-else
+          v-model:sorting="sorting"
           :data="filteredReports"
           :columns="columns"
           :caption="t('app.reports')"

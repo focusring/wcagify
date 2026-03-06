@@ -26,5 +26,5 @@ export default defineConfig({
     'import/prefer-default-export': 'off',
     'vue/define-props-destructuring': 'off'
   },
-  ignorePatterns: ['.nuxt/', 'node_modules/', '.output/', 'dist/']
+  ignorePatterns: ['.nuxt/', 'node_modules/', '.output/', 'dist/', 'shims/']
 })

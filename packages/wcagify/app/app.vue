@@ -47,6 +47,7 @@ onKeyStroke(',', (e: KeyboardEvent) => {
           :aria-keyshortcuts="kbdEnabled ? ',' : undefined"
           color="neutral"
           variant="ghost"
+          class="no-underline!"
         >
           <template #trailing>
             <kbd
