@@ -71,7 +71,6 @@
     "better-sqlite3": "catalog:core",
     "nuxt-studio": "catalog:core",
     "tailwindcss": "catalog:core",
-    "shiki": "catalog:core",
     "zod": "catalog:core"
   },
   "devDependencies": {
