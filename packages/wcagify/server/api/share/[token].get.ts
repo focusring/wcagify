@@ -1,5 +1,5 @@
 import { queryCollection } from '@nuxt/content/server'
-import { getShareByToken, verifySharePassword } from '../../utils/shares'
+import { getShareByToken } from '../../utils/shares'
 
 export default defineEventHandler(async (event) => {
   const token = getRouterParam(event, 'token')
@@ -14,15 +14,9 @@ export default defineEventHandler(async (event) => {
   }
 
   if (share.password_hash) {
-    const query = getQuery(event)
-    const password = query.password as string | undefined
-
-    if (!password) {
+    const unlocked = getCookie(event, `share-unlock-${token}`)
+    if (!unlocked) {
       return { passwordRequired: true, token }
-    }
-
-    if (!verifySharePassword(share, password)) {
-      throw createError({ statusCode: 401, statusMessage: 'Invalid password' })
     }
   }
 

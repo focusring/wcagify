@@ -14,7 +14,7 @@ const samplePage = computed(() => resolveSamplePage(props.report.sample, props.i
 </script>
 
 <template>
-  <article :id="`issue-${issue.path.split('/').pop()}`">
+  <article :id="`issue-${issue.path.split('/').filter(Boolean).pop() || issue.path}`">
     <h4 class="font-medium text-gray-950 dark:text-white">
       {{ issue.title }}
     </h4>

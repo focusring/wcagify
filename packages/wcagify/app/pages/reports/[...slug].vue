@@ -64,6 +64,7 @@ const shareOpen = ref(false)
   </ReportContent>
 
   <ReportShareSlideover
+    v-if="shareOpen"
     v-model:open="shareOpen"
     :report-slug="(route.params.slug as string[]).join('/')"
   />

@@ -75,7 +75,12 @@
     "passwordDescription": "This report is protected. Enter the password to view it.",
     "passwordIncorrect": "Incorrect password. Please try again.",
     "passwordProtected": "Password protected",
-    "unlock": "View report"
+    "unlock": "View report",
+    "adminRequired": "Admin authentication required",
+    "adminDescription": "Enter your admin secret to manage share links.",
+    "adminSecret": "Admin secret",
+    "adminLogin": "Authenticate",
+    "adminError": "Invalid admin secret. Please try again."
   },
   "settings": {
     "title": "Settings",

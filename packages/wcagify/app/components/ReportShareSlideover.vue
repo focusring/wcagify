@@ -9,11 +9,36 @@ const open = defineModel<boolean>('open', { default: false })
 
 const { t } = useI18n()
 
-const { data: shares, refresh } = await useAsyncData(
+const adminSecret = ref('')
+const adminError = ref(false)
+const adminAuthenticated = ref(false)
+
+const {
+  data: shares,
+  error,
+  refresh
+} = await useAsyncData(
   `shares-${props.reportSlug}`,
   () => $fetch<Share[]>('/api/shares', { query: { reportSlug: props.reportSlug } }),
-  { default: () => [] }
+  { default: () => [], watch: [() => props.reportSlug] }
 )
+
+const needsAdminLogin = computed(() => error.value?.statusCode === 401 && !adminAuthenticated.value)
+
+async function loginAdmin() {
+  adminError.value = false
+  try {
+    await $fetch('/api/admin/login', {
+      method: 'POST',
+      body: { secret: adminSecret.value }
+    })
+    adminAuthenticated.value = true
+    adminSecret.value = ''
+    await refresh()
+  } catch {
+    adminError.value = true
+  }
+}
 
 const expiresAt = ref('')
 const password = ref('')
@@ -33,8 +58,11 @@ async function createShareLink() {
   await refresh()
 }
 
-async function deleteShareLink(token: string) {
-  await $fetch(`/api/shares/${token}`, { method: 'DELETE' })
+async function deleteShareLink(token: string, deleteToken: string) {
+  await $fetch(`/api/shares/${token}`, {
+    method: 'DELETE',
+    body: { deleteToken }
+  })
   await refresh()
 }
 
@@ -51,14 +79,38 @@ async function copyLink(token: string) {
 }
 
 function formatDate(dateStr: string): string {
-  return new Date(dateStr).toLocaleDateString()
+  const parts = dateStr.split('-').map(Number)
+  return new Date(parts[0]!, parts[1]! - 1, parts[2]!).toLocaleDateString()
 }
 </script>
 
 <template>
   <USlideover v-model:open="open" :title="t('share.shareReport')" :modal="true">
     <template #body>
-      <div class="space-y-6">
+      <div v-if="needsAdminLogin" class="flex flex-col items-center justify-center py-12">
+        <UIcon name="i-lucide-shield" class="size-12 text-muted" />
+        <h3 class="mt-4 text-lg font-semibold text-gray-950 dark:text-white">
+          {{ t('share.adminRequired') }}
+        </h3>
+        <p class="mt-2 text-sm text-muted text-center">
+          {{ t('share.adminDescription') }}
+        </p>
+        <form class="mt-6 w-full max-w-xs space-y-4" @submit.prevent="loginAdmin">
+          <UInput
+            v-model="adminSecret"
+            type="password"
+            :placeholder="t('share.adminSecret')"
+            autofocus
+            required
+          />
+          <p v-if="adminError" class="text-sm text-error">
+            {{ t('share.adminError') }}
+          </p>
+          <UButton type="submit" :label="t('share.adminLogin')" block />
+        </form>
+      </div>
+
+      <div v-else class="space-y-6">
         <div>
           <h3 class="text-sm font-medium text-gray-950 dark:text-white">
             {{ t('share.createLink') }}
@@ -123,7 +175,7 @@ function formatDate(dateStr: string): string {
                   variant="ghost"
                   size="sm"
                   :aria-label="t('share.deleteLink')"
-                  @click="deleteShareLink(share.token)"
+                  @click="deleteShareLink(share.token, share.delete_token)"
                 />
               </div>
               <div class="mt-2 flex items-center gap-4 text-xs text-muted">

@@ -12,13 +12,19 @@ const passwordError = ref(false)
 const authenticated = ref(false)
 
 const { data, error, refresh } = await useAsyncData(`share-${token}`, () =>
-  $fetch(`/api/share/${token}`, {
-    query: password.value ? { password: password.value } : undefined
-  })
+  $fetch(`/api/share/${token}`)
 )
 
-if (error.value && error.value.statusCode !== 401) {
-  throw createError({ statusCode: 404, statusMessage: t('share.notFound') })
+if (error.value) {
+  if (error.value.statusCode === 404) {
+    throw createError({ statusCode: 404, statusMessage: t('share.notFound') })
+  }
+  if (error.value.statusCode !== 401) {
+    throw createError({
+      statusCode: error.value.statusCode,
+      statusMessage: error.value.statusMessage
+    })
+  }
 }
 
 const passwordRequired = computed(
@@ -49,6 +55,10 @@ useSeoMeta({
 async function submitPassword() {
   passwordError.value = false
   try {
+    await $fetch(`/api/share/${token}`, {
+      method: 'POST',
+      body: { password: password.value }
+    })
     await refresh()
     if (report.value) {
       authenticated.value = true
@@ -64,8 +74,7 @@ async function downloadPdf() {
   isGeneratingPdf.value = true
   try {
     const response = await $fetch<Blob>(`/api/share/${token}/pdf`, {
-      responseType: 'blob',
-      query: password.value ? { password: password.value } : undefined
+      responseType: 'blob'
     })
     const url = URL.createObjectURL(response)
     const link = document.createElement('a')

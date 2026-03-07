@@ -48,7 +48,7 @@ const kbdEnabled = useKeyboardShortcutsEnabled()
 
     <template #right>
       <UButton
-        to="https://github.com/timdamen/wcagify"
+        to="https://github.com/focusring/WCAGify"
         target="_blank"
         icon="i-simple-icons-github"
         aria-label="GitHub"

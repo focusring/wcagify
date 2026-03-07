@@ -75,7 +75,12 @@
     "passwordDescription": "Dit rapport is beveiligd. Voer het wachtwoord in om het te bekijken.",
     "passwordIncorrect": "Onjuist wachtwoord. Probeer het opnieuw.",
     "passwordProtected": "Beveiligd met wachtwoord",
-    "unlock": "Rapport bekijken"
+    "unlock": "Rapport bekijken",
+    "adminRequired": "Beheerdersauthenticatie vereist",
+    "adminDescription": "Voer je beheerdersgeheim in om deellinks te beheren.",
+    "adminSecret": "Beheerdersgeheim",
+    "adminLogin": "Authenticeren",
+    "adminError": "Ongeldig beheerdersgeheim. Probeer het opnieuw."
   },
   "settings": {
     "title": "Instellingen",
