@@ -8,7 +8,7 @@ catalogMode: prefer
 catalogs:
   cli:
     '@clack/prompts': ^0.9.1
-    commander: ^13.1.0
+    commander: ^14.0.3
     ejs: ^3.1.10
     picocolors: ^1.1.1
   core:
