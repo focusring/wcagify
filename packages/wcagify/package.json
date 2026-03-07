@@ -56,6 +56,8 @@
   },
   "scripts": {
     "build": "tsdown",
+    "test": "vitest run",
+    "test:coverage": "vitest run --coverage",
     "typecheck": "tsc --noEmit"
   },
   "dependencies": {
@@ -75,7 +77,9 @@
   },
   "devDependencies": {
     "@nuxt/schema": "catalog:dev",
+    "@vitest/coverage-v8": "catalog:dev",
     "tsdown": "catalog:dev",
-    "typescript": "catalog:dev"
+    "typescript": "catalog:dev",
+    "vitest": "catalog:dev"
   }
 }

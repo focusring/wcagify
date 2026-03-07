@@ -263,5 +263,15 @@ async function create(options: CreateOptions = {}): Promise<void> {
   }
 }
 
-export { create }
-export type { CreateOptions }
+export {
+  create,
+  validateProjectName,
+  getOutputFileName,
+  createSafeSpinner,
+  trackPath,
+  cleanup,
+  renderTemplate,
+  renderTemplatesRecursively,
+  runCommand
+}
+export type { CreateOptions, TemplateData, SafeSpinner }

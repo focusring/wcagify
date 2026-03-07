@@ -114,7 +114,7 @@ const PDF_OVERRIDES = `<style>
   }
 </style>`
 
-export async function prepareForPdf(html: string, baseUrl: string): Promise<string> {
+async function prepareForPdf(html: string, baseUrl: string): Promise<string> {
   let result = html
 
   const stylesheetTags = result.match(STYLESHEET_RE) ?? []
@@ -143,3 +143,5 @@ export async function prepareForPdf(html: string, baseUrl: string): Promise<stri
 
   return result
 }
+
+export { stripCssLayers, forceLightMode, prepareForPdf }
