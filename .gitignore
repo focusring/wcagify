@@ -9,6 +9,9 @@ dist
 # Node dependencies
 node_modules
 
+# Tests
+coverage
+
 # Logs
 logs
 *.log
@@ -27,8 +30,6 @@ docs/.vitepress/dist
 .env
 .env.*
 !.env.example
-
-eleventy-wcag-reporter
 
 #AI
 .ralph-tui
