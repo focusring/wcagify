@@ -108,9 +108,7 @@ function verifyPassword(stored: string, password: string): boolean {
 
 function normalizeExpiresAt(expiresAt?: string): string | undefined {
   if (!expiresAt) return undefined
-  const candidate = /^\d{4}-\d{2}-\d{2}$/.test(expiresAt)
-    ? `${expiresAt}T23:59:59.999Z`
-    : expiresAt
+  const candidate = /^\d{4}-\d{2}-\d{2}$/.test(expiresAt) ? `${expiresAt}T23:59:59.999Z` : expiresAt
   if (Number.isNaN(Date.parse(candidate))) return undefined
   return candidate
 }

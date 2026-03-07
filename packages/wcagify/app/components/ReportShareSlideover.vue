@@ -129,7 +129,9 @@ function formatDate(dateStr: string): string {
           </h3>
           <div class="mt-3 space-y-3">
             <div>
-              <label for="share-expires-at" class="text-xs text-muted">{{ t('share.expiresAt') }}</label>
+              <label for="share-expires-at" class="text-xs text-muted">{{
+                t('share.expiresAt')
+              }}</label>
               <UInput
                 id="share-expires-at"
                 v-model="expiresAt"
@@ -139,7 +141,9 @@ function formatDate(dateStr: string): string {
               />
             </div>
             <div>
-              <label for="share-password" class="text-xs text-muted">{{ t('share.password') }}</label>
+              <label for="share-password" class="text-xs text-muted">{{
+                t('share.password')
+              }}</label>
               <UInput
                 id="share-password"
                 v-model="password"
