@@ -46,11 +46,13 @@
       "understandable": "Understandable",
       "robust": "Robust"
     },
+    "wcagPrinciple": "WCAG Principle",
     "principle": "Principle",
     "result": "Result",
     "total": "Total",
     "conformanceLevel": "Conformance level: {level} — {conforming} of {total} criteria met",
     "criteriaMet": "{conforming} of {total} criteria met",
+    "scoreFormat": "{conforming} / {total}",
     "downloadPdf": "Download PDF",
     "searchReports": "Search reports..."
   },

@@ -100,4 +100,46 @@ function conformanceSummary(
   }
 }
 
-export { PRINCIPLES, scUri, scName, scorecard, conformanceSummary }
+function subtractScorecard(a: Scorecard, b: Scorecard): Scorecard {
+  const conforming = { all: a.conforming.all - b.conforming.all } as Scorecard['conforming']
+  const totals = { all: a.totals.all - b.totals.all } as Scorecard['totals']
+
+  for (const p of PRINCIPLES) {
+    conforming[p] = a.conforming[p] - b.conforming[p]
+    totals[p] = a.totals[p] - b.totals[p]
+  }
+
+  return { conforming, totals }
+}
+
+const levelHierarchy: Level[] = ['A', 'AA', 'AAA']
+
+function scorecardByLevel(
+  issues: { sc: string }[],
+  targetLevel: Level,
+  wcagVersion: WcagVersion = '2.2'
+): { levels: Level[]; perLevel: Map<Level, Scorecard>; total: Scorecard } {
+  const levels = levelHierarchy.slice(0, levelHierarchy.indexOf(targetLevel) + 1)
+
+  const cumulative = new Map<Level, Scorecard>()
+  for (const level of levels) {
+    cumulative.set(level, scorecard(issues, level, wcagVersion))
+  }
+
+  const perLevel = new Map<Level, Scorecard>()
+  for (let i = 0; i < levels.length; i++) {
+    const level = levels[i]!
+    const current = cumulative.get(level)!
+
+    if (i === 0) {
+      perLevel.set(level, current)
+    } else {
+      const prev = cumulative.get(levels[i - 1]!)!
+      perLevel.set(level, subtractScorecard(current, prev))
+    }
+  }
+
+  return { levels, perLevel, total: cumulative.get(targetLevel)! }
+}
+
+export { PRINCIPLES, scUri, scName, scorecard, conformanceSummary, scorecardByLevel }

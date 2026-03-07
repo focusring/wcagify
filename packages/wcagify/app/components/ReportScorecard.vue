@@ -8,15 +8,17 @@ const props = defineProps<{
 }>()
 
 const { t } = useI18n()
-const { conformanceSummary, PRINCIPLES } = useWcagData()
+const { scorecardByLevel, PRINCIPLES } = useWcagData()
 
 const data = computed(() =>
-  conformanceSummary(
+  scorecardByLevel(
     props.issues,
     props.targetLevel as 'A' | 'AA' | 'AAA',
     props.wcagVersion as '2.0' | '2.1' | '2.2'
   )
 )
+
+const showTotalColumn = computed(() => data.value.levels.length > 1)
 </script>
 
 <template>
@@ -25,8 +27,8 @@ const data = computed(() =>
       {{
         t('report.conformanceLevel', {
           level: targetLevel,
-          conforming: data.conforming.all,
-          total: data.totals.all
+          conforming: data.total.conforming.all,
+          total: data.total.totals.all
         })
       }}
     </p>
@@ -40,32 +42,55 @@ const data = computed(() =>
         <tr>
           <th
             scope="col"
-            class="border-b border-gray-200 py-2 pr-4 font-medium text-gray-950 dark:border-gray-800 dark:text-white"
+            class="border-b border-gray-200 py-2 pr-4 font-medium text-gray-500 dark:border-gray-700 dark:text-gray-400"
           >
-            {{ t('report.principle') }}
+            {{ t('report.wcagPrinciple') }}
           </th>
           <th
+            v-for="level in data.levels"
+            :key="level"
             scope="col"
-            class="border-b border-gray-200 py-2 font-medium text-gray-950 dark:border-gray-800 dark:text-white"
+            class="border-b border-gray-200 py-2 pr-4 text-center font-medium text-gray-500 dark:border-gray-700 dark:text-gray-400"
           >
-            {{ t('report.result') }}
+            {{ level }}
+          </th>
+          <th
+            v-if="showTotalColumn"
+            scope="col"
+            class="border-b border-gray-200 py-2 text-center font-medium text-gray-500 dark:border-gray-700 dark:text-gray-400"
+          >
+            {{ t('report.total') }}
           </th>
         </tr>
       </thead>
       <tbody>
         <tr v-for="principle in PRINCIPLES" :key="principle">
-          <td
-            class="border-b border-gray-100 py-2 pr-4 text-gray-700 dark:border-gray-900 dark:text-gray-300"
+          <th
+            scope="row"
+            class="border-b border-gray-200 py-2 pr-4 font-medium text-gray-950 dark:border-gray-700 dark:text-white"
           >
             {{ t(`report.principles.${principle}`) }}
-          </td>
+          </th>
           <td
-            class="border-b border-gray-100 py-2 text-gray-700 dark:border-gray-900 dark:text-gray-300"
+            v-for="level in data.levels"
+            :key="level"
+            class="border-b border-gray-200 py-2 pr-4 text-center text-gray-700 dark:border-gray-700 dark:text-gray-300"
           >
             {{
-              t('report.criteriaMet', {
-                conforming: data.conforming[principle],
-                total: data.totals[principle]
+              t('report.scoreFormat', {
+                conforming: data.perLevel.get(level)!.conforming[principle],
+                total: data.perLevel.get(level)!.totals[principle]
+              })
+            }}
+          </td>
+          <td
+            v-if="showTotalColumn"
+            class="border-b border-gray-200 py-2 text-center text-gray-700 dark:border-gray-700 dark:text-gray-300"
+          >
+            {{
+              t('report.scoreFormat', {
+                conforming: data.total.conforming[principle],
+                total: data.total.totals[principle]
               })
             }}
           </td>
@@ -75,15 +100,31 @@ const data = computed(() =>
         <tr>
           <th
             scope="row"
-            class="border-t border-gray-200 py-2 pr-4 font-medium text-gray-950 dark:border-gray-800 dark:text-white"
+            class="border-b border-gray-200 py-2 pr-4 font-medium text-gray-950 dark:border-gray-700 dark:text-white"
           >
             {{ t('report.total') }}
           </th>
           <td
-            class="border-t border-gray-200 py-2 font-medium text-gray-950 dark:border-gray-800 dark:text-white"
+            v-for="level in data.levels"
+            :key="level"
+            class="border-b border-gray-200 py-2 pr-4 text-center font-medium text-gray-950 dark:border-gray-700 dark:text-white"
           >
             {{
-              t('report.criteriaMet', { conforming: data.conforming.all, total: data.totals.all })
+              t('report.scoreFormat', {
+                conforming: data.perLevel.get(level)!.conforming.all,
+                total: data.perLevel.get(level)!.totals.all
+              })
+            }}
+          </td>
+          <td
+            v-if="showTotalColumn"
+            class="border-b border-gray-200 py-2 text-center font-medium text-gray-950 dark:border-gray-700 dark:text-white"
+          >
+            {{
+              t('report.scoreFormat', {
+                conforming: data.total.conforming.all,
+                total: data.total.totals.all
+              })
             }}
           </td>
         </tr>

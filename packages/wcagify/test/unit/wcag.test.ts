@@ -1,5 +1,12 @@
 import { describe, it, expect } from 'vitest'
-import { scUri, scName, scorecard, conformanceSummary, PRINCIPLES } from '../../src/wcag'
+import {
+  scUri,
+  scName,
+  scorecard,
+  conformanceSummary,
+  scorecardByLevel,
+  PRINCIPLES
+} from '../../src/wcag'
 
 describe('PRINCIPLES', () => {
   it('contains all four WCAG principles', () => {
@@ -103,5 +110,73 @@ describe('conformanceSummary', () => {
     const result = conformanceSummary([], 'AA', '2.2')
     expect(result).toHaveProperty('conforming')
     expect(result).toHaveProperty('totals')
+  })
+})
+
+describe('scorecardByLevel', () => {
+  it('returns individual levels for target AA', () => {
+    const result = scorecardByLevel([], 'AA', '2.2')
+    expect(result.levels).toEqual(['A', 'AA'])
+  })
+
+  it('returns individual levels for target AAA', () => {
+    const result = scorecardByLevel([], 'AAA', '2.2')
+    expect(result.levels).toEqual(['A', 'AA', 'AAA'])
+  })
+
+  it('returns single level for target A', () => {
+    const result = scorecardByLevel([], 'A', '2.2')
+    expect(result.levels).toEqual(['A'])
+  })
+
+  it('per-level totals sum to the combined total', () => {
+    const result = scorecardByLevel([], 'AA', '2.2')
+    const aData = result.perLevel.get('A')!
+    const aaData = result.perLevel.get('AA')!
+
+    expect(aData.totals.all + aaData.totals.all).toBe(result.total.totals.all)
+    for (const p of PRINCIPLES) {
+      expect(aData.totals[p] + aaData.totals[p]).toBe(result.total.totals[p])
+    }
+  })
+
+  it('per-level conforming sums to the combined total with no issues', () => {
+    const result = scorecardByLevel([], 'AA', '2.2')
+    const aData = result.perLevel.get('A')!
+    const aaData = result.perLevel.get('AA')!
+
+    expect(aData.conforming.all + aaData.conforming.all).toBe(result.total.conforming.all)
+  })
+
+  it('attributes a level-A issue only to the A column', () => {
+    const result = scorecardByLevel([{ sc: '1.1.1' }], 'AA', '2.2')
+    const full = scorecardByLevel([], 'AA', '2.2')
+    const aData = result.perLevel.get('A')!
+    const aaData = result.perLevel.get('AA')!
+    const fullA = full.perLevel.get('A')!
+    const fullAA = full.perLevel.get('AA')!
+
+    expect(aData.conforming.perceivable).toBe(fullA.totals.perceivable - 1)
+    expect(aaData.conforming).toEqual(fullAA.totals)
+  })
+
+  it('attributes a level-AA issue only to the AA column', () => {
+    const result = scorecardByLevel([{ sc: '2.4.7' }], 'AA', '2.2')
+    const full = scorecardByLevel([], 'AA', '2.2')
+    const aData = result.perLevel.get('A')!
+    const aaData = result.perLevel.get('AA')!
+    const fullA = full.perLevel.get('A')!
+    const fullAA = full.perLevel.get('AA')!
+
+    expect(aData.conforming).toEqual(fullA.totals)
+    expect(aaData.conforming.operable).toBe(fullAA.totals.operable - 1)
+  })
+
+  it('total matches scorecard output', () => {
+    const issues = [{ sc: '1.1.1' }, { sc: '2.4.7' }]
+    const result = scorecardByLevel(issues, 'AA', '2.2')
+    const expected = scorecard(issues, 'AA', '2.2')
+
+    expect(result.total).toEqual(expected)
   })
 })

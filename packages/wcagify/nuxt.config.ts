@@ -42,9 +42,25 @@ const nuxtConfig = {
     debug: `${dir}/shims/debug-esm.js`
   },
 
+  vite: {
+    optimizeDeps: {
+      exclude: [
+        'axe-core',
+        'remark-gfm',
+        'remark-emoji',
+        'remark-mdc',
+        'remark-rehype',
+        'rehype-raw',
+        'parse5',
+        'unist-util-visit',
+        'unified'
+      ]
+    }
+  },
+
   i18n: {
     defaultLocale: 'en',
-    strategy: 'prefix_except_default',
+    strategy: 'no_prefix',
     locales: [
       {
         code: 'en',
