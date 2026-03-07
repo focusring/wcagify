@@ -54,6 +54,27 @@
     "downloadPdf": "Download PDF",
     "searchReports": "Search reports..."
   },
+  "share": {
+    "share": "Share",
+    "shareReport": "Share report",
+    "createLink": "Create share link",
+    "copyLink": "Copy link",
+    "copied": "Copied!",
+    "deleteLink": "Delete link",
+    "expiresAt": "Expires at",
+    "noExpiry": "No expiry",
+    "activeLinks": "Active share links",
+    "noLinks": "No share links yet",
+    "notFound": "This share link was not found or has expired",
+    "createdAt": "Created",
+    "password": "Password",
+    "passwordOptional": "Optional",
+    "passwordRequired": "Password required",
+    "passwordDescription": "This report is protected. Enter the password to view it.",
+    "passwordIncorrect": "Incorrect password. Please try again.",
+    "passwordProtected": "Password protected",
+    "unlock": "View report"
+  },
   "settings": {
     "title": "Settings",
     "tagline": "Customize your WCAGify experience",
