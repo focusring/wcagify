@@ -72,7 +72,7 @@ function runMigrations(instance: Database.Database): void {
   }
 }
 
-let sharesDb: Database.Database | undefined
+let sharesDb: Database.Database | undefined = undefined
 
 function getSharesDb(): Database.Database {
   if (sharesDb) return sharesDb
@@ -121,9 +121,11 @@ function createShare(reportSlug: string, expiresAt?: string, password?: string):
   const passwordHash = password ? hashPassword(password) : undefined
   const normalizedExpiry = normalizeExpiresAt(expiresAt)
 
-  conn.prepare(
-    'INSERT INTO shares (token, report_slug, expires_at, password_hash, delete_token) VALUES (?, ?, ?, ?, ?)'
-  ).run(token, reportSlug, normalizedExpiry ?? null, passwordHash ?? null, deleteToken)
+  conn
+    .prepare(
+      'INSERT INTO shares (token, report_slug, expires_at, password_hash, delete_token) VALUES (?, ?, ?, ?, ?)'
+    )
+    .run(token, reportSlug, normalizedExpiry, passwordHash, deleteToken)
 
   const row = conn.prepare('SELECT * FROM shares WHERE token = ?').get(token) as ShareRow
   return toPublicShare(row)
