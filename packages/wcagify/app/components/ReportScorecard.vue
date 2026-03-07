@@ -34,7 +34,9 @@ const showTotalColumn = computed(() => data.value.levels.length > 1)
     </p>
     <table class="w-full border-separate border-spacing-0 text-sm text-left">
       <caption class="sr-only">
-        {{ t('report.resultsPerPrinciple') }}
+        {{
+          t('report.resultsPerPrinciple')
+        }}
       </caption>
       <thead>
         <tr>

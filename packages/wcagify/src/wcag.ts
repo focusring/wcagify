@@ -119,10 +119,7 @@ function scorecardByLevel(
   targetLevel: Level,
   wcagVersion: WcagVersion = '2.2'
 ): { levels: Level[]; perLevel: Map<Level, Scorecard>; total: Scorecard } {
-  const levels = levelHierarchy.slice(
-    0,
-    levelHierarchy.indexOf(targetLevel) + 1
-  )
+  const levels = levelHierarchy.slice(0, levelHierarchy.indexOf(targetLevel) + 1)
 
   const cumulative = new Map<Level, Scorecard>()
   for (const level of levels) {

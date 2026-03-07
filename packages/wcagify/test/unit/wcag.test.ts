@@ -1,5 +1,12 @@
 import { describe, it, expect } from 'vitest'
-import { scUri, scName, scorecard, conformanceSummary, scorecardByLevel, PRINCIPLES } from '../../src/wcag'
+import {
+  scUri,
+  scName,
+  scorecard,
+  conformanceSummary,
+  scorecardByLevel,
+  PRINCIPLES
+} from '../../src/wcag'
 
 describe('PRINCIPLES', () => {
   it('contains all four WCAG principles', () => {
