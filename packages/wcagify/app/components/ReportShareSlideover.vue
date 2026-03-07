@@ -42,7 +42,7 @@ async function loginAdmin() {
 
 const expiresAt = ref('')
 const password = ref('')
-const copiedToken = ref<string | null>(null)
+const copiedToken = ref<string | undefined>()
 
 async function createShareLink() {
   await $fetch('/api/shares', {
@@ -67,14 +67,14 @@ async function deleteShareLink(token: string, deleteToken: string) {
 }
 
 function shareUrl(token: string): string {
-  return `${window.location.origin}/share/${token}`
+  return `${globalThis.location.origin}/share/${token}`
 }
 
 async function copyLink(token: string) {
   await navigator.clipboard.writeText(shareUrl(token))
   copiedToken.value = token
   setTimeout(() => {
-    copiedToken.value = null
+    copiedToken.value = undefined
   }, 2000)
 }
 

@@ -57,12 +57,12 @@ describe('verifySharePassword', () => {
 })
 
 describe('normalizeExpiresAt', () => {
-  it('returns null for undefined', () => {
-    expect(normalizeExpiresAt(undefined)).toBeNull()
+  it('returns undefined for undefined', () => {
+    expect(normalizeExpiresAt(undefined)).toBeUndefined()
   })
 
-  it('returns null for empty string', () => {
-    expect(normalizeExpiresAt('')).toBeNull()
+  it('returns undefined for empty string', () => {
+    expect(normalizeExpiresAt('')).toBeUndefined()
   })
 
   it('normalizes date-only string to end of day UTC', () => {
@@ -129,14 +129,14 @@ describe('getAdminSecret', () => {
     expect(getAdminSecret()).toBe('my-secret')
   })
 
-  it('returns null when env var is not set', () => {
+  it('returns undefined when env var is not set', () => {
     delete process.env.WCAGIFY_ADMIN_SECRET
-    expect(getAdminSecret()).toBeNull()
+    expect(getAdminSecret()).toBeUndefined()
   })
 
-  it('returns null for empty string', () => {
+  it('returns undefined for empty string', () => {
     process.env.WCAGIFY_ADMIN_SECRET = ''
-    expect(getAdminSecret()).toBeNull()
+    expect(getAdminSecret()).toBeUndefined()
   })
 })
 

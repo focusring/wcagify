@@ -33,7 +33,7 @@ const passwordRequired = computed(
 
 const report = computed(() => {
   const d = data.value as Record<string, unknown> | null
-  if (!d || passwordRequired.value || !('report' in d)) return null
+  if (!d || passwordRequired.value || !('report' in d)) return undefined
   return d.report as unknown as ReportsCollectionItem
 })
 
