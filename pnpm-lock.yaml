@@ -35,7 +35,7 @@ catalogs:
       specifier: ^1.0.0
       version: 1.15.0
     '@nuxt/kit':
-      specifier: ^4.0.0
+      specifier: ^4.3.1
       version: 4.3.1
     '@nuxt/ui':
       specifier: ^4.0.0
@@ -63,7 +63,7 @@ catalogs:
       version: 4.3.6
   dev:
     '@nuxt/schema':
-      specifier: ^4.0.0
+      specifier: ^4.3.1
       version: 4.3.1
     '@types/ejs':
       specifier: ^3.1.5
