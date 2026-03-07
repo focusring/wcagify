@@ -1,4 +1,4 @@
-export { scUri, scName, scorecard, conformanceSummary, PRINCIPLES } from './wcag'
+export { scUri, scName, scorecard, conformanceSummary, scorecardByLevel, PRINCIPLES } from './wcag'
 export { reportSchema, issueSchema, evaluationSchema, samplePageSchema } from './schemas'
 export { filterIssues, sortIssuesBySc, filterTips, groupIssuesBySc } from './issues'
 export { resolveSamplePage } from './report'

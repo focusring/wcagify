@@ -46,11 +46,13 @@
       "understandable": "Begrijpelijk",
       "robust": "Robuust"
     },
+    "wcagPrinciple": "WCAG Principe",
     "principle": "Principe",
     "result": "Resultaat",
     "total": "Totaal",
     "conformanceLevel": "Conformiteitsniveau: {level} — {conforming} van {total} criteria voldaan",
     "criteriaMet": "{conforming} van {total} criteria voldaan",
+    "scoreFormat": "{conforming} / {total}",
     "downloadPdf": "Download PDF",
     "searchReports": "Zoek rapporten..."
   },
