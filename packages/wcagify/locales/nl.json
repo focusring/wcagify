@@ -36,7 +36,17 @@
     "tips": "Tips",
     "successCriterion": "Succescriterium",
     "severity": "Ernst",
+    "severityLevel": {
+      "low": "Laag",
+      "medium": "Gemiddeld",
+      "high": "Hoog"
+    },
     "difficulty": "Moeilijkheid",
+    "difficultyLevel": {
+      "low": "Laag",
+      "medium": "Gemiddeld",
+      "high": "Hoog"
+    },
     "url": "URL",
     "description": "Beschrijving",
     "externalLink": "Externe link",
@@ -55,6 +65,33 @@
     "scoreFormat": "{conforming} / {total}",
     "downloadPdf": "Download PDF",
     "searchReports": "Zoek rapporten..."
+  },
+  "share": {
+    "share": "Delen",
+    "shareReport": "Rapport delen",
+    "createLink": "Deellink aanmaken",
+    "copyLink": "Link kopiëren",
+    "copied": "Gekopieerd!",
+    "deleteLink": "Link verwijderen",
+    "expiresAt": "Verloopt op",
+    "noExpiry": "Geen verloopdatum",
+    "activeLinks": "Actieve deellinks",
+    "noLinks": "Nog geen deellinks",
+    "notFound": "Deze deellink is niet gevonden of verlopen",
+    "createdAt": "Aangemaakt",
+    "password": "Wachtwoord",
+    "passwordOptional": "Optioneel",
+    "passwordRequired": "Wachtwoord vereist",
+    "passwordDescription": "Dit rapport is beveiligd. Voer het wachtwoord in om het te bekijken.",
+    "passwordIncorrect": "Onjuist wachtwoord. Probeer het opnieuw.",
+    "passwordProtected": "Beveiligd met wachtwoord",
+    "unlock": "Rapport bekijken",
+    "adminRequired": "Beheerdersauthenticatie vereist",
+    "adminDescription": "Voer je beheerdersgeheim in om deellinks te beheren.",
+    "adminSecret": "Beheerdersgeheim",
+    "adminLogin": "Authenticeren",
+    "adminError": "Ongeldig beheerdersgeheim. Probeer het opnieuw.",
+    "error": "Er is iets misgegaan. Probeer het opnieuw."
   },
   "settings": {
     "title": "Instellingen",
