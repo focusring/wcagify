@@ -26,7 +26,6 @@ useSeoMeta({
   ogTitle: () => t('app.title'),
   ogDescription: () => t('app.description')
 })
-
 </script>
 
 <template>
@@ -36,4 +35,3 @@ useSeoMeta({
     </NuxtLayout>
   </UApp>
 </template>
-

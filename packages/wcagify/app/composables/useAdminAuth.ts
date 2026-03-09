@@ -5,7 +5,7 @@ interface AdminStatus {
 }
 
 function useAdminAuth() {
-  const status = useState<AdminStatus | null>('admin-status', () => null)
+  const status = useState<AdminStatus | undefined>('admin-status', () => undefined)
 
   async function refresh() {
     status.value = await $fetch<AdminStatus>('/api/admin/status')

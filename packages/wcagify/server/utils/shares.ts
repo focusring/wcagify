@@ -184,14 +184,15 @@ function createSignedToken(payload: string, secret: string): string {
   return `${payload}.${signature}`
 }
 
-function verifySignedToken(token: string, secret: string): string | null {
+function verifySignedToken(token: string, secret: string): string | undefined {
   const dotIndex = token.lastIndexOf('.')
-  if (dotIndex === -1) return null
+  if (dotIndex === -1) return undefined
   const payload = token.slice(0, dotIndex)
   const signature = token.slice(dotIndex + 1)
   const expected = createHmac('sha256', secret).update(payload).digest('hex')
-  if (signature.length !== expected.length) return null
-  if (!timingSafeEqual(Buffer.from(signature, 'hex'), Buffer.from(expected, 'hex'))) return null
+  if (signature.length !== expected.length) return undefined
+  if (!timingSafeEqual(Buffer.from(signature, 'hex'), Buffer.from(expected, 'hex')))
+    return undefined
   return payload
 }
 

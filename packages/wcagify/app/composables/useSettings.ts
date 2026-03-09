@@ -43,7 +43,6 @@ function useSettings() {
       },
       { immediate: true }
     )
-
   }
 
   return { settings: settingsRef }

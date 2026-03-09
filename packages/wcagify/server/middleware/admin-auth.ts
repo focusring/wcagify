@@ -14,7 +14,7 @@ function isApiRoute(pathname: string): boolean {
 }
 
 export default defineEventHandler((event) => {
-  const pathname = getRequestURL(event).pathname
+  const { pathname } = getRequestURL(event)
 
   if (isPublicRoute(pathname)) return
 

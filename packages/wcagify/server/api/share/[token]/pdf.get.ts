@@ -16,7 +16,9 @@ export default defineEventHandler(async (event) => {
 
   if (share.password_hash) {
     const unlockCookie = getCookie(event, `share-unlock-${token}`)
-    const verifiedToken = unlockCookie ? verifySignedToken(unlockCookie, share.password_hash) : null
+    const verifiedToken = unlockCookie
+      ? verifySignedToken(unlockCookie, share.password_hash)
+      : undefined
     if (verifiedToken !== token) {
       throw createError({ statusCode: 401, statusMessage: 'Unauthorized' })
     }

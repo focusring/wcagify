@@ -52,7 +52,6 @@ async function onLocaleChange(code: string) {
   await setNuxtLocale(code as 'en' | 'nl')
 }
 
-
 useSeoMeta({
   title: () => `${t('settings.title')} — WCAGify`
 })
@@ -151,8 +150,6 @@ useSeoMeta({
             </div>
           </div>
         </section>
-
-
       </div>
     </article>
   </main>

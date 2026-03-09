@@ -65,8 +65,8 @@ async function submitPassword() {
     if (report.value) {
       authenticated.value = true
     }
-  } catch (e: unknown) {
-    const status = (e as { statusCode?: number }).statusCode
+  } catch (fetchError: unknown) {
+    const status = (fetchError as { statusCode?: number }).statusCode
     if (status === 401) {
       passwordError.value = true
     } else {
