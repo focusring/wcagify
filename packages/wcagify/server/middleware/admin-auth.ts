@@ -40,6 +40,10 @@ export default defineEventHandler((event) => {
   const cookie = getCookie(event, 'wcagify-admin')
   if (cookie && verifySignedToken(cookie, secret)) return
 
+  if (cookie) {
+    deleteCookie(event, 'wcagify-admin', { path: '/' })
+  }
+
   if (isApiRoute(pathname)) {
     throw createError({ statusCode: 401, statusMessage: 'Unauthorized' })
   }

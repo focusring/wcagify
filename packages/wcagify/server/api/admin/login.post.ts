@@ -18,7 +18,7 @@ export default defineEventHandler(async (event) => {
   setCookie(event, 'wcagify-admin', token, {
     httpOnly: true,
     secure: !import.meta.dev,
-    sameSite: 'strict',
+    sameSite: 'lax',
     path: '/',
     maxAge: 60 * 60 * 24 * 365
   })

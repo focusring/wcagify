@@ -6,9 +6,10 @@ interface AdminStatus {
 
 function useAdminAuth() {
   const status = useState<AdminStatus | undefined>('admin-status', () => undefined)
+  const requestFetch = useRequestFetch()
 
   async function refresh() {
-    status.value = await $fetch<AdminStatus>('/api/admin/status')
+    status.value = await requestFetch<AdminStatus>('/api/admin/status')
   }
 
   async function login(secret: string) {
