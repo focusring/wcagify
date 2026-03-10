@@ -10,8 +10,8 @@ catalogs:
       specifier: ^1.1.0
       version: 1.1.0
     commander:
-      specifier: ^13.1.0
-      version: 13.1.0
+      specifier: ^14.0.3
+      version: 14.0.3
     ejs:
       specifier: ^5.0.1
       version: 5.0.1
@@ -176,7 +176,7 @@ importers:
         version: 1.1.0
       commander:
         specifier: catalog:cli
-        version: 13.1.0
+        version: 14.0.3
       ejs:
         specifier: catalog:cli
         version: 5.0.1
@@ -10345,7 +10345,8 @@ snapshots:
 
   commander@11.1.0: {}
 
-  commander@13.1.0: {}
+  commander@13.1.0:
+    optional: true
 
   commander@14.0.3: {}
 
