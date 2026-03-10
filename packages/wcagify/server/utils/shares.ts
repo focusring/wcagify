@@ -1,6 +1,7 @@
 import { pbkdf2Sync, randomBytes, timingSafeEqual } from 'node:crypto'
 import { join } from 'node:path'
 import { nanoid } from 'nanoid'
+import { z } from 'zod'
 import type { DbAdapter, Migration } from '../lib/db'
 import { createLibsqlAdapter, createSqliteAdapter, runMigrations } from '../lib/db'
 
@@ -65,7 +66,12 @@ async function getDb(): Promise<DbAdapter> {
         : await createSqliteAdapter(
             join(process.env.VERCEL ? '/tmp' : join(process.cwd(), '.data'), 'shares.sqlite')
           )
-      await runMigrations(adapter, migrations)
+      try {
+        await runMigrations(adapter, migrations)
+      } catch (error) {
+        adapter.close()
+        throw error
+      }
       return adapter
     })().catch((error) => {
       dbInit = undefined
@@ -95,11 +101,7 @@ function verifyPassword(stored: string, password: string): boolean {
   return timingSafeEqual(storedDk, dk)
 }
 
-const SLUG_RE = /^[\da-z][\da-z-]*$/
-
-function isValidSlug(value: string): boolean {
-  return SLUG_RE.test(value)
-}
+const reportSlugSchema = z.string().regex(/^[\da-z][\da-z-]*$/)
 
 function normalizeExpiresAt(expiresAt?: string): string | undefined {
   if (!expiresAt) return undefined
@@ -181,11 +183,11 @@ export {
   deleteShare,
   getShareByToken,
   hashPassword,
-  isValidSlug,
   listSharesByReport,
   normalizeExpiresAt,
   resetSharesDb,
   toPublicShare,
+  reportSlugSchema,
   verifySharePassword
 }
 export type { Share, ShareRow }

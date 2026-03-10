@@ -226,7 +226,7 @@ describe('renderTemplatesRecursively', () => {
 
 function createMockChildProcess(exitCode: number) {
   const emitter = new EventEmitter()
-  setTimeout(() => emitter.emit('close', exitCode), 10)
+  setImmediate(() => emitter.emit('close', exitCode))
   return emitter
 }
 

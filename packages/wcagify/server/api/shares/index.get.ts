@@ -1,4 +1,4 @@
-import { isValidSlug, listSharesByReport } from '../../utils/shares'
+import { listSharesByReport, reportSlugSchema } from '../../utils/shares'
 
 export default defineEventHandler(async (event) => {
   const query = getQuery(event)
@@ -8,9 +8,10 @@ export default defineEventHandler(async (event) => {
     throw createError({ statusCode: 400, statusMessage: 'Missing reportSlug query parameter' })
   }
 
-  if (!isValidSlug(reportSlug)) {
+  const result = reportSlugSchema.safeParse(reportSlug)
+  if (!result.success) {
     throw createError({ statusCode: 400, statusMessage: 'Invalid reportSlug' })
   }
 
-  return await listSharesByReport(reportSlug)
+  return await listSharesByReport(result.data)
 })

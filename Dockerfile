@@ -1,6 +1,6 @@
 FROM node:22-slim
 
-RUN apt-get update && apt-get install -y python3 make g++ && rm -rf /var/lib/apt/lists/*
+RUN apt-get update && apt-get install -y --no-install-recommends python3 make g++ && apt-get clean && rm -rf /var/lib/apt/lists/*
 RUN corepack enable
 
 WORKDIR /app
@@ -18,6 +18,10 @@ RUN pnpm install --frozen-lockfile --ignore-scripts && \
 COPY . .
 
 RUN pnpm --filter @focusring/wcagify build && pnpm --filter @wcagify/playground build
+
+RUN addgroup --system appuser && adduser --system --ingroup appuser appuser && chown -R appuser:appuser /app
+
+USER appuser
 
 EXPOSE 3000
 ENV PORT=3000

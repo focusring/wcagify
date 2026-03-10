@@ -14,9 +14,12 @@ vi.mock('../../src/version.js', () => ({
 
 import { run } from '../../src/cli'
 
+const ORIGINAL_ARGV = process.argv.slice()
+
 describe('run', () => {
   beforeEach(() => {
     vi.clearAllMocks()
+    process.argv = ORIGINAL_ARGV.slice()
   })
 
   it('is a function', () => {
