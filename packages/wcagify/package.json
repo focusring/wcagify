@@ -65,7 +65,7 @@
   "dependencies": {
     "@iconify-json/lucide": "catalog:core",
     "@iconify-json/simple-icons": "catalog:core",
-    "@libsql/client": "catalog:dev",
+    "@libsql/client": "catalog:core",
     "@nuxt/a11y": "catalog:core",
     "@nuxt/content": "catalog:core",
     "@nuxt/icon": "catalog:core",
@@ -73,7 +73,6 @@
     "@nuxt/ui": "catalog:core",
     "@nuxtjs/i18n": "catalog:core",
     "@vueuse/core": "catalog:core",
-    "better-sqlite3": "catalog:core",
     "nanoid": "catalog:",
     "nuxt-studio": "catalog:core",
     "tailwindcss": "catalog:core",
@@ -81,7 +80,6 @@
   },
   "devDependencies": {
     "@nuxt/schema": "catalog:dev",
-    "@types/better-sqlite3": "catalog:",
     "@vitest/coverage-v8": "catalog:dev",
     "tsdown": "catalog:dev",
     "typescript": "catalog:dev",

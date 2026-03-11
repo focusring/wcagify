@@ -4,7 +4,6 @@ packages:
   - docs
 
 catalog:
-  '@types/better-sqlite3': ^7.6.13
   nanoid: ^5.1.6
 
 catalogMode: prefer
@@ -18,6 +17,7 @@ catalogs:
   core:
     '@iconify-json/lucide': ^1.2.96
     '@iconify-json/simple-icons': ^1.2.73
+    '@libsql/client': ^0.17.0
     '@nuxt/a11y': 1.0.0-alpha.1
     '@nuxt/content': ^3.12.0
     '@nuxt/icon': ^2.2.1
@@ -25,7 +25,6 @@ catalogs:
     '@nuxt/ui': ^4.5.1
     '@nuxtjs/i18n': ^10.2.3
     '@vueuse/core': ^14.2.1
-    better-sqlite3: ^12.6.2
     nuxt: ^4.3.1
     nuxt-studio: ^1.4.0
     tailwindcss: ^4.2.1
@@ -34,7 +33,6 @@ catalogs:
     '@nuxt/schema': ^4.3.1
     '@types/ejs': ^3.1.5
     '@types/node': ^24.12.0
-    '@libsql/client': ^0.17.0
     '@vitest/coverage-v8': ^4.0.18
     bumpp: ^10.4.1
     changelogen: ^0.6.2
@@ -55,7 +53,6 @@ catalogs:
 linkWorkspacePackages: true
 
 onlyBuiltDependencies:
-  - better-sqlite3
   - esbuild
 
 shellEmulator: true

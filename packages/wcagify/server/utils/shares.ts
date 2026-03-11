@@ -3,7 +3,7 @@ import { join } from 'node:path'
 import { nanoid } from 'nanoid'
 import { z } from 'zod'
 import type { DbAdapter, Migration } from '../lib/db'
-import { createLibsqlAdapter, createSqliteAdapter, runMigrations } from '../lib/db'
+import { createLibsqlAdapter, createLocalAdapter, runMigrations } from '../lib/db'
 
 interface ShareRow {
   token: string
@@ -63,7 +63,7 @@ async function getDb(): Promise<DbAdapter> {
       const dbUrl = process.env.DATABASE_URL
       const adapter = dbUrl
         ? await createLibsqlAdapter(dbUrl, process.env.DATABASE_AUTH_TOKEN)
-        : await createSqliteAdapter(
+        : await createLocalAdapter(
             join(process.env.VERCEL ? '/tmp' : join(process.cwd(), '.data'), 'shares.sqlite')
           )
       try {
