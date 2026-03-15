@@ -57,7 +57,7 @@ watch(file, async (newFile) => {
       v-model="file"
       accept="image/*"
       label="Upload an image"
-      description="SVG, PNG, JPG or GIF (max. 2MB)"
+      description="PNG, JPG, GIF or WebP (max. 2MB)"
       :preview="false"
       class="min-h-48"
     >

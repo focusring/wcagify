@@ -1,14 +1,8 @@
 import { writeFile, mkdir } from 'node:fs/promises'
-import { extname } from 'node:path'
 import { randomUUID } from 'node:crypto'
+import sharp from 'sharp'
 
-const MIME_EXT_MAP: Record<string, string> = {
-  'image/png': '.png',
-  'image/jpeg': '.jpg',
-  'image/gif': '.gif',
-  'image/webp': '.webp'
-}
-const ALLOWED_TYPES = new Set(Object.keys(MIME_EXT_MAP))
+const ALLOWED_TYPES = new Set(['image/png', 'image/jpeg', 'image/gif', 'image/webp'])
 
 const MAGIC_BYTES: Record<string, number[][]> = {
   'image/png': [[0x89, 0x50, 0x4e, 0x47]],
@@ -54,14 +48,12 @@ export default defineEventHandler(async (event) => {
     })
   }
 
-  const ext =
-    extname(fileField.filename || '').toLowerCase() || MIME_EXT_MAP[fileField.type] || '.bin'
-  const filename = `${randomUUID()}${ext}`
+  const webpData = await sharp(fileField.data).webp({ quality: 80 }).toBuffer()
 
+  const filename = `${randomUUID()}.webp`
   const { dir: uploadsDir, filepath } = resolveSecurePath(['public', 'uploads'], filename)
   await mkdir(uploadsDir, { recursive: true })
-
-  await writeFile(filepath, fileField.data)
+  await writeFile(filepath, webpData)
 
   return {
     url: `/api/uploads/${filename}`

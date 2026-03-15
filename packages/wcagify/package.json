@@ -78,6 +78,7 @@
     "@vueuse/core": "catalog:core",
     "nanoid": "catalog:",
     "nuxt-studio": "catalog:core",
+    "sharp": "catalog:",
     "tailwindcss": "catalog:core",
     "zod": "catalog:core"
   },
