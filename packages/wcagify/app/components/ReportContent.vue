@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import type { IssuesCollectionItem, ReportsCollectionItem } from '@nuxt/content'
+import type { Level, WcagVersion, Language } from '@focusring/wcagify'
 
 const props = defineProps<{
   report: ReportsCollectionItem
@@ -7,12 +8,18 @@ const props = defineProps<{
 }>()
 
 const { t } = useI18n()
-const { groupIssuesBySc, filterTips } = useWcagData()
+const { groupIssuesByPrinciple, filterTips } = useWcagData()
 
-const issuesBySc = computed(() => {
-  const wcagVersion = (props.report.evaluation.targetWcagVersion ?? '2.2') as '2.0' | '2.1' | '2.2'
-  const language = (props.report.language === 'nl' ? 'nl' : 'en') as 'en' | 'nl'
-  return groupIssuesBySc(props.issues, wcagVersion, language)
+const issuesByPrinciple = computed(() => {
+  const wcagVersion = (props.report.evaluation.targetWcagVersion ?? '2.2') as WcagVersion
+  const language = (props.report.language === 'nl' ? 'nl' : 'en') as Language
+  const targetLevel = (props.report.evaluation.targetLevel ?? 'AA') as Level
+  const scStatuses = (props.report as any).scStatuses as Record<string, string> | undefined
+  return groupIssuesByPrinciple(props.issues, targetLevel, {
+    wcagVersion,
+    language,
+    scStatuses: scStatuses ?? {}
+  })
 })
 
 const reportTips = computed(() => filterTips(props.issues))
@@ -86,46 +93,20 @@ const reportTips = computed(() => filterTips(props.issues))
       </div>
     </section>
 
-    <template v-if="issuesBySc.length">
+    <template v-if="issuesByPrinciple.length">
       <hr class="my-12 border-gray-200 dark:border-gray-800" />
 
       <section id="issues">
         <h2 class="text-2xl font-semibold text-gray-950 dark:text-white">
-          {{ t('report.issues') }}
+          {{ t('report.results') }}
         </h2>
 
-        <nav class="mt-4">
-          <div v-for="group in issuesBySc" :key="`toc-${group.sc}`" class="mt-3">
-            <h3 class="text-sm font-medium text-gray-950 dark:text-white">
-              {{ group.name }}
-            </h3>
-            <ol class="mt-1 list-decimal list-inside text-sm">
-              <li v-for="issue in group.issues" :key="issue.path">
-                <a
-                  :href="`#issue-${issue.path.split('/').filter(Boolean).pop() || issue.path}`"
-                  class="text-primary"
-                >
-                  {{ issue.title }}
-                </a>
-              </li>
-            </ol>
-          </div>
-        </nav>
-
-        <div v-for="group in issuesBySc" :key="group.sc" class="mt-8">
-          <h3 class="text-lg font-medium text-gray-950 dark:text-white">
-            <a :href="group.uri" target="_blank">{{ group.name }}</a>
-          </h3>
-          <div class="mt-4 space-y-8">
-            <ReportIssue
-              v-for="issue in group.issues"
-              :key="issue.path"
-              :issue="issue"
-              :report="report"
-              :sc-name="group.name"
-            />
-          </div>
-        </div>
+        <ReportPrinciple
+          v-for="group in issuesByPrinciple"
+          :key="group.principle"
+          :group="group"
+          :report="report"
+        />
       </section>
     </template>
 

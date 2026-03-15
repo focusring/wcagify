@@ -1,4 +1,5 @@
 import scToSlug from './data/sc-to-slug.json'
+import guidelines from './data/guidelines.json'
 import totalsPerLevel from './data/totals-per-level.json'
 import type {
   WcagVersion,
@@ -142,4 +143,32 @@ function scorecardByLevel(
   return { levels, perLevel, total: cumulative.get(targetLevel)! }
 }
 
-export { PRINCIPLES, scUri, scName, scorecard, conformanceSummary, scorecardByLevel }
+function guidelineName(
+  guideline: string,
+  wcagVersion: WcagVersion = '2.2',
+  language: Language = 'en'
+): string {
+  const versionData = guidelines[wcagVersion]?.[language] as Record<string, string> | undefined
+  return versionData?.[guideline] ?? guideline
+}
+
+function allScEntries(
+  wcagVersion: WcagVersion = '2.2',
+  language: Language = 'en'
+): Record<string, ScEntry> {
+  return (scToSlug[wcagVersion]?.[language] ?? {}) as Record<string, ScEntry>
+}
+
+export {
+  PRINCIPLES,
+  scUri,
+  scName,
+  scPrinciple,
+  guidelineName,
+  getScEntry,
+  allScEntries,
+  scorecard,
+  conformanceSummary,
+  scorecardByLevel,
+  levelIncludes
+}

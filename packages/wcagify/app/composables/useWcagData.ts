@@ -5,10 +5,12 @@ import {
   conformanceSummary,
   scorecardByLevel,
   PRINCIPLES,
+  guidelineName,
   filterIssues,
   sortIssuesBySc,
   filterTips,
   groupIssuesBySc,
+  groupIssuesByPrinciple,
   resolveSamplePage
 } from '@focusring/wcagify'
 
@@ -20,10 +22,12 @@ export function useWcagData() {
     conformanceSummary,
     scorecardByLevel,
     PRINCIPLES,
+    guidelineName,
     filterIssues,
     sortIssuesBySc,
     filterTips,
     groupIssuesBySc,
+    groupIssuesByPrinciple,
     resolveSamplePage
   }
 }

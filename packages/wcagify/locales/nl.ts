@@ -36,6 +36,7 @@ export default {
     sample: 'Steekproef',
     representativeSample: 'Representatieve steekproef',
     issues: 'Problemen',
+    results: 'Resultaten',
     tips: 'Tips',
     successCriterion: 'Succescriterium',
     severity: 'Ernst',
@@ -58,6 +59,21 @@ export default {
       operable: 'Bedienbaar',
       understandable: 'Begrijpelijk',
       robust: 'Robuust'
+    },
+    principleDescriptions: {
+      perceivable:
+        'Informatie en gebruikersinterfacecomponenten moeten op een voor gebruikers begrijpelijke manier worden gepresenteerd.',
+      operable: 'Gebruikersinterfacecomponenten en navigatie moeten bedienbaar zijn.',
+      understandable:
+        'Informatie en de bediening van de gebruikersinterface moeten begrijpelijk zijn.',
+      robust:
+        'Content moet robuust genoeg zijn om betrouwbaar geïnterpreteerd te worden door een breed scala aan user agents, inclusief hulptechnologieën.'
+    },
+    scStatus: {
+      passed: 'Goedgekeurd',
+      failed: 'Afgekeurd',
+      'not-present': 'Niet aanwezig',
+      'not-tested': 'Niet Getoetst'
     },
     wcagPrinciple: 'WCAG Principe',
     principle: 'Principe',

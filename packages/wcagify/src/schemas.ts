@@ -17,6 +17,8 @@ const samplePageSchema = z.object({
   description: z.string()
 })
 
+const scStatusSchema = z.enum(['passed', 'not-present'])
+
 const reportSchema = z.object({
   language: z.enum(['nl', 'en']),
   evaluation: evaluationSchema,
@@ -24,7 +26,8 @@ const reportSchema = z.object({
   outOfScope: z.array(z.string()).optional(),
   baseline: z.array(z.string()),
   technologies: z.array(z.string()),
-  sample: z.array(samplePageSchema)
+  sample: z.array(samplePageSchema),
+  scStatuses: z.record(z.string(), scStatusSchema).optional()
 })
 
 const issueSchema = z.object({

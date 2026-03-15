@@ -3,6 +3,7 @@ import type scToSlug from './data/sc-to-slug.json'
 type WcagVersion = keyof typeof scToSlug
 type Language = keyof (typeof scToSlug)['2.2']
 type Level = 'A' | 'AA' | 'AAA'
+type ScStatus = 'passed' | 'failed' | 'not-present' | 'not-tested'
 type Principle = 'perceivable' | 'operable' | 'understandable' | 'robust'
 
 interface ScEntry {
@@ -38,6 +39,27 @@ interface IssueGroup<T extends { sc: string }> {
   issues: T[]
 }
 
+interface ScGroup<T extends { sc: string }> {
+  sc: string
+  name: string
+  level: Level
+  uri: string
+  status: ScStatus
+  issues: T[]
+}
+
+interface GuidelineGroup<T extends { sc: string }> {
+  guideline: string
+  name: string
+  criteria: ScGroup<T>[]
+}
+
+interface PrincipleGroup<T extends { sc: string }> {
+  principle: Principle
+  number: number
+  guidelines: GuidelineGroup<T>[]
+}
+
 export type {
   WcagVersion,
   Language,
@@ -47,5 +69,9 @@ export type {
   PrincipleCounts,
   Scorecard,
   SamplePage,
-  IssueGroup
+  IssueGroup,
+  ScStatus,
+  ScGroup,
+  GuidelineGroup,
+  PrincipleGroup
 }

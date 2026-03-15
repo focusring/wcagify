@@ -35,6 +35,7 @@ export default {
     sample: 'Sample',
     representativeSample: 'Representative sample',
     issues: 'Issues',
+    results: 'Results',
     tips: 'Tips',
     successCriterion: 'Success criterion',
     severity: 'Severity',
@@ -57,6 +58,20 @@ export default {
       operable: 'Operable',
       understandable: 'Understandable',
       robust: 'Robust'
+    },
+    principleDescriptions: {
+      perceivable:
+        'Information and user interface components must be presentable to users in ways they can perceive.',
+      operable: 'User interface components and navigation must be operable.',
+      understandable: 'Information and the operation of user interface must be understandable.',
+      robust:
+        'Content must be robust enough that it can be interpreted reliably by a wide variety of user agents, including assistive technologies.'
+    },
+    scStatus: {
+      passed: 'Passed',
+      failed: 'Failed',
+      'not-present': 'Not present',
+      'not-tested': 'Not tested'
     },
     wcagPrinciple: 'WCAG Principle',
     principle: 'Principle',

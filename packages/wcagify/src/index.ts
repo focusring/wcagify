@@ -1,6 +1,20 @@
-export { scUri, scName, scorecard, conformanceSummary, scorecardByLevel, PRINCIPLES } from './wcag'
+export {
+  scUri,
+  scName,
+  scorecard,
+  conformanceSummary,
+  scorecardByLevel,
+  PRINCIPLES,
+  guidelineName
+} from './wcag'
 export { reportSchema, issueSchema, evaluationSchema, samplePageSchema } from './schemas'
-export { filterIssues, sortIssuesBySc, filterTips, groupIssuesBySc } from './issues'
+export {
+  filterIssues,
+  sortIssuesBySc,
+  filterTips,
+  groupIssuesBySc,
+  groupIssuesByPrinciple
+} from './issues'
 export { resolveSamplePage } from './report'
 export { defineWcagifyConfig } from './config'
 export { toSlug, buildIssueFrontmatter, escapeYamlValue } from './content-utils'
@@ -13,5 +27,9 @@ export type {
   PrincipleCounts,
   Scorecard,
   SamplePage,
-  IssueGroup
+  IssueGroup,
+  ScStatus,
+  ScGroup,
+  GuidelineGroup,
+  PrincipleGroup
 } from './types'
