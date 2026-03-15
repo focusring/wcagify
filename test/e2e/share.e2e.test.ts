@@ -115,7 +115,7 @@ describe('Share E2E', () => {
       context = await browser.newContext()
       page = await context.newPage()
 
-      await page.goto(`${baseUrl}/share/${share.token}`)
+      await page.goto(`${baseUrl}/share/${share.token}`, { waitUntil: 'networkidle' })
       await page.waitForSelector('input[type="password"]', { timeout: 30_000 })
 
       expect(await page.$('input[type="password"]')).toBeTruthy()
