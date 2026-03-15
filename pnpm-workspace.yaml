@@ -15,8 +15,8 @@ catalogs:
     ejs: ^5.0.1
     picocolors: ^1.1.1
   core:
-    '@iconify-json/lucide': ^1.2.96
-    '@iconify-json/simple-icons': ^1.2.73
+    '@iconify-json/lucide': ^1.2.98
+    '@iconify-json/simple-icons': ^1.2.74
     '@libsql/client': ^0.17.0
     '@nuxt/a11y': 1.0.0-alpha.1
     '@nuxt/content': ^3.12.0
@@ -33,18 +33,18 @@ catalogs:
     '@nuxt/schema': ^4.4.2
     '@types/ejs': ^3.1.5
     '@types/node': ^24.12.0
-    '@vitest/coverage-v8': ^4.0.18
+    '@vitest/coverage-v8': ^4.1.0
     bumpp: ^10.4.1
     changelogen: ^0.6.2
     changelogithub: ^14.0.0
     husky: ^9.1.7
-    lint-staged: ^16.3.3
-    oxfmt: ^0.37.0
-    oxlint: ^1.52.0
+    lint-staged: ^16.4.0
+    oxfmt: ^0.40.0
+    oxlint: ^1.55.0
     playwright: ^1.58.2
-    tsdown: ^0.21.1
+    tsdown: ^0.21.2
     typescript: ^5.9.3
-    vitest: ^4.0.18
+    vitest: ^4.1.0
     vue-tsc: ^3.2.5
   docs:
     '@tailwindcss/vite': ^4.2.1
