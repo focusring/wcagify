@@ -9,7 +9,7 @@ const props = defineProps<{
 
 const { t } = useI18n()
 
-const open = ref(false)
+const statusFilters = inject<Ref<Set<string>>>('statusFilters')
 
 type BadgeColor = 'error' | 'neutral' | 'success' | 'warning' | 'primary' | 'secondary' | 'info'
 
@@ -28,8 +28,11 @@ const levelColors: Record<string, BadgeColor> = {
 </script>
 
 <template>
-  <div class="rounded-lg border border-gray-200 dark:border-gray-800">
-    <button class="flex w-full items-center gap-3 px-4 py-3 text-left" @click="open = !open">
+  <div
+    v-show="!statusFilters || statusFilters.has(criterion.status)"
+    class="rounded-lg border border-gray-200 dark:border-gray-800"
+  >
+    <div class="flex items-center gap-3 px-4 py-3">
       <UBadge
         :label="criterion.level"
         variant="subtle"
@@ -41,7 +44,6 @@ const levelColors: Record<string, BadgeColor> = {
         :href="criterion.uri"
         target="_blank"
         class="font-medium text-gray-950 dark:text-white hover:underline"
-        @click.stop
       >
         {{ criterion.name }}
       </a>
@@ -52,18 +54,11 @@ const levelColors: Record<string, BadgeColor> = {
           variant="subtle"
           :color="statusColors[criterion.status]"
         />
-
-        <Icon
-          v-if="criterion.issues.length > 0"
-          name="i-lucide-chevron-down"
-          class="size-5 text-gray-400 transition-transform"
-          :class="{ 'rotate-180': open }"
-        />
       </div>
-    </button>
+    </div>
 
     <div
-      v-if="criterion.issues.length > 0 && open"
+      v-if="criterion.issues.length > 0"
       class="border-t border-gray-200 dark:border-gray-800 px-4 py-4 space-y-6"
     >
       <ReportIssue

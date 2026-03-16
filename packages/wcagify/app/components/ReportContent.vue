@@ -23,6 +23,32 @@ const issuesByPrinciple = computed(() => {
 })
 
 const reportTips = computed(() => filterTips(props.issues))
+
+type Status = 'passed' | 'failed' | 'not-present' | 'not-tested'
+const allStatuses: Status[] = ['passed', 'failed', 'not-present', 'not-tested']
+
+const statusCounts = computed(() => {
+  const counts: Record<Status, number> = { passed: 0, failed: 0, 'not-present': 0, 'not-tested': 0 }
+  for (const group of issuesByPrinciple.value) {
+    for (const guideline of group.guidelines) {
+      for (const sc of guideline.criteria) {
+        counts[sc.status as Status]++
+      }
+    }
+  }
+  return counts
+})
+
+const activeFilters = ref<Set<Status>>(new Set(allStatuses))
+
+function toggleFilter(status: Status) {
+  const isOnlyThis = activeFilters.value.size === 1 && activeFilters.value.has(status)
+  activeFilters.value = isOnlyThis ? new Set(allStatuses) : new Set([status])
+}
+
+const isFiltering = computed(() => activeFilters.value.size < allStatuses.length)
+
+provide('statusFilters', activeFilters)
 </script>
 
 <template>
@@ -34,7 +60,7 @@ const reportTips = computed(() => filterTips(props.issues))
       <slot name="actions" />
     </div>
 
-    <section id="executive-summary" class="mt-12">
+    <section id="executive-summary" class="mt-12 scroll-mt-20">
       <h2 class="text-2xl font-semibold text-gray-950 dark:text-white">
         {{ t('report.executiveSummary') }}
       </h2>
@@ -45,7 +71,7 @@ const reportTips = computed(() => filterTips(props.issues))
 
     <hr class="my-12 border-gray-200 dark:border-gray-800" />
 
-    <section id="scorecard">
+    <section id="scorecard" class="scroll-mt-20">
       <h2 class="text-2xl font-semibold text-gray-950 dark:text-white">
         {{ t('report.resultsPerPrinciple') }}
       </h2>
@@ -60,7 +86,7 @@ const reportTips = computed(() => filterTips(props.issues))
 
     <hr class="my-12 border-gray-200 dark:border-gray-800" />
 
-    <section id="about">
+    <section id="about" class="scroll-mt-20">
       <h2 class="text-2xl font-semibold text-gray-950 dark:text-white">
         {{ t('report.aboutThisReport') }}
       </h2>
@@ -73,7 +99,7 @@ const reportTips = computed(() => filterTips(props.issues))
 
     <hr class="my-12 border-gray-200 dark:border-gray-800" />
 
-    <section id="scope">
+    <section id="scope" class="scroll-mt-20">
       <h2 class="text-2xl font-semibold text-gray-950 dark:text-white">
         {{ t('report.scope') }}
       </h2>
@@ -84,7 +110,7 @@ const reportTips = computed(() => filterTips(props.issues))
 
     <hr class="my-12 border-gray-200 dark:border-gray-800" />
 
-    <section id="sample">
+    <section id="sample" class="scroll-mt-20">
       <h2 class="text-2xl font-semibold text-gray-950 dark:text-white">
         {{ t('report.representativeSample') }}
       </h2>
@@ -96,10 +122,41 @@ const reportTips = computed(() => filterTips(props.issues))
     <template v-if="issuesByPrinciple.length">
       <hr class="my-12 border-gray-200 dark:border-gray-800" />
 
-      <section id="issues">
+      <section id="issues" class="min-h-screen">
         <h2 class="text-2xl font-semibold text-gray-950 dark:text-white">
           {{ t('report.results') }}
         </h2>
+
+        <div class="md:flex grid grid-cols-2 grid-rows-2 gap-4 mt-4 max-w-lg md:max-w-none">
+          <ResultsIndicator
+            status="passed"
+            :count="statusCounts.passed"
+            :active="activeFilters.has('passed')"
+            :filtering="isFiltering"
+            @toggle="toggleFilter('passed')"
+          />
+          <ResultsIndicator
+            status="failed"
+            :count="statusCounts.failed"
+            :active="activeFilters.has('failed')"
+            :filtering="isFiltering"
+            @toggle="toggleFilter('failed')"
+          />
+          <ResultsIndicator
+            status="not-present"
+            :count="statusCounts['not-present']"
+            :active="activeFilters.has('not-present')"
+            :filtering="isFiltering"
+            @toggle="toggleFilter('not-present')"
+          />
+          <ResultsIndicator
+            status="not-tested"
+            :count="statusCounts['not-tested']"
+            :active="activeFilters.has('not-tested')"
+            :filtering="isFiltering"
+            @toggle="toggleFilter('not-tested')"
+          />
+        </div>
 
         <ReportPrinciple
           v-for="group in issuesByPrinciple"
