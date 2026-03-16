@@ -7,23 +7,20 @@ const props = defineProps<{
   report: ReportsCollectionItem
 }>()
 
-const open = ref(true)
+const statusFilters = inject<Ref<Set<string>>>('statusFilters')
+
+const hasVisibleCriteria = computed(
+  () => !statusFilters || props.guideline.criteria.some((sc) => statusFilters.value.has(sc.status))
+)
 </script>
 
 <template>
-  <div>
-    <button class="flex w-full items-center justify-between py-2 text-left" @click="open = !open">
-      <h3 class="text-lg font-medium text-gray-950 dark:text-white">
-        {{ guideline.guideline }}: {{ guideline.name }}
-      </h3>
-      <Icon
-        name="i-lucide-chevron-down"
-        class="size-5 text-gray-400 transition-transform"
-        :class="{ 'rotate-180': open }"
-      />
-    </button>
+  <div v-show="hasVisibleCriteria">
+    <h3 class="text-lg font-medium text-gray-950 dark:text-white py-2">
+      {{ guideline.guideline }}: {{ guideline.name }}
+    </h3>
 
-    <div v-show="open" class="mt-2 space-y-3">
+    <div class="mt-2 space-y-3">
       <ReportSuccessCriterion
         v-for="criterion in guideline.criteria"
         :key="criterion.sc"

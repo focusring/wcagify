@@ -1,6 +1,5 @@
 <script setup lang="ts">
 const route = useRoute()
-const { t } = useI18n()
 
 const reportPath = computed(() => `/reports/${(route.params.slug as string[]).join('/')}`)
 
@@ -57,13 +56,13 @@ const shareOpen = ref(false)
       <ReportContent :report="report" :issues="issues ?? []">
         <template #actions>
           <UButton
-            :label="t('share.share')"
+            :label="$t('share.share')"
             icon="i-lucide-share-2"
             variant="outline"
             @click="shareOpen = true"
           />
           <UButton
-            :label="t('report.downloadPdf')"
+            :label="$t('report.downloadPdf')"
             icon="i-lucide-download"
             :loading="isGeneratingPdf"
             @click="downloadPdf"
@@ -79,7 +78,7 @@ const shareOpen = ref(false)
 
     <template #right>
       <UPageAside>
-        <ReportAside :report="report" />
+        <ReportAside />
       </UPageAside>
     </template>
   </UPage>

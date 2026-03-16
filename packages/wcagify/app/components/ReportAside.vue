@@ -3,7 +3,7 @@ import type { ContentNavigationLink } from '@nuxt/ui'
 
 const { t } = useI18n()
 
-const navigation = ref<ContentNavigationLink[]>([
+const navigation = computed<ContentNavigationLink[]>(() => [
   {
     title: t('report.executiveSummary'),
     icon: 'i-lucide:notebook',
@@ -62,7 +62,7 @@ const navigation = ref<ContentNavigationLink[]>([
 <template>
   <div class="p-3 rounded-lg border border-accented max-w-58">
     <h2 class="mb-4 text-2xl font-semibold text-gray-950 dark:text-white">
-      {{ t('report.navigationTitle') }}
+      {{ $t('report.navigationTitle') }}
     </h2>
     <UContentNavigation
       :navigation="navigation"
