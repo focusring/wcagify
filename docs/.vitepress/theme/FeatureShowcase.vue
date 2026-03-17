@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { ref, computed, onMounted, onUnmounted } from 'vue'
+import { ref, computed, watch, nextTick, onMounted, onUnmounted } from 'vue'
 import { useData } from 'vitepress'
 
 const { lang } = useData()
@@ -214,7 +214,7 @@ const tabs: Tab[] = [
   { id: 'markdown', labelKey: 'tabMarkdown' }
 ]
 
-const DURATION = 8000
+const DURATIONS = [8000, 8000, 8000, 10000]
 const activeIndex = ref(0)
 const progress = ref(0)
 const paused = ref(false)
@@ -226,8 +226,9 @@ function tick() {
   if (!paused.value) {
     const now = Date.now()
     elapsed = now - startTime
-    progress.value = Math.min((elapsed / DURATION) * 100, 100)
-    if (elapsed >= DURATION) {
+    const duration = DURATIONS[activeIndex.value]
+    progress.value = Math.min((elapsed / duration) * 100, 100)
+    if (elapsed >= duration) {
       activeIndex.value = (activeIndex.value + 1) % tabs.length
       startTime = Date.now()
       elapsed = 0
@@ -285,6 +286,32 @@ function onTabKeydown(event: KeyboardEvent) {
   tab?.focus()
 }
 
+const panelsEl = ref<HTMLElement | null>(null)
+
+watch(activeIndex, () => {
+  const el = panelsEl.value
+  if (!el) return
+  // Capture current height before DOM update
+  const fromHeight = el.offsetHeight
+  nextTick(() => {
+    // Measure new content height
+    const toHeight = el.scrollHeight
+    if (fromHeight === toHeight) return
+    // Animate from old to new height
+    el.style.height = `${fromHeight}px`
+    requestAnimationFrame(() => {
+      el.style.transition = 'height 0.35s ease'
+      el.style.height = `${toHeight}px`
+      const onEnd = () => {
+        el.style.height = ''
+        el.style.transition = ''
+        el.removeEventListener('transitionend', onEnd)
+      }
+      el.addEventListener('transitionend', onEnd)
+    })
+  })
+})
+
 onMounted(() => {
   startTime = Date.now()
   rafId = requestAnimationFrame(tick)
@@ -297,7 +324,7 @@ onUnmounted(() => cancelAnimationFrame(rafId))
   <section class="py-16">
     <div class="relative">
       <!-- Tab panels -->
-      <div class="showcase-panels">
+      <div ref="panelsEl" class="showcase-panels">
         <!-- Reports panel: table → click → report detail -->
         <div
           id="showcase-panel-reports"
@@ -307,7 +334,7 @@ onUnmounted(() => cancelAnimationFrame(rafId))
           :tabindex="activeIndex === 0 ? 0 : undefined"
           class="showcase-panel"
         >
-          <div v-if="activeIndex === 0" class="mockup anim-fade-in">
+          <div v-if="activeIndex === 0" class="mockup">
             <div class="mockup-header">
               <div class="mockup-dots"><span /><span /><span /></div>
               <div class="mockup-title">{{ t('reports') }}</div>
@@ -462,7 +489,7 @@ onUnmounted(() => cancelAnimationFrame(rafId))
           :tabindex="activeIndex === 1 ? 0 : undefined"
           class="showcase-panel"
         >
-          <div v-if="activeIndex === 1" class="mockup anim-fade-in">
+          <div v-if="activeIndex === 1" class="mockup">
             <div class="mockup-header">
               <div class="mockup-dots"><span /><span /><span /></div>
               <div class="mockup-title">{{ t('reportAcme') }}</div>
@@ -474,15 +501,45 @@ onUnmounted(() => cancelAnimationFrame(rafId))
             <div class="mockup-body mockup-body-issues">
               <div class="mockup-principle anim-slide-up" style="--delay: 0.2s">
                 <div class="mockup-principle-header">
-                  <span class="mockup-principle-icon">&#128065;</span>
+                  <svg
+                    class="mockup-principle-icon"
+                    xmlns="http://www.w3.org/2000/svg"
+                    width="16"
+                    height="16"
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="currentColor"
+                    stroke-width="2"
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                    aria-hidden="true"
+                  >
+                    <path
+                      d="M2.062 12.348a1 1 0 0 1 0-.696 10.75 10.75 0 0 1 19.876 0 1 1 0 0 1 0 .696 10.75 10.75 0 0 1-19.876 0"
+                    />
+                    <circle cx="12" cy="12" r="3" />
+                  </svg>
                   <span>{{ t('perceivable') }}</span>
                 </div>
                 <div class="mockup-guideline anim-expand" style="--delay: 0.8s">
                   <div class="mockup-guideline-header">
                     <span>{{ t('textAlternatives') }}</span>
-                    <span class="mockup-chevron anim-rotate-chevron" style="--delay: 0.7s"
-                      >&#9654;</span
+                    <svg
+                      class="mockup-chevron anim-rotate-chevron"
+                      style="--delay: 0.7s"
+                      xmlns="http://www.w3.org/2000/svg"
+                      width="14"
+                      height="14"
+                      viewBox="0 0 24 24"
+                      fill="none"
+                      stroke="currentColor"
+                      stroke-width="2"
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                      aria-hidden="true"
                     >
+                      <path d="m9 18 6-6-6-6" />
+                    </svg>
                   </div>
                   <div class="mockup-criterion anim-slide-up" style="--delay: 1.4s">
                     <div class="mockup-criterion-header">
@@ -509,7 +566,21 @@ onUnmounted(() => cancelAnimationFrame(rafId))
                 <div class="mockup-guideline anim-slide-up" style="--delay: 3.6s">
                   <div class="mockup-guideline-header">
                     <span>{{ t('adaptable') }}</span>
-                    <span class="mockup-chevron">&#9654;</span>
+                    <svg
+                      class="mockup-chevron"
+                      xmlns="http://www.w3.org/2000/svg"
+                      width="14"
+                      height="14"
+                      viewBox="0 0 24 24"
+                      fill="none"
+                      stroke="currentColor"
+                      stroke-width="2"
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                      aria-hidden="true"
+                    >
+                      <path d="m9 18 6-6-6-6" />
+                    </svg>
                   </div>
                 </div>
               </div>
@@ -518,7 +589,27 @@ onUnmounted(() => cancelAnimationFrame(rafId))
                 style="--delay: 4.2s"
               >
                 <div class="mockup-principle-header">
-                  <span class="mockup-principle-icon">&#9995;</span>
+                  <svg
+                    class="mockup-principle-icon"
+                    xmlns="http://www.w3.org/2000/svg"
+                    width="16"
+                    height="16"
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="currentColor"
+                    stroke-width="2"
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                    aria-hidden="true"
+                  >
+                    <path d="M22 14a8 8 0 0 1-8 8" />
+                    <path d="M18 11v-1a2 2 0 0 0-2-2a2 2 0 0 0-2 2" />
+                    <path d="M14 10V9a2 2 0 0 0-2-2a2 2 0 0 0-2 2v1" />
+                    <path d="M10 9.5V4a2 2 0 0 0-2-2a2 2 0 0 0-2 2v10" />
+                    <path
+                      d="M18 11a2 2 0 1 1 4 0v3a8 8 0 0 1-8 8h-2c-2.8 0-4.5-.86-5.99-2.34l-3.6-3.6a2 2 0 0 1 2.83-2.82L7 16"
+                    />
+                  </svg>
                   <span>{{ t('operable') }}</span>
                   <span class="mockup-status-passed mockup-ml-auto">{{ t('operablePassed') }}</span>
                 </div>
@@ -528,7 +619,33 @@ onUnmounted(() => cancelAnimationFrame(rafId))
                 style="--delay: 4.8s"
               >
                 <div class="mockup-principle-header">
-                  <span class="mockup-principle-icon">&#129504;</span>
+                  <svg
+                    class="mockup-principle-icon"
+                    xmlns="http://www.w3.org/2000/svg"
+                    width="16"
+                    height="16"
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="currentColor"
+                    stroke-width="2"
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                    aria-hidden="true"
+                  >
+                    <path
+                      d="M12 5a3 3 0 1 0-5.997.125 4 4 0 0 0-2.526 5.77 4 4 0 0 0 .556 6.588A4 4 0 1 0 12 18Z"
+                    />
+                    <path
+                      d="M12 5a3 3 0 1 1 5.997.125 4 4 0 0 1 2.526 5.77 4 4 0 0 1-.556 6.588A4 4 0 1 1 12 18Z"
+                    />
+                    <path d="M15 13a4.5 4.5 0 0 1-3-4 4.5 4.5 0 0 1-3 4" />
+                    <path d="M17.599 6.5a3 3 0 0 0 .399-1.375" />
+                    <path d="M6.003 5.125A3 3 0 0 0 6.401 6.5" />
+                    <path d="M3.477 10.896a4 4 0 0 1 .585-.396" />
+                    <path d="M19.938 10.5a4 4 0 0 1 .585.396" />
+                    <path d="M6 18a4 4 0 0 1-1.967-.516" />
+                    <path d="M19.967 17.484A4 4 0 0 1 18 18" />
+                  </svg>
                   <span>{{ t('understandable') }}</span>
                   <span class="mockup-status-passed mockup-ml-auto">{{
                     t('understandablePassed')
@@ -540,7 +657,24 @@ onUnmounted(() => cancelAnimationFrame(rafId))
                 style="--delay: 5.4s"
               >
                 <div class="mockup-principle-header">
-                  <span class="mockup-principle-icon">&#9881;</span>
+                  <svg
+                    class="mockup-principle-icon"
+                    xmlns="http://www.w3.org/2000/svg"
+                    width="16"
+                    height="16"
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="currentColor"
+                    stroke-width="2"
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                    aria-hidden="true"
+                  >
+                    <path
+                      d="M20 13c0 5-3.5 7.5-7.66 8.95a1 1 0 0 1-.67-.01C7.5 20.5 4 18 4 13V6a1 1 0 0 1 1-1c2 0 4.5-1.2 6.24-2.72a1.17 1.17 0 0 1 1.52 0C14.51 3.81 17 5 19 5a1 1 0 0 1 1 1z"
+                    />
+                    <path d="m9 12 2 2 4-4" />
+                  </svg>
                   <span>{{ t('robust') }}</span>
                   <span class="mockup-status-passed mockup-ml-auto">{{ t('robustPassed') }}</span>
                 </div>
@@ -558,7 +692,7 @@ onUnmounted(() => cancelAnimationFrame(rafId))
           :tabindex="activeIndex === 2 ? 0 : undefined"
           class="showcase-panel"
         >
-          <div v-if="activeIndex === 2" class="mockup anim-fade-in">
+          <div v-if="activeIndex === 2" class="mockup">
             <div class="mockup-header">
               <div class="mockup-dots"><span /><span /><span /></div>
               <div class="mockup-title">{{ t('pdfFileName') }}</div>
@@ -650,7 +784,7 @@ onUnmounted(() => cancelAnimationFrame(rafId))
           :tabindex="activeIndex === 3 ? 0 : undefined"
           class="showcase-panel"
         >
-          <div v-if="activeIndex === 3" class="mockup anim-fade-in">
+          <div v-if="activeIndex === 3" class="mockup">
             <div class="mockup-header">
               <div class="mockup-dots"><span /><span /><span /></div>
               <div class="mockup-title">{{ t('mdFileName') }}</div>
@@ -704,8 +838,8 @@ onUnmounted(() => cancelAnimationFrame(rafId))
                     <span class="mockup-code-fence">```html</span>
                   </div>
                   <div class="anim-type-line" style="--line: 15">
-                    <span class="mockup-code-tag">&lt;img</span>
-                    <span class="mockup-code-attr">alt</span>=<span class="mockup-code-string"
+                    <span class="mockup-code-tag">&lt;img</span>{{ ' '
+                    }}<span class="mockup-code-attr">alt</span>=<span class="mockup-code-string"
                       >"{{ t('mdAltValue') }}"</span
                     >
                     <span class="mockup-code-tag">/&gt;</span>
@@ -719,7 +853,7 @@ onUnmounted(() => cancelAnimationFrame(rafId))
               <!-- Right: Live HTML preview -->
               <div class="split-preview">
                 <!-- Frontmatter parsed into header -->
-                <div class="preview-header anim-preview" style="--pdelay: 1.5s">
+                <div class="preview-header anim-preview" style="--pdelay: 2.5s">
                   <div class="preview-badge-row">
                     <span class="mockup-badge-aa">AA</span>
                     <span class="preview-sc">{{ t('previewNonTextContent') }}</span>
@@ -732,24 +866,24 @@ onUnmounted(() => cancelAnimationFrame(rafId))
                   </div>
                 </div>
                 <!-- Title from frontmatter -->
-                <div class="preview-title anim-preview" style="--pdelay: 1.8s">
+                <div class="preview-title anim-preview" style="--pdelay: 3s">
                   {{ t('previewMissingAlt') }}
                 </div>
                 <!-- Body text -->
-                <div class="preview-body-text anim-preview" style="--pdelay: 2.3s">
+                <div class="preview-body-text anim-preview" style="--pdelay: 3.8s">
                   {{ t('previewBody') }} <code>alt</code> {{ t('previewBodySuffix') }}
                 </div>
                 <!-- Heading -->
-                <div class="preview-h2 anim-preview" style="--pdelay: 3s">
+                <div class="preview-h2 anim-preview" style="--pdelay: 5s">
                   {{ t('previewRecommendation') }}
                 </div>
                 <!-- Body text -->
-                <div class="preview-body-text anim-preview" style="--pdelay: 3.5s">
+                <div class="preview-body-text anim-preview" style="--pdelay: 5.8s">
                   {{ t('previewRecommendationText') }} <code>alt</code>:
                 </div>
                 <!-- Code block -->
-                <div class="preview-code-block anim-preview" style="--pdelay: 4s">
-                  <code>&lt;img alt="{{ t('mdAltValue') }}" /&gt;</code>
+                <div class="preview-code-block anim-preview" style="--pdelay: 6.5s">
+                  <code>&lt;img&nbsp;alt="{{ t('mdAltValue') }}" /&gt;</code>
                 </div>
               </div>
             </div>
@@ -1093,8 +1227,8 @@ onUnmounted(() => cancelAnimationFrame(rafId))
 }
 
 .anim-type-line {
-  animation: typeLine 0.15s ease-out both;
-  animation-delay: calc(0.3s + var(--line) * 0.25s);
+  animation: typeLine 0.2s ease-out both;
+  animation-delay: calc(0.4s + var(--line) * 0.35s);
 }
 
 .anim-text-cursor {
@@ -1104,7 +1238,7 @@ onUnmounted(() => cancelAnimationFrame(rafId))
   height: 1rem;
   background: var(--vp-c-brand-1);
   animation: blink 1s step-end infinite;
-  animation-delay: calc(0.3s + 16 * 0.25s);
+  animation-delay: calc(0.4s + 16 * 0.35s);
   opacity: 0;
   left: 1.25rem;
 }
@@ -1265,6 +1399,7 @@ onUnmounted(() => cancelAnimationFrame(rafId))
   border: none;
   background: transparent;
   padding: 0;
+  transition: background 0.3s ease;
 }
 
 .showcase-tab:focus-visible {
@@ -1301,10 +1436,12 @@ onUnmounted(() => cancelAnimationFrame(rafId))
   font-weight: 500;
   white-space: nowrap;
   color: var(--vp-c-text-2);
+  transition: color 0.3s ease;
 }
 
 .showcase-tab-active .showcase-tab-content {
   color: var(--vp-c-brand-1);
+  font-weight: 600;
 }
 
 /* ==============================
@@ -1593,7 +1730,10 @@ onUnmounted(() => cancelAnimationFrame(rafId))
   background: var(--vp-c-bg-soft);
 }
 .mockup-principle-icon {
-  font-size: 1rem;
+  width: 1rem;
+  height: 1rem;
+  flex-shrink: 0;
+  color: var(--vp-c-text-2);
 }
 .mockup-ml-auto {
   margin-left: auto;
@@ -1611,7 +1751,9 @@ onUnmounted(() => cancelAnimationFrame(rafId))
   color: var(--vp-c-text-2);
 }
 .mockup-chevron {
-  font-size: 0.75rem;
+  width: 0.875rem;
+  height: 0.875rem;
+  flex-shrink: 0;
   color: var(--vp-c-text-3);
 }
 .mockup-criterion {
