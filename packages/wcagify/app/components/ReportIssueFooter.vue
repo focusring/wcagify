@@ -33,7 +33,7 @@ function getSeverityColor(severity: string): BadgeColor {
     :class="criterion || samplePage ? 'md:grid-rows-2' : 'md:grid-rows-1'"
   >
     <div v-if="issue.type" class="flex gap-1">
-      <p>{{ t('report.type') }}:</p>
+      <dt>{{ t('report.type') }}:</dt>
       <UBadge
         :label="t(`report.typesort.${issue.type.toLowerCase()}`)"
         variant="subtle"
@@ -41,7 +41,7 @@ function getSeverityColor(severity: string): BadgeColor {
       />
     </div>
     <div v-if="issue.severity" class="flex gap-1">
-      <p>{{ t('report.severity') }}:</p>
+      <dt>{{ t('report.severity') }}:</dt>
       <UBadge
         :label="t(`report.severityLevel.${issue.severity.toLowerCase()}`)"
         :color="getSeverityColor(issue.severity)"
@@ -49,7 +49,7 @@ function getSeverityColor(severity: string): BadgeColor {
       />
     </div>
     <div v-if="criterion" class="flex gap-1 items-center">
-      <p>{{ t('report.successCriterion') }}:</p>
+      <dt>{{ t('report.successCriterion') }}:</dt>
       <UButton
         :to="criterion.uri"
         :label="criterion.name"
