@@ -42,12 +42,17 @@ async function downloadPdf() {
 }
 
 const shareOpen = ref(false)
+
+const reportContentRef = ref<{ visiblePrinciples: Set<string> }>()
+const visiblePrinciples = computed(
+  () => reportContentRef.value?.visiblePrinciples ?? new Set<string>()
+)
 </script>
 
 <template>
   <div class="mx-6 flex gap-20 mb-8">
     <div v-if="report" class="mx-auto w-full max-w-prose lg:max-w-none">
-      <ReportContent :report="report" :issues="issues ?? []">
+      <ReportContent ref="reportContentRef" :report="report" :issues="issues ?? []">
         <template #actions>
           <UButton
             :label="$t('share.share')"
@@ -70,6 +75,9 @@ const shareOpen = ref(false)
       />
     </div>
 
-    <ReportAside class="mt-12 hidden lg:block h-fit min-w-60.5 sticky top-20 print:hidden" />
+    <ReportAside
+      :visible-principles="visiblePrinciples"
+      class="mt-12 hidden lg:block h-fit min-w-60.5 sticky top-20 print:hidden"
+    />
   </div>
 </template>

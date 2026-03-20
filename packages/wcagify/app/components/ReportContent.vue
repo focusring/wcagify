@@ -56,6 +56,21 @@ const emptyFilterStatus = computed<Status | null>(() => {
 })
 
 provide('statusFilters', activeFilters)
+
+const visiblePrinciples = computed(() => {
+  const visible = new Set<string>()
+  for (const group of issuesByPrinciple.value) {
+    const hasVisible = group.guidelines.some((g) =>
+      g.criteria.some((sc) => activeFilters.value.has(sc.status as Status))
+    )
+    if (hasVisible) {
+      visible.add(group.principle)
+    }
+  }
+  return visible
+})
+
+defineExpose({ visiblePrinciples })
 </script>
 
 <template>

@@ -39,7 +39,7 @@ export default {
     issues: 'Problemen',
     results: 'Resultaten',
     tips: 'Tips',
-    successCriterion: 'Succescriterium',
+    successCriteria: 'Succescriteria',
     type: 'Type',
     typesort: {
       content: 'Content',

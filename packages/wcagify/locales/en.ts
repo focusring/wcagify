@@ -38,7 +38,7 @@ export default {
     issues: 'Issues',
     results: 'Results',
     tips: 'Tips',
-    successCriterion: 'Success criterion',
+    successCriteria: 'Success criteria',
     type: 'Type',
     typesort: {
       content: 'Content',

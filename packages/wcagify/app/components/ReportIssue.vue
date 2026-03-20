@@ -20,19 +20,6 @@ const open = ref(false)
 const sanitizedPath = props.issue.path.split('/').filter(Boolean).join('-')
 const issueId = `issue-${sanitizedPath}`
 const panelId = `issue-panel-${sanitizedPath}`
-
-const severityColor = {
-  low: 'success',
-  medium: 'warning',
-  high: 'error'
-} as const
-
-type BadgeColor = 'error' | 'neutral' | 'success' | 'warning' | 'primary' | 'secondary' | 'info'
-
-function getSeverityColor(severity: string): BadgeColor {
-  return (severityColor[severity.toLowerCase() as keyof typeof severityColor] ??
-    'neutral') as BadgeColor
-}
 </script>
 
 <template>
@@ -43,18 +30,12 @@ function getSeverityColor(severity: string): BadgeColor {
       :aria-controls="panelId"
       @click="open = !open"
     >
-      <span class="font-medium text-gray-950 dark:text-white">
+      <h5 class="font-medium text-gray-950 dark:text-white text-base">
         <span v-if="index !== undefined && index !== null">{{ index }}. </span>{{ issue.title }}
-      </span>
+      </h5>
 
       <div class="ml-auto flex items-center gap-2 shrink-0">
         <UBadge v-if="samplePage" :label="samplePage.title" variant="outline" color="neutral" />
-        <UBadge
-          v-if="issue.severity"
-          :label="t(`report.severityLevel.${issue.severity.toLowerCase()}`)"
-          variant="subtle"
-          :color="getSeverityColor(issue.severity)"
-        />
         <UBadge
           :label="t('report.scStatus.failed')"
           variant="subtle"

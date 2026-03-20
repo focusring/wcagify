@@ -13,11 +13,11 @@ const statusFilters = inject<Ref<Set<string>>>('statusFilters')
 
 type BadgeColor = 'error' | 'neutral' | 'success' | 'warning' | 'primary' | 'secondary' | 'info'
 
-const statusColors: Record<ScStatus, BadgeColor> = {
-  passed: 'success',
-  failed: 'error',
-  'not-present': 'neutral',
-  'not-tested': 'warning'
+const statusConfig: Record<ScStatus, { color: BadgeColor; icon: string }> = {
+  passed: { color: 'success', icon: 'i-lucide:check' },
+  failed: { color: 'error', icon: 'i-lucide:x' },
+  'not-present': { color: 'neutral', icon: 'i-lucide:book-dashed' },
+  'not-tested': { color: 'warning', icon: 'i-lucide:mouse-pointer-2-off' }
 }
 
 const levelColors: Record<string, BadgeColor> = {
@@ -40,19 +40,16 @@ const levelColors: Record<string, BadgeColor> = {
         class="shrink-0"
       />
 
-      <a
-        :href="criterion.uri"
-        target="_blank"
-        class="font-medium text-gray-950 dark:text-white hover:underline"
-      >
+      <h4 class="font-medium text-gray-950 dark:text-white text-base">
         {{ criterion.name }}
-      </a>
+      </h4>
 
       <div class="ml-auto flex items-center gap-2 shrink-0">
         <UBadge
           :label="t(`report.scStatus.${criterion.status}`)"
           variant="subtle"
-          :color="statusColors[criterion.status]"
+          :color="statusConfig[criterion.status].color"
+          :icon="statusConfig[criterion.status].icon"
         />
       </div>
     </div>

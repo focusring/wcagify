@@ -33,9 +33,7 @@ const fixedToolbarItems = computed<EditorToolbarItem<typeof customHandlers>[][]>
       tooltip: { text: t('editor.headings') },
       content: { align: 'start' },
       items: [
-        { kind: 'heading', level: 1, icon: 'i-lucide-heading-1', label: t('editor.heading1') },
-        { kind: 'heading', level: 2, icon: 'i-lucide-heading-2', label: t('editor.heading2') },
-        { kind: 'heading', level: 3, icon: 'i-lucide-heading-3', label: t('editor.heading3') }
+        { kind: 'heading', level: 6, icon: 'i-lucide-heading-6', label: t('editor.heading6') }
       ]
     },
     {
@@ -89,9 +87,7 @@ const suggestionItems = computed<EditorSuggestionMenuItem<typeof customHandlers>
   [
     { type: 'label', label: t('editor.style') },
     { kind: 'paragraph', label: t('editor.paragraph'), icon: 'i-lucide-type' },
-    { kind: 'heading', level: 1, label: t('editor.heading1'), icon: 'i-lucide-heading-1' },
-    { kind: 'heading', level: 2, label: t('editor.heading2'), icon: 'i-lucide-heading-2' },
-    { kind: 'heading', level: 3, label: t('editor.heading3'), icon: 'i-lucide-heading-3' },
+    { kind: 'heading', level: 6, label: t('editor.heading6'), icon: 'i-lucide-heading-6' },
     { kind: 'bulletList', label: t('editor.bulletList'), icon: 'i-lucide-list' },
     { kind: 'orderedList', label: t('editor.numberedList'), icon: 'i-lucide-list-ordered' },
     { kind: 'blockquote', label: t('editor.blockquote'), icon: 'i-lucide-text-quote' },
