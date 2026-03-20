@@ -56,7 +56,7 @@ function getSeverityColor(severity: string): BadgeColor {
         target="_blank"
         variant="link"
         trailing-icon="i-lucide-external-link"
-        class="p-0"
+        class="p-0 underline"
       />
     </div>
     <div v-if="samplePage" class="flex gap-1 items-center">
@@ -67,7 +67,7 @@ function getSeverityColor(severity: string): BadgeColor {
         target="_blank"
         variant="link"
         trailing-icon="i-lucide-external-link"
-        class="p-0"
+        class="p-0 underline"
       />
     </div>
   </dl>

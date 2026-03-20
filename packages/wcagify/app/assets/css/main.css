@@ -3,7 +3,11 @@
 
 @source "../../components";
 
-a {
+a:not([class]) {
+  text-decoration: underline;
+}
+
+.prose a {
   text-decoration: underline;
 }
 
