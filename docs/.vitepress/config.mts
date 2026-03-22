@@ -26,7 +26,8 @@ export default defineConfig({
     siteTitle: false,
     nav: [
       { text: 'Guide', link: '/guide/getting-started' },
-      { text: 'Reference', link: '/reference/configuration' }
+      { text: 'Reference', link: '/reference/configuration' },
+      { text: 'Legal', link: '/legal/terms-and-conditions' }
     ],
 
     sidebar: {
@@ -45,6 +46,16 @@ export default defineConfig({
         {
           text: 'Reference',
           items: [{ text: 'Configuration', link: '/reference/configuration' }]
+        }
+      ],
+      '/legal/': [
+        {
+          text: 'Legal',
+          items: [
+            { text: 'Terms and Conditions', link: '/legal/terms-and-conditions' },
+            { text: 'Privacy Policy', link: '/legal/privacy-policy' },
+            { text: 'Security Policy', link: '/legal/security-policy' }
+          ]
         }
       ]
     },

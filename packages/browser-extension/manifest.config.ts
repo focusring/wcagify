@@ -21,10 +21,9 @@ export default defineManifest({
     type: 'module'
   },
   permissions: ['activeTab', 'tabs', 'scripting', 'storage', 'sidePanel'],
-  host_permissions: ['http://localhost:*/*', 'http://127.0.0.1:*/*', 'https://*/*'],
+  host_permissions: ['https://*/*'],
   content_security_policy: {
-    extension_pages:
-      "script-src 'self' 'wasm-unsafe-eval'; object-src 'self'; img-src 'self' data: http://localhost:* http://127.0.0.1:* https://*;"
+    extension_pages: "script-src 'self'; object-src 'self'; img-src 'self' data: https://*;"
   },
   side_panel: {
     default_path: 'src/popup/index.html'
