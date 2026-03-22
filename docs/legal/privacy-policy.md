@@ -42,7 +42,7 @@ The WCAGify documentation website is a static website. No personal data is colle
 
 ## 8. Security
 
-Since WCAGify is self-hosted, you are responsible for the security of your installation. See our [Security Policy](/legal/beveiligingsverklaring) for recommendations.
+Since WCAGify is self-hosted, you are responsible for the security of your installation. See our [Security Policy](/legal/security-policy) for recommendations.
 
 ## 9. Your Rights
 
