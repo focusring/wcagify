@@ -27,6 +27,9 @@ docs/.vitepress/dist
 .fleet
 .idea
 
+# Auto-generated
+auto-imports.d.ts
+
 # Local env files
 .env
 .env.*
