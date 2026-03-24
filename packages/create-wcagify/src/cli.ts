@@ -1,5 +1,3 @@
-import { basename } from 'node:path'
-import { pathToFileURL } from 'node:url'
 import { Command } from 'commander'
 import { create } from './create.js'
 import type { CreateOptions } from './create.js'
@@ -24,13 +22,10 @@ program
     await create({ ...options, name })
   })
 
-const scriptName = process.argv[1] ? basename(process.argv[1]) : ''
-if (import.meta.url === pathToFileURL(process.argv[1] ?? '').href || scriptName === 'cli.js') {
-  run().catch((error) => {
-    console.error(error)
-    process.exit(1)
-  })
-}
+run().catch((error) => {
+  console.error(error)
+  process.exit(1)
+})
 
 export async function run(): Promise<void> {
   await program.parseAsync()
