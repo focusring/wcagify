@@ -1,4 +1,5 @@
 import { fileURLToPath } from 'node:url'
+import { join } from 'node:path'
 
 const dir = fileURLToPath(new URL('.', import.meta.url))
 
@@ -9,10 +10,6 @@ const hasStudioRepoInfo = Boolean(
 )
 
 const nuxtConfig = {
-  features: {
-    inlineStyles: false
-  },
-
   modules: [
     '@nuxt/ui',
     '@nuxt/content',
@@ -23,7 +20,7 @@ const nuxtConfig = {
     '@focusring/wcagify/nuxt'
   ],
 
-  css: [`${dir}/app/assets/css/main.css`, `${dir}/print.css`],
+  css: [join(dir, 'app/assets/css/main.css'), join(dir, 'print.css')],
 
   runtimeConfig: {
     weasyprintUrl: 'https://magnificent-encouragement-production.up.railway.app'
@@ -39,15 +36,15 @@ const nuxtConfig = {
     customCollections: [
       {
         prefix: 'logo',
-        dir: `${dir}/app/assets/logo`
+        dir: join(dir, 'app/assets/logo')
       }
     ]
   },
 
   // CJS packages used by nuxt-studio that lack ESM default exports, breaking Vite's @fs serving in the layer architecture
   alias: {
-    extend: `${dir}/shims/extend-esm.js`,
-    debug: `${dir}/shims/debug-esm.js`
+    extend: join(dir, 'shims/extend-esm.js'),
+    debug: join(dir, 'shims/debug-esm.js')
   },
 
   vite: {
