@@ -36,14 +36,17 @@ export default defineNitroPlugin((nitroApp) => {
       )
     )
 
-    // Prevent FOUC: hide the page until all external CSS stylesheets have loaded.
-    // In Vite dev mode, Tailwind utilities are served as external stylesheets that
-    // load asynchronously, causing a flash of unstyled content. We hide the page
-    // with an inline style, then unhide once every <link rel="stylesheet"> fires
-    // its load event (with a safety timeout fallback).
+    // Prevent FOUC: hide the page until CSS is actually applied.
+    // In Vite dev mode, <link rel="stylesheet"> tags load JS modules that call
+    // __vite__updateStyle() to inject <style> tags — the link's `load` event fires
+    // when the JS is received, BEFORE styles are in the DOM. In production, CSS is
+    // inlined or loaded as real stylesheets, so the `load` event works.
+    // We use a two-pronged approach:
+    //   1. Watch for Tailwind's marker (--font-sans) via getComputedStyle
+    //   2. Safety timeout so the page is never hidden indefinitely
     html.head.unshift('<style>html:not(.css-ready){visibility:hidden}</style>')
     html.head.push(
-      `<script>(function(){var d=document.documentElement,l=document.querySelectorAll('link[rel="stylesheet"]'),n=0;function r(){if(--n<=0)d.classList.add('css-ready')}for(var i=0;i<l.length;i++){if(l[i].sheet)continue;n++;l[i].addEventListener('load',r);l[i].addEventListener('error',r)}if(n===0)d.classList.add('css-ready');setTimeout(function(){d.classList.add('css-ready')},1500)})();</script>`
+      `<script>(function(){var d=document.documentElement;function show(){d.classList.add('css-ready')}function check(){if(getComputedStyle(d).getPropertyValue('--font-sans'))return show();requestAnimationFrame(check)}check();setTimeout(show,3000)})();</script>`
     )
   })
 })
