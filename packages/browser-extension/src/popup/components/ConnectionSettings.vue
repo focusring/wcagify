@@ -169,7 +169,7 @@ async function fetchReports() {
               >{{ t('connection.url') }} <small>({{ t('connection.required') }})</small></label
             >
             <div class="flex gap-2">
-              <input
+              <UInput
                 id="wcagify-url"
                 v-model="wcagifyUrl"
                 type="url"
@@ -178,27 +178,20 @@ async function fetchReports() {
                 aria-required="true"
                 :aria-invalid="status === 'error' ? true : undefined"
                 :aria-describedby="status === 'error' ? 'wcagify-url-error' : undefined"
-                :class="[
-                  'flex-1 rounded border bg-white dark:bg-gray-800 px-2 py-1.5 text-base text-gray-900 dark:text-gray-100 focus:outline-none',
-                  status === 'error'
-                    ? 'border-red-500 dark:border-red-400 focus:border-red-600 dark:focus:border-red-400'
-                    : 'border-gray-300 dark:border-gray-600 focus:border-green-600 dark:focus:border-green-400'
-                ]"
+                :color="status === 'error' ? 'error' : 'success'"
+                :highlight="status === 'error'"
+                class="flex-1"
               />
-              <button
-                type="submit"
-                class="rounded bg-green-700 dark:bg-green-600 px-3 py-1.5 text-sm font-medium text-white hover:bg-green-800 dark:hover:bg-green-700"
-              >
-                {{ t('connection.connect') }}
-              </button>
-              <button
-                type="button"
+
+              <UButton type="submit" color="success" :label="t('connection.connect')" />
+
+              <UButton
                 @click="rescan"
+                color="neutral"
+                variant="outline"
+                icon="i-lucide-refresh-cw"
                 :aria-label="t('connection.rescan')"
-                class="rounded border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-800 px-2 py-1.5 text-gray-600 dark:text-gray-400 hover:bg-gray-50 dark:hover:bg-gray-700"
-              >
-                <UIcon name="i-lucide-refresh-cw" class="size-4" />
-              </button>
+              />
             </div>
           </form>
           <div
@@ -217,14 +210,13 @@ async function fetchReports() {
           {{ t('connection.connecting') }}
         </div>
 
-        <div
+        <UAlert
           v-if="status === 'error'"
           id="wcagify-url-error"
-          role="alert"
-          class="rounded bg-red-50 dark:bg-red-900/30 p-2 text-sm text-red-700 dark:text-red-400"
-        >
-          {{ errorMessage }}
-        </div>
+          color="error"
+          variant="subtle"
+          :description="errorMessage"
+        />
       </div>
     </details>
 
@@ -234,18 +226,17 @@ async function fetchReports() {
         class="block text-sm font-medium text-gray-600 dark:text-gray-400 mb-1"
         >{{ t('connection.report') }} <small>({{ t('connection.required') }})</small></label
       >
-      <select
+      <USelect
         id="wcagify-report"
         v-model="reportSlug"
+        :items="reports.map((r) => ({ label: r.title, value: r.slug }))"
+        :placeholder="t('connection.selectReport')"
         required
         aria-required="true"
-        class="w-full rounded border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-800 px-2 py-1.5 text-base text-gray-900 dark:text-gray-100 focus:border-green-600 dark:focus:border-green-400 focus:outline-none"
-      >
-        <option value="" disabled>{{ t('connection.selectReport') }}</option>
-        <option v-for="report in reports" :key="report.slug" :value="report.slug">
-          {{ report.title }}
-        </option>
-      </select>
+        color="success"
+        class="w-full"
+        size="lg"
+      />
     </div>
   </div>
 </template>

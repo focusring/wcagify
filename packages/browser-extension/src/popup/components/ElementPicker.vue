@@ -47,13 +47,17 @@ async function pickElement() {
 
 <template>
   <div class="space-y-2">
-    <button
+    <UButton
       @click="pickElement"
       :disabled="picking"
-      class="w-full rounded border border-green-700 dark:border-green-500 px-3 py-1.5 text-sm font-medium text-green-700 dark:text-green-400 hover:bg-green-50 dark:hover:bg-green-900/30 disabled:opacity-50"
-    >
-      {{ picking ? t('picker.picking') : t('picker.pickElement') }}
-    </button>
+      color="success"
+      variant="outline"
+      class="w-full justify-center"
+      icon="i-lucide-square-mouse-pointer"
+      size="xl"
+      :ui="{ leadingIcon: 'size-5' }"
+      :label="picking ? t('picker.picking') : t('picker.pickElement')"
+    />
 
     <div v-if="selector" class="space-y-1 rounded bg-gray-50 dark:bg-gray-800 p-2 text-sm">
       <div>

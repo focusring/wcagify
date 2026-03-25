@@ -20,20 +20,20 @@
 /*
  * Nuxt UI references --ui-color-neutral-* and --ui-color-primary-* via @layer theme.
  * In a non-Nuxt setup #build/ui.css is not generated, so we define them here.
- * Using Tailwind's default neutral (gray) scale.
+ * Using Tailwind's slate scale.
  */
 :root {
-  --ui-color-neutral-50: #fafafa;
-  --ui-color-neutral-100: #f5f5f5;
-  --ui-color-neutral-200: #e5e5e5;
-  --ui-color-neutral-300: #d4d4d4;
-  --ui-color-neutral-400: #a3a3a3;
-  --ui-color-neutral-500: #737373;
-  --ui-color-neutral-600: #525252;
-  --ui-color-neutral-700: #404040;
-  --ui-color-neutral-800: #262626;
-  --ui-color-neutral-900: #171717;
-  --ui-color-neutral-950: #0a0a0a;
+  --ui-color-neutral-50: #f8fafc;
+  --ui-color-neutral-100: #f1f5f9;
+  --ui-color-neutral-200: #e2e8f0;
+  --ui-color-neutral-300: #cbd5e1;
+  --ui-color-neutral-400: #94a3b8;
+  --ui-color-neutral-500: #64748b;
+  --ui-color-neutral-600: #475569;
+  --ui-color-neutral-700: #334155;
+  --ui-color-neutral-800: #1e293b;
+  --ui-color-neutral-900: #0f172a;
+  --ui-color-neutral-950: #020617;
 
   --ui-color-primary-50: var(--color-green-50);
   --ui-color-primary-100: var(--color-green-100);
@@ -46,25 +46,27 @@
   --ui-color-primary-800: var(--color-green-800);
   --ui-color-primary-900: var(--color-green-900);
   --ui-color-primary-950: var(--color-green-950);
+
+  --ui-radius: 0.125rem;
 }
 
 /*
  * Nuxt UI's preflight strips default form element styling.
  * Restore appearance for plain HTML inputs/selects/buttons used in the extension.
  */
-input:not([class*='u-']),
+/* input:not([class*='u-']),
 select:not([class*='u-']),
 textarea:not([class*='u-']) {
   background-color: white;
   color: #111827;
-}
+} */
 
-.dark input:not([class*='u-']),
+/* .dark input:not([class*='u-']),
 .dark select:not([class*='u-']),
 .dark textarea:not([class*='u-']) {
   background-color: #1f2937;
   color: #f3f4f6;
-}
+} */
 
 select:not([class*='u-']) {
   appearance: auto;

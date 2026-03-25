@@ -29,6 +29,12 @@ const submitMessage = ref('')
 const selectedReport = computed(() => props.reports.find((r) => r.slug === reportSlug.value))
 
 const samplePages = computed(() => selectedReport.value?.sample ?? [])
+const sampleModel = computed({
+  get: () => sample.value || undefined,
+  set: (v: string | undefined) => {
+    sample.value = v ?? ''
+  }
+})
 const wcagVersion = computed(() => selectedReport.value?.wcagVersion ?? '2.2')
 const targetLevel = computed(() => selectedReport.value?.targetLevel ?? 'AA')
 
@@ -112,18 +118,16 @@ async function submit() {
         class="block text-sm font-medium text-gray-600 dark:text-gray-400 mb-1"
         >{{ t('form.samplePage') }} <small>({{ t('form.required') }})</small></label
       >
-      <select
+      <USelect
         id="issue-sample"
-        v-model="sample"
+        v-model="sampleModel"
+        :items="samplePages.map((p) => ({ label: `${p.title} — ${p.url}`, value: p.id }))"
+        :placeholder="t('form.selectPage')"
         required
         aria-required="true"
-        class="w-full rounded border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-800 px-2 py-1.5 text-base text-gray-900 dark:text-gray-100 focus:border-green-600 dark:focus:border-green-400 focus:outline-none"
-      >
-        <option value="" disabled>{{ t('form.selectPage') }}</option>
-        <option v-for="page in samplePages" :key="page.id" :value="page.id">
-          {{ page.title }} — {{ page.url }}
-        </option>
-      </select>
+        color="success"
+        class="w-full"
+      />
     </div>
 
     <div>
@@ -132,7 +136,7 @@ async function submit() {
         class="block text-sm font-medium text-gray-600 dark:text-gray-400 mb-1"
         >{{ t('form.issueTitle') }} <small>({{ t('form.required') }})</small></label
       >
-      <input
+      <UInput
         id="issue-title"
         v-model="title"
         type="text"
@@ -140,7 +144,8 @@ async function submit() {
         required
         aria-required="true"
         :placeholder="t('form.issueTitlePlaceholder')"
-        class="w-full rounded border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-800 px-2 py-1.5 text-base text-gray-900 dark:text-gray-100 focus:border-green-600 dark:focus:border-green-400 focus:outline-none"
+        color="success"
+        class="w-full"
       />
     </div>
 
@@ -166,15 +171,13 @@ async function submit() {
           class="block text-sm font-medium text-gray-600 dark:text-gray-400 mb-1"
           >{{ t('form.severity') }}</label
         >
-        <select
+        <USelect
           id="issue-severity"
           v-model="severity"
-          class="w-full rounded border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-800 px-2 py-1.5 text-base text-gray-900 dark:text-gray-100 focus:border-green-600 dark:focus:border-green-400 focus:outline-none"
-        >
-          <option v-for="opt in severityOptions" :key="opt.value" :value="opt.value">
-            {{ opt.label }}
-          </option>
-        </select>
+          :items="severityOptions"
+          color="success"
+          class="w-full"
+        />
       </div>
     </div>
 
@@ -185,13 +188,17 @@ async function submit() {
       <RichTextEditor v-model="description" :placeholder="t('form.descriptionPlaceholder')" />
     </div>
 
-    <button
+    <UButton
       type="submit"
       :disabled="!canSubmit"
-      class="w-full rounded bg-green-700 dark:bg-green-600 px-3 py-2 text-base font-medium text-white hover:bg-green-800 dark:hover:bg-green-700 disabled:opacity-50"
-    >
-      {{ submitting ? t('form.submitting') : t('form.submit') }}
-    </button>
+      :loading="submitting"
+      :label="submitting ? t('form.submitting') : t('form.submit')"
+      color="success"
+      size="xl"
+      icon="i-lucide-file-input"
+      class="w-full justify-center"
+      :ui="{ leadingIcon: 'size-5' }"
+    />
 
     <div
       v-if="submitStatus === 'success'"

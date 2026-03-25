@@ -26,6 +26,7 @@ const colorModeLabel = computed(() => {
 })
 
 const locales = Object.entries(localeLabels) as [Locale, string][]
+const localeItems = computed(() => locales.map(([value, label]) => ({ value, label })))
 
 function onReportsLoaded(data: Report[]) {
   reports.value = data
@@ -36,25 +37,24 @@ function onReportsLoaded(data: Report[]) {
   <UApp>
     <div class="min-h-screen p-4 bg-white dark:bg-gray-900 font-sans">
       <div class="flex items-center gap-2 mb-4 pb-3 border-b border-gray-200 dark:border-gray-700">
-        <img src="../assets/wcagify-48.png" alt="WCAGify logo" width="24" height="24" />
+        <img src="../assets/wcagify-48.png" alt="WCAGify logo" class="size-6" />
         <h1 class="text-lg font-bold text-black dark:text-white">WCAGify</h1>
         <div class="ml-auto flex items-center gap-1">
-          <select
+          <USelect
             v-model="locale"
-            :title="t('language')"
-            class="rounded border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-800 px-1.5 py-1 text-sm text-gray-700 dark:text-gray-300 focus:border-green-600 dark:focus:border-green-400 focus:outline-none"
-          >
-            <option v-for="[code, label] in locales" :key="code" :value="code">
-              {{ label }}
-            </option>
-          </select>
-          <button
+            :items="localeItems"
+            :aria-label="t('language')"
+            size="sm"
+            class="w-auto min-w-24"
+          />
+          <UButton
             @click="cycle"
             :title="`${t('colorMode.dark')}/${t('colorMode.light')}/${t('colorMode.system')}: ${colorModeLabel}`"
-            class="rounded p-1.5 text-gray-500 hover:bg-gray-100 hover:text-gray-700 dark:text-gray-400 dark:hover:bg-gray-800 dark:hover:text-gray-200"
-          >
-            <UIcon :name="colorModeIcon" class="size-4" />
-          </button>
+            :icon="colorModeIcon"
+            size="sm"
+            color="neutral"
+            variant="ghost"
+          />
         </div>
       </div>
 
