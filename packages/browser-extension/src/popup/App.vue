@@ -50,6 +50,7 @@ function onReportsLoaded(data: Report[]) {
           <UButton
             @click="cycle"
             :title="`${t('colorMode.dark')}/${t('colorMode.light')}/${t('colorMode.system')}: ${colorModeLabel}`"
+            :aria-label="`${t('colorMode.dark')}/${t('colorMode.light')}/${t('colorMode.system')}: ${colorModeLabel}`"
             :icon="colorModeIcon"
             size="sm"
             color="neutral"

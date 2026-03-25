@@ -39,6 +39,16 @@ const wcagVersion = computed(() => selectedReport.value?.wcagVersion ?? '2.2')
 const targetLevel = computed(() => selectedReport.value?.targetLevel ?? 'AA')
 
 watch(
+  samplePages,
+  (pages) => {
+    if (sample.value && !pages.some((page) => page.id === sample.value)) {
+      sample.value = ''
+    }
+  },
+  { immediate: true }
+)
+
+watch(
   () => props.pageUrl,
   (url) => {
     if (!url) return

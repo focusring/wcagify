@@ -206,7 +206,7 @@ watch(
       :aria-required="required || undefined"
       :required="required"
       :placeholder="placeholder"
-      class="w-full rounded border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-900 px-2 py-1.5 max-h-8 text-sm font-medium text-gray-900 dark:text-gray-100 focus:border-green-600 dark:focus:border-green-400 focus:outline-none"
+      class="w-full rounded border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-900 dark:hover:bg-gray-800 px-2 py-1.5 max-h-8 text-sm font-medium text-gray-900 dark:text-gray-100 dark:hover:text-white focus:border-green-600 dark:focus:border-green-400 focus:outline-none"
       @input="onInput"
       @keydown="onKeydown"
       @focus="onFocus"

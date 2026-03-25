@@ -38,6 +38,7 @@ watch(scanStatus, (val) => {
     const instance = instances.value[0]!
     wcagifyUrl.value = instance.url
     reports.value = instance.reports
+    syncSelectedReport()
     status.value = 'connected'
     emit('reportsLoaded', instance.reports)
   } else {
@@ -50,11 +51,18 @@ watch(scanStatus, (val) => {
   }
 })
 
+function syncSelectedReport() {
+  if (reportSlug.value && !reports.value.some((r) => r.slug === reportSlug.value)) {
+    reportSlug.value = ''
+  }
+}
+
 function connectInstance(url: string) {
   wcagifyUrl.value = url
   const instance = instances.value.find((i) => i.url === url)
   if (instance) {
     reports.value = instance.reports
+    syncSelectedReport()
     status.value = 'connected'
     emit('reportsLoaded', instance.reports)
   }
@@ -86,6 +94,7 @@ async function fetchReports() {
 
     const data: Report[] = await res.json()
     reports.value = data
+    syncSelectedReport()
     status.value = 'connected'
     emit('reportsLoaded', data)
   } catch (error) {
@@ -98,6 +107,7 @@ async function fetchReports() {
       errorMessage.value = t('connection.connectionFailed')
     }
     reports.value = []
+    syncSelectedReport()
   }
 }
 </script>
