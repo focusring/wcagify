@@ -1,4 +1,5 @@
 import { defineCollection } from '@nuxt/content'
+import { z } from 'zod'
 import { reportSchema, issueSchema } from './schemas'
 
 function defineWcagifyCollections() {
@@ -19,6 +20,16 @@ function defineWcagifyCollections() {
         prefix: '/reports'
       },
       schema: issueSchema
+    }),
+    navigation: defineCollection({
+      type: 'data' as const,
+      source: {
+        include: '**/.navigation.yml'
+      },
+      schema: z.object({
+        title: z.string().optional(),
+        icon: z.string().optional()
+      })
     })
   }
 }

@@ -8,6 +8,7 @@
     "resolveJsonModule": true,
     "esModuleInterop": true,
     "lib": ["ESNext", "DOM", "DOM.Iterable"],
+    "types": ["chrome"],
     "skipLibCheck": true,
     "paths": {
       "#build/ui/*": ["./node_modules/@nuxt/ui/dist/runtime/*"]
