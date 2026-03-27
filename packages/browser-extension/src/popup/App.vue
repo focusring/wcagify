@@ -38,7 +38,7 @@ function onReportsLoaded(data: Report[]) {
     <div class="min-h-screen p-4 bg-white dark:bg-gray-900 font-sans">
       <div class="flex items-center gap-2">
         <img src="../assets/wcagify-48.png" alt="WCAGify logo" class="size-6" />
-        <h1 class="text-lg font-bold text-black dark:text-white select-none">WCAGify</h1>
+        <h1 class="text-lg font-bold text-black dark:text-white">WCAGify</h1>
         <div class="ml-auto flex items-center gap-2">
           <USelect
             v-model="locale"
