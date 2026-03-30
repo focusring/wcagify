@@ -15,26 +15,21 @@
   --color-green-800: #016538;
   --color-green-900: #0a5331;
   --color-green-950: #052e16;
+
+  --color-blue-50: #eff6ff;
+  --color-blue-100: #dbeafe;
+  --color-blue-200: #bedbff;
+  --color-blue-300: #8ec5ff;
+  --color-blue-400: #51a2ff;
+  --color-blue-500: #2b7fff;
+  --color-blue-600: #155dfc;
+  --color-blue-700: #1447e6;
+  --color-blue-800: #193cb8;
+  --color-blue-900: #1c398e;
+  --color-blue-950: #162456;
 }
 
-/*
- * Nuxt UI references --ui-color-neutral-* and --ui-color-primary-* via @layer theme.
- * In a non-Nuxt setup #build/ui.css is not generated, so we define them here.
- * Using Tailwind's default neutral (gray) scale.
- */
 :root {
-  --ui-color-neutral-50: #fafafa;
-  --ui-color-neutral-100: #f5f5f5;
-  --ui-color-neutral-200: #e5e5e5;
-  --ui-color-neutral-300: #d4d4d4;
-  --ui-color-neutral-400: #a3a3a3;
-  --ui-color-neutral-500: #737373;
-  --ui-color-neutral-600: #525252;
-  --ui-color-neutral-700: #404040;
-  --ui-color-neutral-800: #262626;
-  --ui-color-neutral-900: #171717;
-  --ui-color-neutral-950: #0a0a0a;
-
   --ui-color-primary-50: var(--color-green-50);
   --ui-color-primary-100: var(--color-green-100);
   --ui-color-primary-200: var(--color-green-200);
@@ -46,34 +41,48 @@
   --ui-color-primary-800: var(--color-green-800);
   --ui-color-primary-900: var(--color-green-900);
   --ui-color-primary-950: var(--color-green-950);
+
+  --ui-color-secondary-50: var(--color-blue-50);
+  --ui-color-secondary-100: var(--color-blue-100);
+  --ui-color-secondary-200: var(--color-blue-200);
+  --ui-color-secondary-300: var(--color-blue-300);
+  --ui-color-secondary-400: var(--color-blue-400);
+  --ui-color-secondary-500: var(--color-blue-500);
+  --ui-color-secondary-600: var(--color-blue-600);
+  --ui-color-secondary-700: var(--color-blue-700);
+  --ui-color-secondary-800: var(--color-blue-800);
+  --ui-color-secondary-900: var(--color-blue-900);
+  --ui-color-secondary-950: var(--color-blue-950);
+
+  --ui-radius: 0.125rem;
 }
 
 /*
  * Nuxt UI's preflight strips default form element styling.
  * Restore appearance for plain HTML inputs/selects/buttons used in the extension.
  */
-input:not([class*='u-']),
+/* input:not([class*='u-']),
 select:not([class*='u-']),
 textarea:not([class*='u-']) {
   background-color: white;
   color: #111827;
-}
+} */
 
-.dark input:not([class*='u-']),
+/* .dark input:not([class*='u-']),
 .dark select:not([class*='u-']),
 .dark textarea:not([class*='u-']) {
   background-color: #1f2937;
   color: #f3f4f6;
-}
+} */
 
-select:not([class*='u-']) {
+/* select:not([class*='u-']) {
   appearance: auto;
-}
+} */
 
 /*
  * TipTap editor: ensure placeholder and list markers have proper contrast.
  */
-.tiptap .is-editor-empty::before,
+/* .tiptap .is-editor-empty::before,
 .tiptap .is-empty::before {
   color: #9ca3af;
 }
@@ -91,4 +100,4 @@ select:not([class*='u-']) {
 .dark .tiptap ul li::marker,
 .dark .tiptap ol li::marker {
   color: #d1d5db;
-}
+} */
