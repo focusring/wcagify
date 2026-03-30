@@ -49,6 +49,7 @@ export default {
     required: 'verplicht',
     scSearch: 'Criteria zoeken...',
     noResults: 'Geen overeenkomende criteria',
+    clear: 'Wissen',
     none: 'Geen',
     low: 'Laag',
     medium: 'Gemiddeld',

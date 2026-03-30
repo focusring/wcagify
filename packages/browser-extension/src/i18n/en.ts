@@ -49,6 +49,7 @@ export default {
     required: 'required',
     scSearch: 'Search criteria...',
     noResults: 'No matching criteria',
+    clear: 'Clear',
     none: 'None',
     low: 'Low',
     medium: 'Medium',
