@@ -1,5 +1,6 @@
 import { execSync, spawn, type ChildProcess } from 'node:child_process'
 import { existsSync, mkdirSync, readFileSync, rmSync, writeFileSync } from 'node:fs'
+import { createServer, type AddressInfo } from 'node:net'
 import { dirname, join } from 'node:path'
 import { fileURLToPath } from 'node:url'
 
@@ -127,12 +128,24 @@ async function waitForServer(url: string, timeoutMs: number): Promise<void> {
   throw new Error(`Server at ${url} did not respond within ${timeoutMs}ms`)
 }
 
+async function getFreePort(): Promise<number> {
+  return new Promise((resolve, reject) => {
+    const server = createServer()
+    server.listen(0, () => {
+      const port = (server.address() as AddressInfo).port
+      server.close(() => resolve(port))
+    })
+    server.on('error', reject)
+  })
+}
+
 export async function startDevServer(projectPath: string): Promise<{
   process: ChildProcess
   url: string
 }> {
-  const url = 'http://localhost:3099'
-  const child = spawn('npx', ['nuxt', 'dev', '--port', '3099'], {
+  const port = await getFreePort()
+  const url = `http://localhost:${port}`
+  const child = spawn('npx', ['nuxt', 'dev', '--port', String(port)], {
     cwd: projectPath,
     stdio: 'ignore',
     shell: true,
