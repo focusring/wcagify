@@ -142,7 +142,7 @@ async function submit() {
         v-model="sampleModel"
         :items="samplePages.map((p) => ({ label: `${p.title} — ${p.url}`, value: p.id }))"
         :placeholder="t('form.selectPage')"
-        clear-label="Clear page"
+        :clear-label="t('form.clearPage')"
         required
       />
     </div>
@@ -171,7 +171,7 @@ async function submit() {
             variant="ghost"
             size="xs"
             icon="i-lucide-x"
-            :aria-label="t('form.clear')"
+            :aria-label="t('form.clearTitle')"
             :ui="{
               base: 'focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-primary focus-visible:rounded-sm'
             }"
@@ -208,7 +208,7 @@ async function submit() {
           v-model="severity"
           :items="severityOptions"
           :placeholder="t('form.none')"
-          clear-label="Clear severity"
+          :clear-label="t('form.clearSeverity')"
         />
       </div>
       <div>
@@ -222,7 +222,7 @@ async function submit() {
           v-model="type"
           :items="typeOptions"
           :placeholder="t('form.unknown')"
-          clear-label="Clear type"
+          :clear-label="t('form.clearType')"
         />
       </div>
     </div>

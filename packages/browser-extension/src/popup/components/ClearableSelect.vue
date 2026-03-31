@@ -10,21 +10,21 @@ withDefaults(
     valueKey?: string
     placeholder?: string
     required?: boolean
+    clearLabel?: string
   }>(),
   {
     valueKey: 'value',
-    required: false
+    required: false,
+    clearLabel: undefined
   }
 )
 
 const { t } = useI18n()
 
 function onSelectKeydown(e: KeyboardEvent) {
-  if (e.key !== 'Tab') return
-  e.preventDefault()
-  const arrow = e.shiftKey ? 'ArrowUp' : 'ArrowDown'
+  if (e.key !== 'ArrowUp' && e.key !== 'ArrowDown') return
   e.target?.dispatchEvent(
-    new KeyboardEvent('keydown', { key: arrow, bubbles: true, cancelable: true })
+    new KeyboardEvent('keydown', { key: e.key, bubbles: true, cancelable: true })
   )
 }
 </script>
@@ -55,7 +55,7 @@ function onSelectKeydown(e: KeyboardEvent) {
         variant="ghost"
         size="xs"
         icon="i-lucide-x"
-        :aria-label="t('form.clear')"
+        :aria-label="clearLabel || t('form.clear')"
         :ui="{
           base: 'focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-primary focus-visible:rounded-sm'
         }"
