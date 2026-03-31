@@ -30,6 +30,8 @@ export default {
     selector: 'Selector:',
     url: 'URL:',
     page: 'Page:',
+    foregroundColor: 'Foreground:',
+    backgroundColor: 'Background:',
     hoverHint: 'Hover over an element...',
     clickHint: 'Click to select · Esc to cancel'
   },

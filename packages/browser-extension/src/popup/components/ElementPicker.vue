@@ -7,15 +7,26 @@ const { t } = useI18n()
 const selector = ref('')
 const pageUrl = ref('')
 const pageTitle = ref('')
+const foregroundColor = ref('')
+const backgroundColor = ref('')
 const picking = ref(false)
 
-defineExpose({ selector, pageUrl, pageTitle })
+defineExpose({ selector, pageUrl, pageTitle, foregroundColor, backgroundColor })
 
-function onMessage(message: { type: string; selector?: string; url?: string; pageTitle?: string }) {
+function onMessage(message: {
+  type: string
+  selector?: string
+  url?: string
+  pageTitle?: string
+  foregroundColor?: string
+  backgroundColor?: string
+}) {
   if (message.type === 'element-picked') {
     selector.value = message.selector ?? ''
     pageUrl.value = message.url ?? ''
     pageTitle.value = message.pageTitle ?? ''
+    foregroundColor.value = message.foregroundColor ?? ''
+    backgroundColor.value = message.backgroundColor ?? ''
     picking.value = false
   }
   if (message.type === 'picker-cancelled') {
@@ -38,6 +49,8 @@ async function pickElement() {
   selector.value = ''
   pageUrl.value = ''
   pageTitle.value = ''
+  foregroundColor.value = ''
+  backgroundColor.value = ''
 
   chrome.tabs.sendMessage(tab.id, { type: 'start-picker' }).catch(() => {
     picking.value = false
@@ -71,6 +84,28 @@ async function pickElement() {
       <div>
         <span class="font-medium text-gray-600 dark:text-gray-400">{{ t('picker.page') }}</span>
         <span class="ml-1 text-gray-800 dark:text-gray-200">{{ pageTitle }}</span>
+      </div>
+      <div v-if="foregroundColor" class="flex items-center gap-1">
+        <span class="font-medium text-gray-600 dark:text-gray-400">{{
+          t('picker.foregroundColor')
+        }}</span>
+        <span
+          class="ml-1 inline-block size-3.5 rounded-sm border border-gray-300 dark:border-gray-600 shrink-0"
+          :style="{ backgroundColor: foregroundColor }"
+          aria-hidden="true"
+        />
+        <code class="text-gray-800 dark:text-gray-200">{{ foregroundColor }}</code>
+      </div>
+      <div v-if="backgroundColor" class="flex items-center gap-1">
+        <span class="font-medium text-gray-600 dark:text-gray-400">{{
+          t('picker.backgroundColor')
+        }}</span>
+        <span
+          class="ml-1 inline-block size-3.5 rounded-sm border border-gray-300 dark:border-gray-600 shrink-0"
+          :style="{ backgroundColor: backgroundColor }"
+          aria-hidden="true"
+        />
+        <code class="text-gray-800 dark:text-gray-200">{{ backgroundColor }}</code>
       </div>
     </div>
   </div>

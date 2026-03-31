@@ -172,11 +172,14 @@ function handleClick(e: MouseEvent) {
   if (!currentTarget) return
 
   const selector = getUniqueSelector(currentTarget)
+  const style = getComputedStyle(currentTarget)
   chrome.runtime.sendMessage({
     type: 'element-picked',
     selector,
     url: document.URL,
-    pageTitle: document.title
+    pageTitle: document.title,
+    foregroundColor: style.color,
+    backgroundColor: style.backgroundColor
   })
   cleanup()
 }

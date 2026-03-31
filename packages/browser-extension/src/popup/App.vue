@@ -31,6 +31,10 @@ const localeItems = computed(() => locales.map(([value, label]) => ({ value, lab
 function onReportsLoaded(data: Report[]) {
   reports.value = data
 }
+
+function copyToClipboard(value: string | undefined) {
+  if (value) navigator.clipboard.writeText(value)
+}
 </script>
 
 <template>
@@ -76,6 +80,84 @@ function onReportsLoaded(data: Report[]) {
 
         <div v-if="reports.length > 0" class="space-y-4">
           <ElementPicker ref="picker" />
+
+          <div>
+            <label class="block text-sm font-medium text-gray-600 dark:text-gray-400 mb-1">
+              Test Options
+            </label>
+            <UCollapsible class="flex flex-col gap-2">
+              <UButton
+                label="Button"
+                color="primary"
+                variant="subtle"
+                icon="i-lucide-test-tube"
+                :ui="{ leadingIcon: 'size-4' }"
+                block
+              />
+
+              <template #content>
+                <div class="bg-muted p-2 space-y-3 rounded">
+                  <div class="flex flex-row gap-2">
+                    <div class="space-y-1 w-full">
+                      <label
+                        class="block text-sm font-medium text-gray-600 dark:text-gray-400 mb-1"
+                      >
+                        Sample Preview
+                      </label>
+                      <div class="h-10 border-3 p-2 bg-white border-black">
+                        <div class="h-full rounded-sm w-full bg-gray-300"></div>
+                      </div>
+                    </div>
+                    <div class="space-y-1 min-w-24 flex flex-col items-center">
+                      <label
+                        class="block text-sm text-center font-medium text-gray-600 dark:text-gray-400 mb-1"
+                      >
+                        Contrast Ratio
+                      </label>
+                      <UBadge
+                        label="2.5:1"
+                        color="error"
+                        variant="subtle"
+                        size="xl"
+                        icon="i-lucide-x"
+                        :ui="{ leadingIcon: 'size-5', base: 'h-8 my-auto' }"
+                      />
+                    </div>
+                  </div>
+                  <div class="space-y-4">
+                    <label class="block text-sm font-medium text-gray-600 dark:text-gray-400 mb-1">
+                      Element color
+                    </label>
+                    <UButton
+                      :label="picker?.foregroundColor ?? t('picker.foregroundColor')"
+                      trailing-icon="i-lucide-copy"
+                      :style="{
+                        backgroundColor: picker?.foregroundColor,
+                        color: 'black',
+                        borderColor: picker?.foregroundColor
+                      }"
+                      :ui="{ trailingIcon: 'size-5', base: 'w-full justify-between' }"
+                      @click="copyToClipboard(picker?.foregroundColor)"
+                    />
+                    <label class="block text-sm font-medium text-gray-600 dark:text-gray-400 mb-1">
+                      Background color
+                    </label>
+                    <UButton
+                      :label="picker?.backgroundColor ?? t('picker.backgroundColor')"
+                      trailing-icon="i-lucide-copy"
+                      :style="{
+                        backgroundColor: picker?.backgroundColor,
+                        color: 'black',
+                        borderColor: picker?.backgroundColor
+                      }"
+                      :ui="{ trailingIcon: 'size-5', base: 'w-full justify-between' }"
+                      @click="copyToClipboard(picker?.backgroundColor)"
+                    />
+                  </div>
+                </div>
+              </template>
+            </UCollapsible>
+          </div>
 
           <IssueForm
             :reports="reports"
