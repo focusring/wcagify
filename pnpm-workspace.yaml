@@ -6,15 +6,15 @@ packages:
 catalog:
   '@nuxt/fonts': ^0.14.0
   '@nuxt/ui': ^4.6.0
-  '@tiptap/core': ^3.21.0
-  '@tiptap/extension-code-block-lowlight': ^3.21.0
-  '@tiptap/extension-emoji': ^3.21.0
-  '@tiptap/extension-image': ^3.21.0
-  '@tiptap/extension-link': ^3.21.0
-  '@tiptap/extension-placeholder': ^3.21.0
-  '@tiptap/extension-underline': ^3.21.0
-  '@tiptap/starter-kit': ^3.21.0
-  '@tiptap/vue-3': ^3.21.0
+  '@tiptap/core': ^3.22.0
+  '@tiptap/extension-code-block-lowlight': ^3.22.0
+  '@tiptap/extension-emoji': ^3.22.0
+  '@tiptap/extension-image': ^3.22.0
+  '@tiptap/extension-link': ^3.22.0
+  '@tiptap/extension-placeholder': ^3.22.0
+  '@tiptap/extension-underline': ^3.22.0
+  '@tiptap/starter-kit': ^3.22.0
+  '@tiptap/vue-3': ^3.22.0
   '@types/turndown': ^5.0.6
   happy-dom: ^20.8.9
   lowlight: ^3.3.0
@@ -27,13 +27,13 @@ catalogMode: prefer
 
 catalogs:
   cli:
-    '@clack/prompts': ^1.1.0
+    '@clack/prompts': ^1.2.0
     commander: ^14.0.3
     ejs: ^5.0.1
     picocolors: ^1.1.1
   core:
-    '@iconify-json/lucide': ^1.2.100
-    '@iconify-json/simple-icons': ^1.2.75
+    '@iconify-json/lucide': ^1.2.101
+    '@iconify-json/simple-icons': ^1.2.76
     '@libsql/client': ^0.17.2
     '@nuxt/a11y': 1.0.0-alpha.1
     '@nuxt/content': ^3.12.0
@@ -56,9 +56,9 @@ catalogs:
     changelogithub: ^14.0.0
     husky: ^9.1.7
     lint-staged: ^16.4.0
-    oxfmt: ^0.42.0
-    oxlint: ^1.57.0
-    playwright: ^1.58.2
+    oxfmt: ^0.43.0
+    oxlint: ^1.58.0
+    playwright: ^1.59.0
     tsdown: ^0.21.7
     typescript: ^6.0.2
     vitest: ^4.1.2
