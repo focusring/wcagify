@@ -98,7 +98,10 @@ export default {
     largeText: 'Grote tekst',
     contrastRatio: 'Contrastverhouding',
     copy: 'Kleur kopiëren',
-    eyedropper: 'Kleur van scherm kiezen'
+    eyedropper: 'Kleur van scherm kiezen',
+    testOptions: 'Testopties',
+    contrastChecker: 'Contrastcontrole',
+    sampleSentence: 'De snelle bruine vos'
   },
   language: 'Taal'
 } as const

@@ -98,7 +98,10 @@ export default {
     largeText: 'Large text',
     contrastRatio: 'Contrast ratio',
     copy: 'Copy color',
-    eyedropper: 'Pick color from screen'
+    eyedropper: 'Pick color from screen',
+    testOptions: 'Test Options',
+    contrastChecker: 'Contrast Checker',
+    sampleSentence: 'The quick brown fox'
   },
   language: 'Language'
 } as const

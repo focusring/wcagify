@@ -20,8 +20,9 @@ watch(
   (val) => {
     if (val) {
       pickerSelected.value = true
-      localFg.value = val
-      fgText.value = val
+      const hex = normalizeHex(val, localBg.value) ?? val
+      localFg.value = hex
+      fgText.value = hex
     }
   }
 )
@@ -30,8 +31,9 @@ watch(
   (val) => {
     if (val) {
       pickerSelected.value = true
-      localBg.value = val
-      bgText.value = val
+      const hex = normalizeHex(val) ?? val
+      localBg.value = hex
+      bgText.value = hex
     }
   }
 )
@@ -42,16 +44,43 @@ watch(localBg, (val) => {
   bgText.value = val
 })
 
-function normalizeHex(input: string): string | null {
+function compositeOnBg(r: number, g: number, b: number, a: number, bgHex: string): string {
+  const bm = /^#([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})$/i.exec(bgHex)
+  const bgR = bm ? parseInt(bm[1], 16) : 255
+  const bgG = bm ? parseInt(bm[2], 16) : 255
+  const bgB = bm ? parseInt(bm[3], 16) : 255
+  const blend = (src: number, bkg: number) => Math.round(a * src + (1 - a) * bkg)
+  return `#${blend(r, bgR).toString(16).padStart(2, '0')}${blend(g, bgG).toString(16).padStart(2, '0')}${blend(b, bgB).toString(16).padStart(2, '0')}`
+}
+
+function normalizeHex(input: string, bgHex = '#ffffff'): string | null {
   const s = input.trim().replace(/^#+/, '')
   if (/^[0-9a-fA-F]{3}$/.test(s)) return `#${s[0]}${s[0]}${s[1]}${s[1]}${s[2]}${s[2]}`.toLowerCase()
+  if (/^[0-9a-fA-F]{4}$/.test(s)) {
+    const [r, g, b, a] = [
+      parseInt(s[0] + s[0], 16),
+      parseInt(s[1] + s[1], 16),
+      parseInt(s[2] + s[2], 16),
+      parseInt(s[3] + s[3], 16) / 255
+    ]
+    return compositeOnBg(r, g, b, a, bgHex)
+  }
   if (/^[0-9a-fA-F]{6}$/.test(s)) return `#${s}`.toLowerCase()
+  if (/^[0-9a-fA-F]{8}$/.test(s)) {
+    const [r, g, b, a] = [
+      parseInt(s.slice(0, 2), 16),
+      parseInt(s.slice(2, 4), 16),
+      parseInt(s.slice(4, 6), 16),
+      parseInt(s.slice(6, 8), 16) / 255
+    ]
+    return compositeOnBg(r, g, b, a, bgHex)
+  }
   return null
 }
 
 function handleFgInput(val: string) {
   fgText.value = val
-  const hex = normalizeHex(val)
+  const hex = normalizeHex(val, localBg.value)
   if (hex) localFg.value = hex
 }
 
@@ -144,7 +173,7 @@ async function pickColor(target: 'fg' | 'bg') {
           :style="{ backgroundColor: localBg, color: localFg }"
           class="rounded border border-gray-200 dark:border-gray-700 px-3 py-2 md:py-6"
         >
-          <p class="text-sm">{{ t('contrast.normalText') }}: The quick brown fox</p>
+          <p class="text-sm">{{ t('contrast.normalText') }}: {{ t('contrast.sampleSentence') }}</p>
           <p class="text-lg font-bold">{{ t('contrast.largeText') }}: Aa</p>
         </div>
       </div>
@@ -179,16 +208,6 @@ async function pickColor(target: 'fg' | 'bg') {
             />
           </UFieldGroup>
         </div>
-
-        <!-- <UButton
-          :aria-label="t('contrast.title')"
-          size="sm"
-          color="neutral"
-          variant="ghost"
-          icon="i-lucide-arrow-left-right"
-          :ui="{ base: 'shrink-0 mb-0.5' }"
-          @click="swapColors"
-        /> -->
 
         <label class="block text-sm font-medium text-muted mb-1">
           {{ t('contrast.background') }}

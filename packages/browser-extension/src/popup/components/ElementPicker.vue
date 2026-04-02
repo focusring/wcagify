@@ -6,7 +6,7 @@ const { t } = useI18n()
 
 function toHex(color: string): string {
   if (!color) return color
-  const hex = color.match(/^#[0-9a-fA-F]{3,8}$/)
+  const hex = color.match(/^#(?:[0-9a-fA-F]{3}|[0-9a-fA-F]{4}|[0-9a-fA-F]{6}|[0-9a-fA-F]{8})$/)
   if (hex) return color.toLowerCase()
   const canvas = document.createElement('canvas')
   canvas.width = canvas.height = 1

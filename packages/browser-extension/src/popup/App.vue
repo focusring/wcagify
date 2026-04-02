@@ -84,11 +84,11 @@ function copyToClipboard(value: string | undefined) {
 
           <div>
             <label class="block text-sm font-medium text-gray-600 dark:text-gray-400 mb-1">
-              Test Options
+              {{ t('contrast.testOptions') }}
             </label>
             <UCollapsible class="flex flex-col gap-2">
               <UButton
-                label="Contrast Checker"
+                :label="t('contrast.contrastChecker')"
                 color="primary"
                 variant="subtle"
                 icon="i-lucide-test-tube"
