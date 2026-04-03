@@ -271,9 +271,18 @@ describe('Browser E2E', () => {
         })
       })
 
-      // Wait for Nuxt Content to index the new file, then navigate to the report
-      await new Promise((resolve) => setTimeout(resolve, 2_000))
-      await page.goto(`${baseUrl}/reports/${reportSlug}`, { waitUntil: 'networkidle' })
+      // Wait for Nuxt Content to index the new file, then navigate to the report.
+      // The dev server may HMR-reload after the file write; retry on ERR_ABORTED.
+      await new Promise((resolve) => setTimeout(resolve, 3_000))
+      for (let attempt = 0; attempt < 3; attempt++) {
+        try {
+          await page.goto(`${baseUrl}/reports/${reportSlug}`, { waitUntil: 'networkidle' })
+          break
+        } catch {
+          if (attempt === 2) throw new Error(`Navigation to report page failed after 3 attempts`)
+          await new Promise((resolve) => setTimeout(resolve, 2_000))
+        }
+      }
       await page.waitForSelector('#issues', { timeout: 30_000 })
 
       const issuesContent = await page.textContent('#issues')
