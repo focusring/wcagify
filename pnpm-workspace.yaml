@@ -6,15 +6,15 @@ packages:
 catalog:
   '@nuxt/fonts': ^0.14.0
   '@nuxt/ui': ^4.6.0
-  '@tiptap/core': ^3.22.0
-  '@tiptap/extension-code-block-lowlight': ^3.22.0
-  '@tiptap/extension-emoji': ^3.22.0
-  '@tiptap/extension-image': ^3.22.0
-  '@tiptap/extension-link': ^3.22.0
-  '@tiptap/extension-placeholder': ^3.22.0
-  '@tiptap/extension-underline': ^3.22.0
-  '@tiptap/starter-kit': ^3.22.0
-  '@tiptap/vue-3': ^3.22.0
+  '@tiptap/core': ^3.22.1
+  '@tiptap/extension-code-block-lowlight': ^3.22.1
+  '@tiptap/extension-emoji': ^3.22.1
+  '@tiptap/extension-image': ^3.22.1
+  '@tiptap/extension-link': ^3.22.1
+  '@tiptap/extension-placeholder': ^3.22.1
+  '@tiptap/extension-underline': ^3.22.1
+  '@tiptap/starter-kit': ^3.22.1
+  '@tiptap/vue-3': ^3.22.1
   '@types/turndown': ^5.0.6
   happy-dom: ^20.8.9
   lowlight: ^3.3.0
