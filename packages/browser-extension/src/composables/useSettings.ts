@@ -1,4 +1,5 @@
 import { ref, watch } from 'vue'
+import { z } from 'zod'
 import type { Report } from '../types'
 
 export const ACCENT_COLORS = ['green', 'blue', 'red', 'orange', 'teal', 'indigo', 'violet'] as const
@@ -6,6 +7,13 @@ export const NEUTRAL_COLORS = ['slate', 'gray', 'zinc', 'neutral', 'stone'] as c
 
 export type AccentColor = (typeof ACCENT_COLORS)[number]
 export type NeutralColor = (typeof NEUTRAL_COLORS)[number]
+
+const settingsSchema = z.object({
+  wcagifyUrl: z.string().optional(),
+  reportSlug: z.string().optional(),
+  accentColor: z.enum(ACCENT_COLORS).optional(),
+  neutralColor: z.enum(NEUTRAL_COLORS).optional()
+})
 
 const SHADES = [50, 100, 200, 300, 400, 500, 600, 700, 800, 900, 950]
 
@@ -33,18 +41,21 @@ let ready = false
 let loadPromise: Promise<void> | null = null
 
 async function doLoad() {
-  const result = await chrome.storage.local.get([
-    'wcagifyUrl',
-    'reportSlug',
-    'accentColor',
-    'neutralColor'
-  ])
-  if (result.wcagifyUrl) wcagifyUrl.value = result.wcagifyUrl as string
-  if (result.reportSlug) reportSlug.value = result.reportSlug as string
-  if (result.accentColor && ACCENT_COLORS.includes(result.accentColor as AccentColor))
-    accentColor.value = result.accentColor as AccentColor
-  if (result.neutralColor && NEUTRAL_COLORS.includes(result.neutralColor as NeutralColor))
-    neutralColor.value = result.neutralColor as NeutralColor
+  const parsed = settingsSchema.safeParse(
+    await chrome.storage.local.get(['wcagifyUrl', 'reportSlug', 'accentColor', 'neutralColor'])
+  )
+  if (parsed.success) {
+    const {
+      wcagifyUrl: url,
+      reportSlug: slug,
+      accentColor: color,
+      neutralColor: neutral
+    } = parsed.data
+    if (url && /^https?:\/\//.test(url)) wcagifyUrl.value = url
+    if (slug) reportSlug.value = slug
+    if (color) accentColor.value = color
+    if (neutral) neutralColor.value = neutral
+  }
   applyAccentColor(accentColor.value)
   applyNeutralColor(neutralColor.value)
   ready = true

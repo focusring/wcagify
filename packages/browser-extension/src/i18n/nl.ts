@@ -99,6 +99,7 @@ export default {
     save: 'Opslaan',
     saved: 'Opgeslagen',
     accentColor: 'Accentkleur',
-    backgroundShade: 'Achtergrondtint'
+    backgroundShade: 'Achtergrondtint',
+    clearColor: 'Kleur wissen'
   }
 } as const

@@ -99,6 +99,7 @@ export default {
     save: 'Save',
     saved: 'Saved',
     accentColor: 'Accent Color',
-    backgroundShade: 'Background Shade'
+    backgroundShade: 'Background Shade',
+    clearColor: 'Clear color'
   }
 } as const
