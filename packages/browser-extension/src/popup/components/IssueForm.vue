@@ -227,7 +227,7 @@ async function submit() {
         name="issue-severity"
         required
         :ui="{
-          label: 'label-title',
+          label: 'label-title after:content-none',
           labelWrapper: 'flex items-center justify-start gap-1',
           hint: 'label-hint'
         }"
@@ -246,7 +246,7 @@ async function submit() {
         name="issue-type"
         required
         :ui="{
-          label: 'label-title',
+          label: 'label-title after:content-none',
           labelWrapper: 'flex items-center justify-start gap-1',
           hint: 'label-hint'
         }"
@@ -267,7 +267,7 @@ async function submit() {
       name="issue-description"
       required
       :ui="{
-        label: 'label-title',
+        label: 'label-title after:content-none',
         labelWrapper: 'flex items-center justify-start gap-1',
         hint: 'label-hint'
       }"
