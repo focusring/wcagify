@@ -5,6 +5,7 @@ import { useColorMode } from '../composables/useColorMode'
 import { useI18n } from '../composables/useI18n'
 import { localeLabels, type Locale } from '../i18n'
 import ConnectionSettings from './components/ConnectionSettings.vue'
+import ContrastChecker from './components/ContrastChecker.vue'
 import ElementPicker from './components/ElementPicker.vue'
 import IssueForm from './components/IssueForm.vue'
 
@@ -30,6 +31,10 @@ const localeItems = computed(() => locales.map(([value, label]) => ({ value, lab
 
 function onReportsLoaded(data: Report[]) {
   reports.value = data
+}
+
+function copyToClipboard(value: string | undefined) {
+  if (value) navigator.clipboard.writeText(value)
 }
 </script>
 
@@ -74,6 +79,31 @@ function onReportsLoaded(data: Report[]) {
 
         <div v-if="reports.length > 0" class="space-y-4">
           <ElementPicker ref="picker" />
+
+          <div>
+            <label class="block text-sm font-medium text-gray-600 dark:text-gray-400 mb-1">
+              {{ t('contrast.testOptions') }}
+            </label>
+            <UCollapsible class="flex flex-col gap-2">
+              <UButton
+                :label="t('contrast.title')"
+                color="primary"
+                variant="subtle"
+                icon="i-lucide-test-tube"
+                :ui="{ leadingIcon: 'size-4' }"
+                block
+              />
+
+              <template #content>
+                <div class="bg-muted p-2 space-y-3 rounded">
+                  <ContrastChecker
+                    :fg-color="picker?.foregroundColor"
+                    :bg-color="picker?.backgroundColor"
+                  />
+                </div>
+              </template>
+            </UCollapsible>
+          </div>
 
           <IssueForm
             :reports="reports"

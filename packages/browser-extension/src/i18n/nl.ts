@@ -30,6 +30,8 @@ export default {
     selector: 'Selector:',
     url: 'URL:',
     page: 'Pagina:',
+    foregroundColor: 'Voorgrond:',
+    backgroundColor: 'Achtergrond:',
     hoverHint: 'Beweeg over een element...',
     clickHint: 'Klik om te selecteren · Esc om te annuleren'
   },
@@ -89,6 +91,19 @@ export default {
     style: 'Stijl',
     paragraph: 'Paragraaf',
     insert: 'Invoegen'
+  },
+  contrast: {
+    title: 'Contrastcontrole',
+    preview: 'Voorbeeldweergave',
+    foreground: 'Element kleur',
+    background: 'Achtergrond kleur',
+    normalText: 'Normale tekst',
+    largeText: 'Grote tekst',
+    contrastRatio: 'Contrastverhouding',
+    copy: 'Kleur kopiëren',
+    eyedropper: 'Kleur van scherm kiezen',
+    testOptions: 'Testopties',
+    sampleSentence: 'De snelle bruine vos'
   },
   language: 'Taal'
 } as const
