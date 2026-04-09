@@ -36,30 +36,29 @@ const localeItems = computed(() => locales.map(([value, label]) => ({ value, lab
     <SettingsPage v-show="currentView === 'settings'" @back="currentView = 'main'" />
 
     <div v-show="currentView === 'main'" class="min-h-screen p-4 font-sans">
-      <div class="flex items-center gap-2">
-        <img src="../assets/wcagify-48.png" alt="WCAGify logo" class="size-6" />
-        <h1 class="text-lg font-bold text-black dark:text-white">WCAGify</h1>
-        <UButton
-          @click="currentView = 'settings'"
-          :aria-label="t('settings.title')"
-          :title="t('settings.title')"
-          :label="t('settings.title')"
-          icon="i-lucide-settings"
-          size="sm"
-          color="neutral"
-          variant="subtle"
-          :ui="{
-            base: 'cursor-pointer focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-primary focus-visible:rounded-sm'
-          }"
-          class="ml-auto"
-        />
-      </div>
-
-      <USeparator class="my-4" />
-
       <div class="space-y-4">
         <div v-if="reports.length > 0" class="space-y-4">
-          <ElementPicker ref="picker" />
+          <div class="flex gap-3">
+            <ElementPicker ref="picker" class="flex-1" />
+
+            <UButton
+              @click="currentView = 'settings'"
+              :aria-label="t('settings.title')"
+              :title="t('settings.title')"
+              :label="t('settings.title')"
+              icon="i-lucide-settings"
+              size="xl"
+              color="primary"
+              variant="subtle"
+              :ui="{
+                base: 'cursor-pointer focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-primary focus-visible:rounded-sm',
+                leadingIcon: 'size-5'
+              }"
+              class="ml-auto"
+            />
+          </div>
+
+          <USeparator class="my-4" />
 
           <IssueForm
             :reports="reports"

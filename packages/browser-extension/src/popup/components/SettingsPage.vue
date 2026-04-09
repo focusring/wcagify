@@ -77,13 +77,12 @@ function setNeutralColor(val: string | undefined) {
   <div class="min-h-screen p-4 font-sans">
     <!-- Header -->
     <div class="flex items-center gap-2">
-      <UIcon name="i-lucide-settings" class="shrink-0 size-6 text-black dark:text-white" />
       <h1 class="text-lg font-bold text-black dark:text-white">{{ t('settings.title') }}</h1>
       <UButton
         @click="emit('back')"
         :label="t('settings.back')"
         icon="i-lucide-arrow-left"
-        size="lg"
+        size="xl"
         color="neutral"
         variant="subtle"
         :aria-label="t('settings.back')"
