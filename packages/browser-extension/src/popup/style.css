@@ -150,6 +150,7 @@
 }
 
 :root {
+  --focus-gap-color: black;
   --ui-color-primary-50: var(--color-green-50);
   --ui-color-primary-100: var(--color-green-100);
   --ui-color-primary-200: var(--color-green-200);
@@ -175,6 +176,27 @@
   --ui-color-secondary-950: var(--color-blue-950);
 
   --ui-radius: 0.125rem;
+}
+
+.dark {
+  --focus-gap-color: white;
+}
+
+:focus {
+  outline: 0.375rem double black;
+  box-shadow: 0 0 0 0.25rem white;
+  border-radius: 0.125rem;
+}
+
+.selectable-focus:focus,
+.selectable-focus:focus-visible,
+.selectable-focus:has(input:focus),
+.selectable-focus:has(input:focus-visible) {
+  outline: 0.375rem double var(--ui-color-primary-500);
+  outline-offset: -1px;
+  border-radius: 0.125rem;
+  box-shadow: 0 0 0 0.25rem var(--focus-gap-color);
+  transition: none;
 }
 
 /*

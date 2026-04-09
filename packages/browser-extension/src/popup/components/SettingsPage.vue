@@ -74,7 +74,7 @@ function setNeutralColor(val: string | undefined) {
 </script>
 
 <template>
-  <div class="min-h-screen p-4 bg-white dark:bg-gray-900 font-sans">
+  <div class="min-h-screen p-4 font-sans">
     <!-- Header -->
     <div class="flex items-center gap-2">
       <UIcon name="i-lucide-settings" class="shrink-0 size-6 text-black dark:text-white" />
@@ -91,92 +91,95 @@ function setNeutralColor(val: string | undefined) {
           base: 'cursor-pointer font-medium focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-primary focus-visible:rounded-sm',
           leadingIcon: 'size-4'
         }"
-        class="ml-auto"
+        class="ml-auto selectable-focus"
       />
     </div>
 
     <USeparator class="my-3" />
 
-    <!-- General -->
-    <h2 class="text-sm font-semibold text-muted tracking-wide mb-3">
-      {{ t('settings.general') }}
-    </h2>
-    <section class="bg-elevated rounded-sm p-4 space-y-3 mb-4">
-      <ConnectionSettings />
+    <div class="lg:grid lg:grid-cols-2 lg:grid-rows-[auto_auto] lg:gap-x-4">
+      <!-- General -->
+      <h2 class="text-sm font-semibold text-muted tracking-wide mb-3 col-start-1 row-start-1">
+        {{ t('settings.general') }}
+      </h2>
+      <section class="bg-elevated rounded-sm p-4 space-y-3 mb-4 lg:mb-0">
+        <ConnectionSettings />
 
-      <!-- Language -->
-      <UFormField
-        :label="t('settings.languageLabel')"
-        :ui="{ label: 'text-sm font-semibold tracking-wide text-gray-700 dark:text-gray-300' }"
-        class="flex flex-row items-center justify-between gap-4"
-      >
-        <USelect
-          v-model="locale"
-          :items="localeItems"
-          :aria-label="t('language')"
-          :ui="{
-            trailingIcon: 'group-data-[state=open]:rotate-180 transition-transform duration-200',
-            item: 'data-highlighted:not-data-disabled:before:bg-elevated data-highlighted:not-data-disabled:before:ring-2 data-highlighted:not-data-disabled:before:ring-inset data-highlighted:not-data-disabled:before:ring-primary'
-          }"
-          variant="subtle"
-          size="lg"
-          class="w-auto min-w-28 cursor-pointer"
-        />
-      </UFormField>
+        <!-- Language -->
+        <UFormField
+          :label="t('settings.languageLabel')"
+          :ui="{ label: 'text-sm font-semibold tracking-wide text-gray-700 dark:text-gray-300' }"
+          class="flex flex-row items-center justify-between gap-4"
+        >
+          <USelect
+            v-model="locale"
+            :items="localeItems"
+            :aria-label="t('language')"
+            :ui="{
+              trailingIcon: 'group-data-[state=open]:rotate-180 transition-transform duration-200',
+              item: 'selectable-focus',
+              content: 'overflow-visible'
+            }"
+            variant="subtle"
+            size="lg"
+            class="w-auto min-w-36 cursor-pointer selectable-focus"
+          />
+        </UFormField>
+      </section>
 
-      <div class="space-y-3">
-        <span class="block text-sm font-medium">
-          {{ t('settings.accentColor') }}
-        </span>
-        <SettingsColorPicker
-          :colors="accentColorSwatches"
-          :model-value="accentColor"
-          :label="t('settings.accentColor')"
-          name="accent-color"
-          @update:model-value="setAccentColor($event)"
-        />
-      </div>
+      <!-- Appearance -->
+      <h2 class="text-sm font-semibold text-muted tracking-wide mb-3 col-start-2 row-start-1">
+        {{ t('settings.appearance') }}
+      </h2>
+      <section class="bg-elevated rounded-sm space-y-5 p-4">
+        <!-- Theme -->
+        <UFormField
+          :label="t('settings.colorMode')"
+          :ui="{ label: 'text-sm font-semibold tracking-wide text-gray-700 dark:text-gray-300' }"
+          class="flex flex-row items-center justify-between gap-4"
+        >
+          <UButton
+            @click="cycle"
+            :aria-label="`${t('colorMode.dark')}/${t('colorMode.light')}/${t('colorMode.system')}: ${colorModeLabel}`"
+            :ui="{
+              base: 'cursor-pointer',
+              leadingIcon: 'size-4'
+            }"
+            :leading-icon="colorModeIcon"
+            :label="colorModeLabel"
+            size="lg"
+            color="neutral"
+            variant="subtle"
+            class="min-w-28 selectable-focus"
+          />
+        </UFormField>
 
-      <div class="space-y-3">
-        <span class="block text-sm font-medium">
-          {{ t('settings.backgroundShade') }}
-        </span>
-        <SettingsColorPicker
-          :colors="neutralColorSwatches"
-          :model-value="neutralColor"
-          :label="t('settings.backgroundShade')"
-          name="background-shade"
-          @update:model-value="setNeutralColor($event)"
-        />
-      </div>
-    </section>
+        <div class="space-y-3">
+          <span class="block text-sm font-medium" aria-hidden="true">
+            {{ t('settings.accentColor') }} - {{ accentColor }}
+          </span>
+          <SettingsColorPicker
+            :colors="accentColorSwatches"
+            :model-value="accentColor"
+            :label="t('settings.accentColor')"
+            name="accent-color"
+            @update:model-value="setAccentColor($event)"
+          />
+        </div>
 
-    <!-- Appearance -->
-    <h2 class="text-sm font-semibold text-muted tracking-wide mb-3">
-      {{ t('settings.appearance') }}
-    </h2>
-    <section class="bg-elevated rounded-sm space-y-3 p-4">
-      <!-- Theme -->
-      <UFormField
-        :label="t('settings.colorMode')"
-        :ui="{ label: 'text-sm font-semibold tracking-wide text-gray-700 dark:text-gray-300' }"
-        class="flex flex-row items-center justify-between gap-4"
-      >
-        <UButton
-          @click="cycle"
-          :aria-label="`${t('colorMode.dark')}/${t('colorMode.light')}/${t('colorMode.system')}: ${colorModeLabel}`"
-          :ui="{
-            base: 'cursor-pointer focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-primary focus-visible:rounded-sm',
-            leadingIcon: 'size-4'
-          }"
-          :leading-icon="colorModeIcon"
-          :label="colorModeLabel"
-          size="lg"
-          color="neutral"
-          variant="subtle"
-          class="min-w-28"
-        />
-      </UFormField>
-    </section>
+        <div class="space-y-3">
+          <span class="block text-sm font-medium" aria-hidden="true">
+            {{ t('settings.backgroundShade') }} - {{ neutralColor }}
+          </span>
+          <SettingsColorPicker
+            :colors="neutralColorSwatches"
+            :model-value="neutralColor"
+            :label="t('settings.backgroundShade')"
+            name="background-shade"
+            @update:model-value="setNeutralColor($event)"
+          />
+        </div>
+      </section>
+    </div>
   </div>
 </template>

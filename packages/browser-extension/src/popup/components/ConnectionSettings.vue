@@ -12,12 +12,6 @@ const status = ref<'idle' | 'loading' | 'connected' | 'error'>('idle')
 const errorMessage = ref('')
 const mode = ref<'scanning' | 'select' | 'manual'>('scanning')
 const autoConnected = ref(false)
-const isOpen = ref(status.value !== 'connected')
-
-watch(status, (val) => {
-  isOpen.value = val !== 'connected'
-})
-
 onMounted(() => {
   scan()
 })
@@ -110,138 +104,115 @@ async function fetchReports() {
 
 <template>
   <div class="space-y-3">
-    <UCollapsible :open="isOpen" @update:open="isOpen = $event">
-      <UButton
-        class="group"
-        variant="ghost"
-        color="neutral"
-        trailing-icon="i-lucide-chevron-down"
-        block
-        :ui="{
-          trailingIcon: 'group-data-[state=open]:rotate-180 transition-transform duration-200',
-          base: 'cursor-pointer px-3 focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-primary focus-visible:rounded-sm'
-        }"
+    <!-- Connected state (always visible on top) -->
+    <div v-if="status === 'connected'" class="flex items-center gap-2 px-1 text-sm">
+      <UChip color="success" standalone inset />
+      <span class="text-success">{{ t('connection.connected') }}</span>
+      <span class="text-gray-600 dark:text-gray-300">&mdash; {{ wcagifyUrl }}</span>
+    </div>
+
+    <!-- Scanning state -->
+    <div v-if="mode === 'scanning'" class="text-sm text-gray-500 dark:text-gray-400">
+      {{ t('connection.scanning') }}
+    </div>
+
+    <!-- Multiple instances found: dropdown -->
+    <div v-else-if="mode === 'select'">
+      <label
+        for="wcagify-instance"
+        class="block text-sm font-medium text-gray-600 dark:text-gray-400 mb-1"
+        >{{ t('connection.selectInstance') }} <small>({{ t('connection.required') }})</small></label
       >
-        <template v-if="status === 'connected'">
-          <UChip color="success" standalone inset />
-          <span class="text-green-700 dark:text-green-400">{{ t('connection.connected') }}</span>
-          <span class="text-gray-600 dark:text-gray-300">&mdash; {{ wcagifyUrl }}</span>
-        </template>
-        <template v-else-if="mode === 'scanning'">
-          {{ t('connection.scanning') }}
-        </template>
-        <template v-else>
-          {{ t('connection.url') }}
-        </template>
-      </UButton>
+      <USelect
+        id="wcagify-instance"
+        :model-value="wcagifyUrl"
+        :items="instances.map((i) => ({ label: i.label, value: i.url }))"
+        @update:model-value="connectInstance"
+        required
+        :ui="{
+          placeholder: 'text-muted',
+          item: 'data-highlighted:not-data-disabled:before:bg-elevated data-highlighted:not-data-disabled:before:ring-2 data-highlighted:not-data-disabled:before:ring-inset data-highlighted:not-data-disabled:before:ring-primary'
+        }"
+        aria-required="true"
+        class="w-full cursor-pointer"
+      />
+      <UButton
+        variant="link"
+        :label="t('connection.enterManually')"
+        color="success"
+        size="sm"
+        class="mt-1"
+        @click="switchToManual"
+        :ui="{ base: 'cursor-pointer px-0' }"
+      />
+    </div>
 
-      <template #content>
-        <div class="mt-3 space-y-3">
-          <!-- Scanning state -->
-          <div v-if="mode === 'scanning'" class="text-sm text-gray-500 dark:text-gray-400 px-2.5">
-            {{ t('connection.scanning') }}
-          </div>
+    <!-- Manual input -->
+    <div v-else-if="mode === 'manual'">
+      <form @submit.prevent="fetchReports">
+        <label
+          for="wcagify-url"
+          class="block text-sm font-medium text-gray-600 dark:text-gray-400 mb-1"
+          >{{ t('connection.url') }} <small>({{ t('connection.required') }})</small></label
+        >
+        <div class="flex gap-2">
+          <UInput
+            id="wcagify-url"
+            v-model="wcagifyUrl"
+            type="url"
+            placeholder="http://localhost:3000"
+            required
+            aria-required="true"
+            :aria-invalid="status === 'error' ? true : undefined"
+            :aria-describedby="status === 'error' ? 'wcagify-url-error' : undefined"
+            :color="status === 'error' ? 'error' : 'success'"
+            :highlight="status === 'error'"
+            :ui="{ base: 'selectable-focus' }"
+            class="flex-1"
+          />
 
-          <!-- Multiple instances found: dropdown -->
-          <div v-else-if="mode === 'select'">
-            <label
-              for="wcagify-instance"
-              class="block text-sm font-medium text-gray-600 dark:text-gray-400 mb-1"
-              >{{ t('connection.selectInstance') }}
-              <small>({{ t('connection.required') }})</small></label
-            >
-            <USelect
-              id="wcagify-instance"
-              :model-value="wcagifyUrl"
-              :items="instances.map((i) => ({ label: i.label, value: i.url }))"
-              @update:model-value="connectInstance"
-              required
-              :ui="{
-                placeholder: 'text-muted',
-                item: 'data-highlighted:not-data-disabled:before:bg-elevated data-highlighted:not-data-disabled:before:ring-2 data-highlighted:not-data-disabled:before:ring-inset data-highlighted:not-data-disabled:before:ring-primary'
-              }"
-              aria-required="true"
-              class="w-full cursor-pointer"
-            />
-            <UButton
-              variant="link"
-              :label="t('connection.enterManually')"
-              color="success"
-              size="sm"
-              class="mt-1"
-              @click="switchToManual"
-              :ui="{ base: 'cursor-pointer px-0' }"
-            />
-          </div>
+          <UButton
+            type="submit"
+            color="success"
+            :label="t('connection.connect')"
+            :ui="{ base: 'cursor-pointer selectable-focus' }"
+          />
 
-          <!-- Manual input -->
-          <div v-else>
-            <form @submit.prevent="fetchReports">
-              <label
-                for="wcagify-url"
-                class="block text-sm font-medium text-gray-600 dark:text-gray-400 mb-1"
-                >{{ t('connection.url') }} <small>({{ t('connection.required') }})</small></label
-              >
-              <div class="flex gap-2">
-                <UInput
-                  id="wcagify-url"
-                  v-model="wcagifyUrl"
-                  type="url"
-                  placeholder="http://localhost:3000"
-                  required
-                  aria-required="true"
-                  :aria-invalid="status === 'error' ? true : undefined"
-                  :aria-describedby="status === 'error' ? 'wcagify-url-error' : undefined"
-                  :color="status === 'error' ? 'error' : 'success'"
-                  :highlight="status === 'error'"
-                  class="flex-1"
-                />
-
-                <UButton
-                  type="submit"
-                  color="success"
-                  :label="t('connection.connect')"
-                  :ui="{ base: 'cursor-pointer' }"
-                />
-
-                <UButton
-                  @click="rescan"
-                  color="neutral"
-                  variant="outline"
-                  icon="i-lucide-refresh-cw"
-                  :aria-label="t('connection.rescan')"
-                  :ui="{
-                    base: 'cursor-pointer focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-primary focus-visible:rounded-sm'
-                  }"
-                />
-              </div>
-            </form>
-            <div
-              v-if="autoConnected && status === 'connected'"
-              class="mt-1.5 flex items-center gap-1.5 text-sm text-blue-600 dark:text-blue-400"
-            >
-              <UIcon name="i-lucide-info" class="size-4 shrink-0" />
-              {{ t('connection.autoConnected') }}
-            </div>
-          </div>
-
-          <div
-            v-if="mode !== 'scanning' && status === 'loading'"
-            class="text-sm text-gray-500 dark:text-gray-400"
-          >
-            {{ t('connection.connecting') }}
-          </div>
-
-          <UAlert
-            v-if="status === 'error'"
-            id="wcagify-url-error"
-            color="error"
-            variant="subtle"
-            :description="errorMessage"
+          <UButton
+            @click="rescan"
+            color="neutral"
+            variant="outline"
+            icon="i-lucide-refresh-cw"
+            :aria-label="t('connection.rescan')"
+            :ui="{
+              base: 'cursor-pointer focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-primary focus-visible:rounded-sm selectable-focus'
+            }"
           />
         </div>
-      </template>
-    </UCollapsible>
+      </form>
+      <div
+        v-if="autoConnected && status === 'connected'"
+        class="mt-1.5 flex items-center gap-1.5 text-sm text-blue-600 dark:text-blue-400"
+      >
+        <UIcon name="i-lucide-info" class="size-4 shrink-0" />
+        {{ t('connection.autoConnected') }}
+      </div>
+    </div>
+
+    <div
+      v-if="mode !== 'scanning' && status === 'loading'"
+      class="text-sm text-gray-500 dark:text-gray-400"
+    >
+      {{ t('connection.connecting') }}
+    </div>
+
+    <UAlert
+      v-if="status === 'error'"
+      id="wcagify-url-error"
+      color="error"
+      variant="subtle"
+      :description="errorMessage"
+    />
 
     <div v-if="status === 'connected' && reports.length > 0" class="">
       <label
@@ -257,11 +228,12 @@ async function fetchReports() {
         :ui="{
           placeholder: 'text-muted',
           trailingIcon: 'text-muted',
-          item: 'data-highlighted:not-data-disabled:before:bg-elevated data-highlighted:not-data-disabled:before:ring-2 data-highlighted:not-data-disabled:before:ring-inset data-highlighted:not-data-disabled:before:ring-primary'
+          item: 'selectable-focus',
+          content: 'overflow-visible'
         }"
         required
         aria-required="true"
-        class="w-full cursor-pointer"
+        class="w-full cursor-pointer selectable-focus"
         size="lg"
         variant="subtle"
       />
