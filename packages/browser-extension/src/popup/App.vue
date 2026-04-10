@@ -37,25 +37,33 @@ const localeItems = computed(() => locales.map(([value, label]) => ({ value, lab
 
     <div v-show="currentView === 'main'" class="min-h-screen p-4 font-sans">
       <div class="space-y-4">
-        <div class="flex gap-3">
-          <ElementPicker v-if="reports.length > 0" ref="picker" class="flex-1" />
-          <USkeleton v-else-if="scanStatus !== 'done'" class="flex-1 h-10 rounded-md" />
+        <ElementPicker
+          v-if="reports.length > 0"
+          ref="picker"
+          class="flex-1"
+          @open-settings="currentView = 'settings'"
+        />
 
-          <UButton
-            @click="currentView = 'settings'"
-            :aria-label="t('settings.title')"
-            :title="t('settings.title')"
-            :label="t('settings.title')"
-            icon="i-lucide-settings"
-            size="xl"
-            color="primary"
-            variant="subtle"
-            :ui="{
-              base: 'cursor-pointer selectable-focus',
-              leadingIcon: 'size-5'
-            }"
-          />
+        <div v-else-if="scanStatus !== 'done'" class="w-full flex gap-3">
+          <USkeleton class="h-10 w-full rounded-md" />
+          <USkeleton class="h-10 w-32 rounded-md" />
         </div>
+
+        <UButton
+          v-else
+          @click="currentView = 'settings'"
+          :aria-label="t('settings.title')"
+          :title="t('settings.title')"
+          :label="t('settings.title')"
+          icon="i-lucide-settings"
+          size="xl"
+          color="primary"
+          variant="subtle"
+          :ui="{
+            base: 'cursor-pointer selectable-focus',
+            leadingIcon: 'size-5'
+          }"
+        />
 
         <template v-if="reports.length > 0">
           <USeparator class="my-4" />
@@ -72,7 +80,7 @@ const localeItems = computed(() => locales.map(([value, label]) => ({ value, lab
           <USeparator class="my-4" />
 
           <div class="space-y-3">
-            <div v-for="n in 3" :key="n" class="w-full space-y-2.5">
+            <div v-for="n in 2" :key="n" class="w-full space-y-2.5">
               <USkeleton class="h-3.5 w-24 rounded-md" />
               <USkeleton class="h-9 w-full rounded-md" />
             </div>

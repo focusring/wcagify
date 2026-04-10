@@ -178,7 +178,7 @@ async function submit() {
         :placeholder="t('form.issueTitlePlaceholder')"
         :ui="{
           trailing: 'pe-1.5',
-          base: '[&::placeholder]:text-muted py-2 text-sm hover:bg-accented/75'
+          base: '[&::placeholder]:text-muted py-2 text-sm hover:bg-accented/75 selectable-focus'
         }"
         variant="subtle"
         class="w-full"
@@ -219,7 +219,7 @@ async function submit() {
       />
     </UFormField>
 
-    <div class="grid grid-cols-2 gap-2">
+    <div class="flex gap-3">
       <UFormField
         :label="t('form.severity')"
         :hint="`(${t('form.required')})`"
@@ -230,6 +230,7 @@ async function submit() {
           labelWrapper: 'flex items-center justify-start gap-1',
           hint: 'label-hint'
         }"
+        class="w-full"
       >
         <ClearableSelect
           id="issue-severity"
@@ -249,6 +250,7 @@ async function submit() {
           labelWrapper: 'flex items-center justify-start gap-1',
           hint: 'label-hint'
         }"
+        class="w-full"
       >
         <ClearableSelect
           id="issue-type"

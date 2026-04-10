@@ -87,8 +87,8 @@ function setNeutralColor(val: string | undefined) {
         variant="subtle"
         :aria-label="t('settings.back')"
         :ui="{
-          base: 'cursor-pointer font-medium focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-primary focus-visible:rounded-sm',
-          leadingIcon: 'size-4'
+          base: 'cursor-pointer font-medium selectable-focus',
+          leadingIcon: 'size-5'
         }"
         class="ml-auto selectable-focus"
       />

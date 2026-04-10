@@ -197,6 +197,14 @@
   box-shadow: none;
 }
 
+/* remove focus ring on USelect dropdown, restore Tailwind ring+shadow */
+[role='listbox']:focus {
+  outline: none;
+  box-shadow:
+    var(--tw-inset-ring-shadow, 0 0 0 #0000), var(--tw-ring-offset-shadow, 0 0 0 #0000),
+    var(--tw-ring-shadow, 0 0 0 #0000), var(--tw-shadow, 0 0 0 #0000) !important;
+}
+
 .selectable-focus:focus,
 .selectable-focus:focus-visible,
 .selectable-focus[data-highlighted],
@@ -210,7 +218,7 @@
 }
 
 .label-title {
-  @apply font-medium tracking-wide text-slate-600 dark:text-slate-300;
+  @apply font-medium tracking-wide text-muted;
 }
 
 .label-hint {

@@ -1,7 +1,19 @@
 <script setup lang="ts">
+import { ref, watch } from 'vue'
 import { useI18n } from '../../composables/useI18n'
 
 const model = defineModel<string | undefined>()
+
+const isOpen = ref(false)
+
+function onTabKeydown(e: KeyboardEvent) {
+  if (e.key === 'Tab') isOpen.value = false
+}
+
+watch(isOpen, (open) => {
+  if (open) document.addEventListener('keydown', onTabKeydown)
+  else document.removeEventListener('keydown', onTabKeydown)
+})
 
 withDefaults(
   defineProps<{
@@ -34,6 +46,8 @@ function onSelectKeydown(e: KeyboardEvent) {
   <USelect
     :id="id"
     v-model="model"
+    :open="isOpen"
+    @update:open="isOpen = $event"
     :items="items"
     :value-key="valueKey"
     :placeholder="placeholder"
