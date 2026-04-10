@@ -181,7 +181,7 @@ async function submit() {
           base: '[&::placeholder]:text-muted py-2 text-sm hover:bg-accented/75'
         }"
         variant="subtle"
-        class="issue-title-input w-full"
+        class="w-full"
       >
         <template v-if="title?.length" #trailing>
           <UButton
@@ -191,10 +191,9 @@ async function submit() {
             icon="i-lucide-x"
             :aria-label="t('form.clearTitle')"
             :ui="{
-              base: 'focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-primary focus-visible:rounded-sm'
+              base: 'selectable-focus cursor-pointer'
             }"
             @click="title = ''"
-            class="cursor-pointer"
           />
         </template>
       </UInput>

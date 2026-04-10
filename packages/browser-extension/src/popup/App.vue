@@ -51,7 +51,7 @@ const localeItems = computed(() => locales.map(([value, label]) => ({ value, lab
             color="primary"
             variant="subtle"
             :ui="{
-              base: 'cursor-pointer focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-primary focus-visible:rounded-sm',
+              base: 'cursor-pointer selectable-focus',
               leadingIcon: 'size-5'
             }"
           />
