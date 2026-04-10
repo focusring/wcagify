@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { ref, onMounted, onUnmounted, watch } from 'vue'
+import { ref, computed, onMounted, onUnmounted, watch } from 'vue'
 import type { Report } from '../../types'
 import { useSettings } from '../../composables/useSettings'
 import { useI18n } from '../../composables/useI18n'
@@ -50,6 +50,7 @@ function syncSelectedReport() {
 }
 
 function connectInstance(url: string) {
+  autoConnected.value = false
   wcagifyUrl.value = url
   const instance = instances.value.find((i) => i.url === url)
   if (instance) {
@@ -64,6 +65,7 @@ function switchToManual() {
 }
 
 function rescan() {
+  autoConnected.value = false
   mode.value = 'scanning'
   status.value = 'idle'
   errorMessage.value = ''
@@ -71,7 +73,36 @@ function rescan() {
   scan()
 }
 
+const statusAlert = computed(() => {
+  if (autoConnected.value && status.value === 'connected') {
+    return {
+      color: 'info' as const,
+      variant: 'subtle' as const,
+      icon: 'i-lucide-info',
+      description: t('connection.autoConnected')
+    }
+  }
+  if (mode.value !== 'scanning' && status.value === 'loading') {
+    return {
+      color: 'neutral' as const,
+      variant: 'soft' as const,
+      icon: undefined,
+      description: t('connection.connecting')
+    }
+  }
+  if (status.value === 'error') {
+    return {
+      color: 'error' as const,
+      variant: 'subtle' as const,
+      icon: undefined,
+      description: errorMessage.value
+    }
+  }
+  return undefined
+})
+
 async function fetchReports() {
+  autoConnected.value = false
   status.value = 'loading'
   errorMessage.value = ''
 
@@ -214,12 +245,17 @@ async function fetchReports() {
       :description="errorMessage"
     />
 
-    <div v-if="status === 'connected' && reports.length > 0" class="">
-      <label
-        for="wcagify-report"
-        class="block text-sm font-medium text-gray-600 dark:text-gray-400 mb-1"
-        >{{ t('connection.report') }} <small>({{ t('connection.required') }})</small></label
-      >
+    <UFormField
+      v-if="status === 'connected' && reports.length > 0"
+      :label="t('connection.report')"
+      :hint="`(${t('connection.required')})`"
+      name="wcagify-report"
+      :ui="{
+        label: 'label-title',
+        labelWrapper: 'flex items-center justify-start gap-1',
+        hint: 'label-hint'
+      }"
+    >
       <USelect
         id="wcagify-report"
         v-model="reportSlug"
@@ -227,8 +263,8 @@ async function fetchReports() {
         :placeholder="t('connection.selectReport')"
         :ui="{
           placeholder: 'text-muted',
-          trailingIcon: 'text-muted',
-          item: 'selectable-focus',
+          trailingIcon: 'text-muted group-data-[state=open]:rotate-180 transition-transform duration-200',
+          item: 'cursor-pointer selectable-focus',
           content: 'overflow-visible'
         }"
         required
@@ -237,6 +273,6 @@ async function fetchReports() {
         size="lg"
         variant="subtle"
       />
-    </div>
+    </UFormField>
   </div>
 </template>
