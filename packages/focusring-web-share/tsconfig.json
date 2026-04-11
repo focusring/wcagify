@@ -1,0 +1,18 @@
+{
+  "compilerOptions": {
+    "target": "ESNext",
+    "module": "ESNext",
+    "moduleResolution": "bundler",
+    "strict": true,
+    "jsx": "preserve",
+    "resolveJsonModule": true,
+    "esModuleInterop": true,
+    "lib": ["ESNext", "DOM", "DOM.Iterable"],
+    "types": ["chrome"],
+    "skipLibCheck": true,
+    "paths": {
+      "#build/ui/*": ["./node_modules/@nuxt/ui/dist/runtime/*"]
+    }
+  },
+  "include": ["src", "auto-imports.d.ts", "components.d.ts"]
+}
