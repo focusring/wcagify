@@ -21,8 +21,12 @@ const currentView = ref<'main' | 'settings'>('main')
     <SettingsPage v-if="currentView === 'settings'" @back="currentView = 'main'" />
 
     <div v-show="currentView === 'main'" class="min-h-screen p-4 font-sans">
-      <!-- Settings button — always top-right -->
-      <div class="flex justify-end mb-4">
+      <!-- Header -->
+      <div class="flex items-center justify-between mb-4">
+        <div class="flex items-center gap-2">
+          <img :src="logoSvg" alt="" aria-hidden="true" class="size-7" />
+          <h1 class="text-lg font-bold text-black dark:text-white">WCAGify</h1>
+        </div>
         <UButton
           @click="currentView = 'settings'"
           :aria-label="t('settings.title')"
