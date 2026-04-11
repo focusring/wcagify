@@ -90,6 +90,16 @@ export default {
     paragraph: 'Paragraph',
     insert: 'Insert'
   },
+  setup: {
+    title: 'Welcome to WCAGify',
+    description:
+      'Connect to a running WCAGify instance to start reporting accessibility issues directly from your browser.',
+    helpTitle: 'Getting started',
+    step1: 'Start your WCAGify project locally (e.g. pnpm dev)',
+    step2: 'Enter the URL or let the extension auto-detect it',
+    step3: 'Select a report and start auditing',
+    docsLink: 'Read the full WCAGify guide'
+  },
   language: 'Language',
   settings: {
     title: 'Settings',
@@ -103,6 +113,13 @@ export default {
     saved: 'Saved',
     accentColor: 'Accent Color',
     backgroundShade: 'Background Shade',
-    clearColor: 'Clear color'
+    clearColor: 'Clear color',
+    license: 'is released under the MIT License.',
+    terms: 'Terms',
+    privacy: 'Privacy',
+    security: 'Security',
+    madeBy: 'Made with ❤️ by',
+    inRegion: 'in Europe 🇪🇺',
+    version: 'Version'
   }
 } as const

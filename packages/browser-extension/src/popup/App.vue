@@ -1,34 +1,19 @@
 <script setup lang="ts">
-import { ref, computed } from 'vue'
-import { useColorMode } from '../composables/useColorMode'
+import { ref } from 'vue'
 import { useI18n } from '../composables/useI18n'
 import { useSettings } from '../composables/useSettings'
-import { localeLabels, type Locale } from '../i18n'
+import logoSvg from '../assets/wcagify-icon.svg'
+import ClearableSelect from './components/ClearableSelect.vue'
+import ConnectionSettings from './components/ConnectionSettings.vue'
 import ElementPicker from './components/ElementPicker.vue'
 import IssueForm from './components/IssueForm.vue'
 import SettingsPage from './components/SettingsPage.vue'
 
 const picker = ref<InstanceType<typeof ElementPicker>>()
-const { preference, cycle } = useColorMode()
-const { t, locale } = useI18n()
-const { reports, scanStatus } = useSettings()
+const { t } = useI18n()
+const { reports, reportSlug, scanStatus } = useSettings()
 
 const currentView = ref<'main' | 'settings'>('main')
-
-const colorModeIcon = computed(() => {
-  if (preference.value === 'dark') return 'i-lucide-moon'
-  if (preference.value === 'light') return 'i-lucide-sun'
-  return 'i-lucide-monitor'
-})
-
-const colorModeLabel = computed(() => {
-  if (preference.value === 'dark') return t('colorMode.dark')
-  if (preference.value === 'light') return t('colorMode.light')
-  return t('colorMode.system')
-})
-
-const locales = Object.entries(localeLabels) as [Locale, string][]
-const localeItems = computed(() => locales.map(([value, label]) => ({ value, label })))
 </script>
 
 <template>
@@ -36,36 +21,93 @@ const localeItems = computed(() => locales.map(([value, label]) => ({ value, lab
     <SettingsPage v-if="currentView === 'settings'" @back="currentView = 'main'" />
 
     <div v-show="currentView === 'main'" class="min-h-screen p-4 font-sans">
-      <div class="space-y-4">
-        <ElementPicker
-          v-if="reports.length > 0"
-          ref="picker"
-          class="flex-1"
-          @open-settings="currentView = 'settings'"
+      <!-- Settings button — always top-right -->
+      <div class="flex justify-end mb-4">
+        <UButton
+          @click="currentView = 'settings'"
+          :aria-label="t('settings.title')"
+          :title="t('settings.title')"
+          icon="i-lucide-settings"
+          size="xl"
+          color="neutral"
+          variant="ghost"
+          :ui="{
+            base: 'cursor-pointer selectable-focus',
+            leadingIcon: 'size-5'
+          }"
         />
+      </div>
+
+      <div class="space-y-4">
+        <ElementPicker v-if="reports.length > 0" ref="picker" class="flex-1" />
 
         <div v-else-if="scanStatus !== 'done'" class="w-full flex gap-3">
           <USkeleton class="h-10 w-full rounded-md" />
           <USkeleton class="h-10 w-32 rounded-md" />
         </div>
 
-        <UButton
-          v-else
-          @click="currentView = 'settings'"
-          :aria-label="t('settings.title')"
-          :title="t('settings.title')"
-          :label="t('settings.title')"
-          icon="i-lucide-settings"
-          size="xl"
-          color="primary"
-          variant="subtle"
-          :ui="{
-            base: 'cursor-pointer selectable-focus',
-            leadingIcon: 'size-5'
-          }"
-        />
+        <!-- Setup screen when no instance is connected -->
+        <div v-else class="space-y-5">
+          <div class="flex flex-col items-center text-center space-y-3 pt-2">
+            <img :src="logoSvg" alt="" aria-hidden="true" class="size-16" />
+            <div class="space-y-1">
+              <h1 class="text-lg font-bold text-black dark:text-white">
+                {{ t('setup.title') }}
+              </h1>
+              <p class="text-sm text-muted">
+                {{ t('setup.description') }}
+              </p>
+            </div>
+          </div>
+
+          <section class="bg-elevated rounded-sm p-4">
+            <ConnectionSettings />
+          </section>
+
+          <div
+            class="rounded-sm border border-dashed border-gray-300 dark:border-gray-700 p-4 space-y-2"
+          >
+            <h2 class="text-sm font-semibold text-black dark:text-white flex items-center gap-1.5">
+              <UIcon name="i-lucide-info" class="size-4 text-muted" />
+              {{ t('setup.helpTitle') }}
+            </h2>
+            <ol class="text-sm text-muted list-decimal list-inside space-y-1">
+              <li>{{ t('setup.step1') }}</li>
+              <li>{{ t('setup.step2') }}</li>
+              <li>{{ t('setup.step3') }}</li>
+            </ol>
+            <a
+              href="https://wcagify.com/guide/getting-started"
+              target="_blank"
+              rel="noopener noreferrer"
+              class="inline-flex items-center gap-1 text-sm font-medium text-primary hover:underline selectable-focus mt-1"
+            >
+              {{ t('setup.docsLink') }}
+              <UIcon name="i-lucide-external-link" class="size-3.5" />
+            </a>
+          </div>
+        </div>
 
         <template v-if="reports.length > 0">
+          <UFormField
+            :label="t('connection.report')"
+            :hint="`(${t('connection.required')})`"
+            name="wcagify-report"
+            :ui="{
+              label: 'label-title',
+              labelWrapper: 'flex items-center justify-start gap-1',
+              hint: 'label-hint'
+            }"
+          >
+            <ClearableSelect
+              id="wcagify-report"
+              v-model="reportSlug"
+              :items="reports.map((r) => ({ label: r.title, value: r.slug }))"
+              :placeholder="t('connection.selectReport')"
+              required
+            />
+          </UFormField>
+
           <USeparator class="my-4" />
 
           <IssueForm

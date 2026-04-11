@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { computed } from 'vue'
+import { computed, ref, onMounted } from 'vue'
 import { useColorMode } from '../../composables/useColorMode'
 import { useI18n } from '../../composables/useI18n'
 import {
@@ -10,8 +10,16 @@ import {
   type NeutralColor
 } from '../../composables/useSettings'
 import { localeLabels, type Locale } from '../../i18n'
+import logoSvg from '../../assets/wcagify-icon.svg'
 import ConnectionSettings from './ConnectionSettings.vue'
 import SettingsColorPicker from './SettingsColorPicker.vue'
+
+const version = ref('')
+onMounted(() => {
+  try {
+    version.value = chrome.runtime.getManifest().version
+  } catch {}
+})
 
 const emit = defineEmits<{ back: [] }>()
 
@@ -180,5 +188,61 @@ function setNeutralColor(val: string | undefined) {
         </div>
       </section>
     </div>
+
+    <!-- About -->
+    <USeparator class="my-4" />
+
+    <footer
+      class="flex flex-col items-center gap-2 text-center text-xs text-muted pb-2 max-w-md mx-auto whitespace-nowrap"
+    >
+      <img :src="logoSvg" alt="Logo WCAGify" class="size-8" />
+      <div class="space-y-1.5">
+        <p>
+          <a
+            href="https://www.wcagify.com"
+            target="_blank"
+            rel="noopener noreferrer"
+            class="font-medium text-primary hover:underline selectable-focus"
+            >WCAGify</a
+          >
+          {{ t('settings.license') }}
+          <a
+            href="https://wcagify.com/legal/terms-and-conditions"
+            target="_blank"
+            rel="noopener noreferrer"
+            class="hover:underline selectable-focus"
+            >{{ t('settings.terms') }}</a
+          >
+          ·
+          <a
+            href="https://wcagify.com/legal/privacy-policy"
+            target="_blank"
+            rel="noopener noreferrer"
+            class="hover:underline selectable-focus"
+            >{{ t('settings.privacy') }}</a
+          >
+          ·
+          <a
+            href="https://wcagify.com/legal/security-policy"
+            target="_blank"
+            rel="noopener noreferrer"
+            class="hover:underline selectable-focus"
+            >{{ t('settings.security') }}</a
+          >
+        </p>
+        <p>
+          {{ t('settings.madeBy') }}
+          <a
+            href="https://www.focusring.io"
+            target="_blank"
+            rel="noopener noreferrer"
+            class="font-medium text-primary hover:underline selectable-focus"
+            >focusring.io</a
+          >
+          {{ t('settings.inRegion') }}
+        </p>
+        <p v-if="version">{{ t('settings.version') }} {{ version }}</p>
+      </div>
+    </footer>
   </div>
 </template>

@@ -90,6 +90,16 @@ export default {
     paragraph: 'Paragraaf',
     insert: 'Invoegen'
   },
+  setup: {
+    title: 'Welkom bij WCAGify',
+    description:
+      'Maak verbinding met een draaiende WCAGify-instantie om toegankelijkheidsproblemen direct vanuit je browser te rapporteren.',
+    helpTitle: 'Aan de slag',
+    step1: 'Start je WCAGify-project lokaal (bijv. pnpm dev)',
+    step2: 'Voer de URL in of laat de extensie deze automatisch detecteren',
+    step3: 'Selecteer een rapport en begin met auditen',
+    docsLink: 'Lees de volledige WCAGify handleiding'
+  },
   language: 'Taal',
   settings: {
     title: 'Instellingen',
@@ -103,6 +113,13 @@ export default {
     saved: 'Opgeslagen',
     accentColor: 'Accentkleur',
     backgroundShade: 'Achtergrondtint',
-    clearColor: 'Kleur wissen'
+    clearColor: 'Kleur wissen',
+    license: 'is uitgebracht onder de MIT-licentie.',
+    terms: 'Voorwaarden',
+    privacy: 'Privacy',
+    security: 'Beveiliging',
+    madeBy: 'Gemaakt met ❤️ door',
+    inRegion: 'in Europa 🇪🇺',
+    version: 'Versie'
   }
 } as const
