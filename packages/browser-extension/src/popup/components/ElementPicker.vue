@@ -58,7 +58,7 @@ async function pickElement() {
       :label="picking ? t('picker.picking') : t('picker.pickElement')"
     />
 
-    <div v-if="selector" class="space-y-1 rounded bg-gray-50 dark:bg-gray-800 p-2 text-sm">
+    <div v-if="selector" class="space-y-1 rounded bg-muted p-2 text-sm">
       <div>
         <span class="font-medium text-gray-600 dark:text-gray-400">{{ t('picker.selector') }}</span>
         <code class="ml-1 break-all text-gray-800 dark:text-gray-200">{{ selector }}</code>

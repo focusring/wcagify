@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { computed, ref, onMounted } from 'vue'
+import { computed, ref, onMounted, nextTick, useTemplateRef } from 'vue'
 import { useColorMode } from '../../composables/useColorMode'
 import { useI18n } from '../../composables/useI18n'
 import {
@@ -14,11 +14,15 @@ import logoSvg from '../../assets/wcagify-icon.svg'
 import ConnectionSettings from './ConnectionSettings.vue'
 import SettingsColorPicker from './SettingsColorPicker.vue'
 
+const focusSentinel = useTemplateRef<HTMLElement>('focusSentinel')
+
 const version = ref('')
-onMounted(() => {
+onMounted(async () => {
   try {
     version.value = chrome.runtime.getManifest().version
   } catch {}
+  await nextTick()
+  focusSentinel.value?.focus()
 })
 
 const emit = defineEmits<{ back: [] }>()
@@ -83,6 +87,7 @@ function setNeutralColor(val: string | undefined) {
 
 <template>
   <div class="min-h-screen p-4 font-sans">
+    <span ref="focusSentinel" tabindex="-1" aria-hidden="true" class="sr-only" />
     <!-- Header -->
     <div class="flex items-center gap-2">
       <h1 class="text-lg font-bold text-black dark:text-white">{{ t('settings.title') }}</h1>

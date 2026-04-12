@@ -45,9 +45,12 @@ const currentView = ref<'main' | 'settings'>('main')
       <div class="space-y-4">
         <ElementPicker v-if="reports.length > 0" ref="picker" class="flex-1" />
 
-        <div v-else-if="scanStatus !== 'done'" class="w-full flex gap-3">
-          <USkeleton class="h-10 w-full rounded-md" />
-          <USkeleton class="h-10 w-32 rounded-md" />
+        <div v-else-if="scanStatus !== 'done'" class="w-full">
+          <USkeleton class="h-10 w-full rounded-md mb-4" />
+          <div class="w-full space-y-2.5">
+            <USkeleton class="h-3.5 w-24 rounded-md" />
+            <USkeleton class="h-9 w-full rounded-md" />
+          </div>
         </div>
 
         <!-- Setup screen when no instance is connected -->
@@ -126,7 +129,7 @@ const currentView = ref<'main' | 'settings'>('main')
           <USeparator class="my-4" />
 
           <div class="space-y-3">
-            <div v-for="n in 2" :key="n" class="w-full space-y-2.5">
+            <div v-for="n in 3" :key="n" class="w-full space-y-2.5">
               <USkeleton class="h-3.5 w-24 rounded-md" />
               <USkeleton class="h-9 w-full rounded-md" />
             </div>

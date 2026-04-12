@@ -57,29 +57,37 @@ async function probePort(
 const instances = ref<DiscoveredInstance[]>([])
 const scanStatus = ref<'idle' | 'scanning' | 'done'>('idle')
 let abortController: AbortController | undefined
+let scanningPromise: Promise<void> | undefined
 
-async function scan() {
-  abort()
+function scan(): Promise<void> {
+  // Reuse the in-flight scan so concurrent callers don't cancel each other.
+  if (scanningPromise) return scanningPromise
+
   abortController = new AbortController()
   const { signal } = abortController
 
   scanStatus.value = 'scanning'
   instances.value = []
 
-  const results = await Promise.allSettled(PORTS.map((port) => probePort(port, signal)))
+  scanningPromise = Promise.allSettled(PORTS.map((port) => probePort(port, signal)))
+    .then((results) => {
+      if (signal.aborted) return
+      instances.value = results
+        .map((r) => (r.status === 'fulfilled' ? r.value : undefined))
+        .filter((r): r is DiscoveredInstance => r !== undefined)
+      scanStatus.value = 'done'
+    })
+    .finally(() => {
+      scanningPromise = undefined
+    })
 
-  if (signal.aborted) return
-
-  instances.value = results
-    .map((r) => (r.status === 'fulfilled' ? r.value : undefined))
-    .filter((r): r is DiscoveredInstance => r !== undefined)
-
-  scanStatus.value = 'done'
+  return scanningPromise
 }
 
 function abort() {
   abortController?.abort()
   abortController = undefined
+  scanningPromise = undefined
 }
 
 export function useInstanceDiscovery() {

@@ -201,19 +201,20 @@ async function fetchReports() {
               type="url"
               placeholder="http://localhost:3000"
               required
-              size="xl"
+              size="lg"
               aria-required="true"
               :aria-invalid="status === 'error' ? true : undefined"
               :aria-describedby="status === 'error' ? 'wcagify-url-error' : undefined"
               :color="status === 'error' ? 'error' : 'success'"
               :highlight="status === 'error'"
-              :ui="{ base: 'py-1.5 selectable-focus' }"
+              :ui="{ base: 'selectable-focus' }"
               class="flex-1"
             />
 
             <UButton
               type="submit"
               color="primary"
+              size="lg"
               :label="t('connection.connect')"
               :ui="{ base: 'cursor-pointer selectable-focus' }"
             />
@@ -223,9 +224,10 @@ async function fetchReports() {
               color="neutral"
               variant="outline"
               icon="i-lucide-refresh-cw"
+              size="lg"
               :aria-label="t('connection.rescan')"
               :ui="{
-                base: 'cursor-pointer selectable-focus'
+                base: 'shrink-0 cursor-pointer selectable-focus flex-none'
               }"
             />
           </div>
