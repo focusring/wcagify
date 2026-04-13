@@ -13,6 +13,12 @@ const status = ref<'idle' | 'loading' | 'connected' | 'error'>('idle')
 const errorMessage = ref('')
 const mode = ref<'scanning' | 'select' | 'manual'>('scanning')
 const autoConnected = ref(false)
+const manuallyConnected = ref(false)
+const urlCleared = ref(false)
+
+watch(wcagifyUrl, (val) => {
+  if (val) urlCleared.value = false
+})
 
 watch(
   scanStatus,
@@ -63,6 +69,7 @@ function switchToManual() {
 
 function rescan() {
   autoConnected.value = false
+  manuallyConnected.value = false
   mode.value = 'scanning'
   status.value = 'idle'
   errorMessage.value = ''
@@ -71,28 +78,26 @@ function rescan() {
 }
 
 const statusAlert = computed(() => {
+  if (manuallyConnected.value && status.value === 'connected') {
+    return {
+      color: 'success' as const,
+      icon: 'i-lucide-check',
+      description: t('connection.connectionSuccess')
+    }
+  }
   if (autoConnected.value && status.value === 'connected') {
     return {
       color: 'info' as const,
-      variant: 'subtle' as const,
-      icon: 'i-lucide-info',
+      icon: 'i-lucide-circle-check',
       description: t('connection.autoConnected')
-    }
-  }
-  if (mode.value !== 'scanning' && status.value === 'loading') {
-    return {
-      color: 'neutral' as const,
-      variant: 'soft' as const,
-      icon: undefined,
-      description: t('connection.connecting')
     }
   }
   if (status.value === 'error') {
     return {
       color: 'error' as const,
-      variant: 'subtle' as const,
-      icon: undefined,
-      description: errorMessage.value
+      icon: 'i-lucide-x',
+      description: errorMessage.value,
+      id: 'wcagify-url-error'
     }
   }
   return undefined
@@ -100,6 +105,7 @@ const statusAlert = computed(() => {
 
 async function fetchReports() {
   autoConnected.value = false
+  manuallyConnected.value = false
   status.value = 'loading'
   errorMessage.value = ''
 
@@ -115,6 +121,7 @@ async function fetchReports() {
     reports.value = data
     syncSelectedReport()
     status.value = 'connected'
+    manuallyConnected.value = true
 
     // Inherit settings from the connected instance
     try {
@@ -141,10 +148,21 @@ async function fetchReports() {
 <template>
   <div class="space-y-3">
     <!-- Connected state (always visible on top) -->
-    <div v-if="status === 'connected'" class="flex items-center gap-2 text-sm">
-      <UChip color="success" standalone inset />
-      <span class="text-success">{{ t('connection.connected') }}</span>
-      <span class="text-muted">&mdash; {{ wcagifyUrl }}</span>
+    <div v-if="status === 'connected'" class="flex sm:flex-row flex-col items-center gap-2 text-sm">
+      <div class="flex gap-2">
+        <UChip color="success" standalone inset />
+        <span class="text-success">{{ t('connection.connected') }}</span>
+        &mdash;
+      </div>
+      <span class="text-muted">{{ wcagifyUrl }}</span>
+    </div>
+    <div v-if="status === 'idle' || status === 'error'" class="flex gap-2 text-sm">
+      <div class="flex gap-2">
+        <UChip color="error" standalone inset />
+        <span class="text-error">{{ t('connection.disconnected') }}</span>
+        &mdash;
+      </div>
+      <span class="text-muted">{{ wcagifyUrl }}</span>
     </div>
 
     <!-- Scanning state -->
@@ -175,9 +193,8 @@ async function fetchReports() {
         :label="t('connection.enterManually')"
         color="success"
         size="sm"
-        class="mt-1"
         @click="switchToManual"
-        :ui="{ base: 'cursor-pointer px-0' }"
+        :ui="{ base: 'cursor-pointer px-0 mt-1' }"
       />
     </div>
 
@@ -209,7 +226,24 @@ async function fetchReports() {
               :highlight="status === 'error'"
               :ui="{ base: 'selectable-focus' }"
               class="flex-1"
-            />
+            >
+              <template v-if="wcagifyUrl?.length" #trailing>
+                <UButton
+                  color="primary"
+                  variant="ghost"
+                  size="xs"
+                  icon="i-lucide-x"
+                  :aria-label="t('form.clear')"
+                  :ui="{
+                    base: 'selectable-focus cursor-pointer'
+                  }"
+                  @click="
+                    wcagifyUrl = ''
+                    urlCleared = true
+                  "
+                />
+              </template>
+            </UInput>
 
             <UButton
               type="submit"
@@ -233,25 +267,32 @@ async function fetchReports() {
           </div>
         </UFormField>
       </form>
-      <div
-        v-if="autoConnected && status === 'connected'"
-        class="mt-1.5 flex items-center gap-1.5 text-sm text-blue-600 dark:text-blue-400"
-      >
-        <UIcon name="i-lucide-info" class="size-4 shrink-0" />
-        {{ t('connection.autoConnected') }}
-      </div>
-    </div>
-
-    <div v-if="mode !== 'scanning' && status === 'loading'" class="text-sm text-muted">
-      {{ t('connection.connecting') }}
     </div>
 
     <UAlert
-      v-if="status === 'error'"
-      id="wcagify-url-error"
-      color="error"
+      v-if="mode !== 'scanning' && status === 'loading'"
+      color="neutral"
       variant="subtle"
-      :description="errorMessage"
+      icon="i-lucide-loader-circle"
+      :description="t('connection.connecting')"
+      :ui="{ icon: 'animate-spin' }"
+      class="px-3 py-2 items-center"
+    />
+
+    <UAlert
+      v-if="urlCleared"
+      color="warning"
+      variant="subtle"
+      icon="i-lucide-triangle-alert"
+      :description="t('connection.urlClearedWarning')"
+      class="px-3 py-2 items-center"
+    />
+
+    <UAlert
+      v-if="statusAlert"
+      v-bind="statusAlert"
+      variant="subtle"
+      class="px-3 py-2 items-center"
     />
 
     <UFormField
@@ -270,6 +311,7 @@ async function fetchReports() {
         v-model="reportSlug"
         :items="reports.map((r) => ({ label: r.title, value: r.slug }))"
         :placeholder="t('connection.selectReport')"
+        :ui="{ base: 'bg-default' }"
         required
       />
     </UFormField>

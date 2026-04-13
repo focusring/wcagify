@@ -9,6 +9,7 @@ export default {
     connect: 'Connect',
     connecting: 'Connecting...',
     connected: 'Connected',
+    disconnected: 'Disconnected',
     connectionFailed: 'Connection failed',
     connectionRefused:
       'Could not connect. Make sure the WCAGify server is running at this URL. Example: http://localhost:3000',
@@ -21,6 +22,9 @@ export default {
     change: 'Change',
     rescan: 'Scan again',
     autoConnected: 'Automatically connected to a detected running WCAGify instance.',
+    connectionSuccess: 'Successfully connected to WCAGify.',
+    urlClearedWarning:
+      'Enter a URL to connect to a WCAGify report. For example: http://localhost:3000.',
     report: 'Report',
     selectReport: 'Select a report'
   },

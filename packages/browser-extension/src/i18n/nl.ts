@@ -9,6 +9,7 @@ export default {
     connect: 'Verbinden',
     connecting: 'Verbinden...',
     connected: 'Verbonden',
+    disconnected: 'Niet verbonden',
     connectionFailed: 'Verbinding mislukt',
     connectionRefused:
       'Kan geen verbinding maken. Controleer of de WCAGify-server draait op deze URL. Voorbeeld: http://localhost:3000',
@@ -21,6 +22,9 @@ export default {
     change: 'Wijzigen',
     rescan: 'Opnieuw scannen',
     autoConnected: 'Automatisch verbonden met een gevonden draaiende WCAGify-instantie.',
+    connectionSuccess: 'Succesvol verbonden met WCAGify.',
+    urlClearedWarning:
+      'Voer een URL in om verbinding te maken met een WCAGify-rapport. Voorbeeld: http://localhost:3000',
     report: 'Rapport',
     selectReport: 'Selecteer een rapport'
   },

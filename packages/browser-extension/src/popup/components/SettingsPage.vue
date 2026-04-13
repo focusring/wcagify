@@ -89,72 +89,72 @@ function setNeutralColor(val: string | undefined) {
   <div class="min-h-screen p-4 font-sans">
     <span ref="focusSentinel" tabindex="-1" aria-hidden="true" class="sr-only" />
     <!-- Header -->
-    <div class="flex items-center gap-2">
+    <div class="flex items-center">
+      <UIcon name="i-lucide-settings" class="size-9 pr-2 text-black dark:text-white" />
       <h1 class="text-lg font-bold text-black dark:text-white">{{ t('settings.title') }}</h1>
+
       <UButton
         @click="emit('back')"
-        :label="t('settings.back')"
-        icon="i-lucide-arrow-left"
-        size="xl"
+        :aria-label="t('settings.back')"
+        icon="i-lucide-arrow-big-left"
+        size="lg"
         color="neutral"
         variant="subtle"
-        :aria-label="t('settings.back')"
         :ui="{
-          base: 'cursor-pointer font-medium selectable-focus',
+          base: 'cursor-pointer selectable-focus ml-auto',
           leadingIcon: 'size-5'
         }"
-        class="ml-auto selectable-focus"
       />
     </div>
 
     <USeparator class="my-3" />
 
-    <div class="lg:grid lg:grid-cols-2 lg:grid-rows-[auto_auto] lg:gap-x-4">
+    <div class="max-w-2xl mx-auto">
       <!-- General -->
-      <h2 class="text-sm font-semibold text-muted tracking-wide mb-3 col-start-1 row-start-1">
+      <h2 class="text-sm font-semibold text-muted tracking-wide mb-3">
         {{ t('settings.general') }}
       </h2>
-      <section class="bg-elevated rounded-sm p-4 space-y-3 mb-4 lg:mb-0">
+      <section class="bg-elevated rounded-sm p-4 space-y-3 mb-4">
         <ConnectionSettings />
 
         <!-- Language -->
         <UFormField
           :label="t('settings.languageLabel')"
-          :ui="{ label: 'text-sm font-semibold tracking-wide text-gray-700 dark:text-gray-300' }"
-          class="flex flex-row items-center justify-between gap-4"
+          :ui="{ label: 'label-title' }"
+          class="flex flex-row items-center justify-between"
         >
           <USelect
             v-model="locale"
             :items="localeItems"
             :aria-label="t('language')"
             :ui="{
-              trailingIcon: 'group-data-[state=open]:rotate-180 transition-transform duration-200',
+              trailingIcon: 'icon-animation text-muted',
               item: 'selectable-focus',
-              content: 'overflow-visible'
+              content: 'overflow-visible',
+              base: 'bg-default min-w-32 cursor-pointer selectable-focus'
             }"
             variant="subtle"
             size="lg"
-            class="w-auto min-w-36 cursor-pointer selectable-focus"
           />
         </UFormField>
       </section>
 
       <!-- Appearance -->
-      <h2 class="text-sm font-semibold text-muted tracking-wide mb-3 col-start-2 row-start-1">
+      <h2 class="text-sm font-semibold text-muted tracking-wide mb-3">
         {{ t('settings.appearance') }}
       </h2>
-      <section class="bg-elevated rounded-sm space-y-5 p-4">
+      <section class="bg-elevated rounded-sm space-y-3 p-4">
         <!-- Theme -->
         <UFormField
           :label="t('settings.colorMode')"
-          :ui="{ label: 'text-sm font-semibold tracking-wide text-gray-700 dark:text-gray-300' }"
+          :ui="{ label: 'text-sm label-title' }"
           class="flex flex-row items-center justify-between gap-4"
         >
           <UButton
             @click="cycle"
             :aria-label="`${t('colorMode.dark')}/${t('colorMode.light')}/${t('colorMode.system')}: ${colorModeLabel}`"
             :ui="{
-              base: 'cursor-pointer',
+              base: 'bg-default cursor-pointer min-w-24 selectable-focus',
               leadingIcon: 'size-4'
             }"
             :leading-icon="colorModeIcon"
@@ -162,12 +162,11 @@ function setNeutralColor(val: string | undefined) {
             size="lg"
             color="neutral"
             variant="subtle"
-            class="min-w-28 selectable-focus"
           />
         </UFormField>
 
-        <div class="space-y-3">
-          <span class="block text-sm font-medium" aria-hidden="true">
+        <div class="flex sm:flex-row flex-col gap-3 justify-between sm:items-center">
+          <span class="block text-sm label-title" aria-hidden="true">
             {{ t('settings.accentColor') }} - {{ accentColor }}
           </span>
           <SettingsColorPicker
@@ -179,8 +178,8 @@ function setNeutralColor(val: string | undefined) {
           />
         </div>
 
-        <div class="space-y-3">
-          <span class="block text-sm font-medium" aria-hidden="true">
+        <div class="flex sm:flex-row flex-col gap-3 justify-between sm:items-center">
+          <span class="block text-sm label-title" aria-hidden="true">
             {{ t('settings.backgroundShade') }} - {{ neutralColor }}
           </span>
           <SettingsColorPicker

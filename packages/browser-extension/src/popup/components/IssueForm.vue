@@ -283,8 +283,7 @@ async function submit() {
       :label="submitting ? t('form.submitting') : t('form.submit')"
       size="xl"
       icon="i-lucide-file-input"
-      class="w-full justify-center"
-      :ui="{ leadingIcon: 'size-5', base: 'cursor-pointer' }"
+      :ui="{ leadingIcon: 'size-5', base: 'cursor-pointer selectable-focus w-full justify-center' }"
     />
 
     <div

@@ -22,11 +22,10 @@ const currentView = ref<'main' | 'settings'>('main')
 
     <div v-show="currentView === 'main'" class="min-h-screen p-4 font-sans">
       <!-- Header -->
-      <div class="flex items-center justify-between mb-4">
-        <div class="flex items-center gap-2">
-          <img :src="logoSvg" alt="" aria-hidden="true" class="size-7" />
-          <h1 class="text-lg font-bold text-black dark:text-white">WCAGify</h1>
-        </div>
+      <div class="flex items-center gap-2">
+        <img :src="logoSvg" alt="" aria-hidden="true" class="size-7" />
+        <h1 class="text-lg font-bold text-black dark:text-white">WCAGify</h1>
+
         <UButton
           @click="currentView = 'settings'"
           :aria-label="t('settings.title')"
@@ -36,11 +35,13 @@ const currentView = ref<'main' | 'settings'>('main')
           color="neutral"
           variant="ghost"
           :ui="{
-            base: 'cursor-pointer selectable-focus',
+            base: 'cursor-pointer selectable-focus ml-auto',
             leadingIcon: 'size-5'
           }"
         />
       </div>
+
+      <USeparator class="mt-3 mb-4" />
 
       <div class="space-y-4">
         <ElementPicker v-if="reports.length > 0" ref="picker" class="flex-1" />
@@ -54,17 +55,15 @@ const currentView = ref<'main' | 'settings'>('main')
         </div>
 
         <!-- Setup screen when no instance is connected -->
-        <div v-else class="space-y-5">
-          <div class="flex flex-col items-center text-center space-y-3 pt-2">
-            <img :src="logoSvg" alt="" aria-hidden="true" class="size-16" />
-            <div class="space-y-1">
-              <h1 class="text-lg font-bold text-black dark:text-white">
-                {{ t('setup.title') }}
-              </h1>
-              <p class="text-sm text-muted">
-                {{ t('setup.description') }}
-              </p>
-            </div>
+        <div v-else class="space-y-5 max-w-2xl mx-auto">
+          <div class="flex flex-col items-center text-center pt-2">
+            <img :src="logoSvg" alt="" aria-hidden="true" class="size-16 mb-3" />
+            <h1 class="text-lg font-bold text-black dark:text-white mb-1">
+              {{ t('setup.title') }}
+            </h1>
+            <p class="text-sm text-muted">
+              {{ t('setup.description') }}
+            </p>
           </div>
 
           <section class="bg-elevated rounded-sm p-4">
@@ -96,7 +95,8 @@ const currentView = ref<'main' | 'settings'>('main')
         </div>
 
         <template v-if="reports.length > 0">
-          <UFormField
+          <!-- Report Selection remove for now, need to implement when their are more reports -->
+          <!-- <UFormField
             :label="t('connection.report')"
             :hint="`(${t('connection.required')})`"
             name="wcagify-report"
@@ -113,9 +113,7 @@ const currentView = ref<'main' | 'settings'>('main')
               :placeholder="t('connection.selectReport')"
               required
             />
-          </UFormField>
-
-          <USeparator class="my-4" />
+          </UFormField> -->
 
           <IssueForm
             :reports="reports"
@@ -126,10 +124,8 @@ const currentView = ref<'main' | 'settings'>('main')
         </template>
 
         <template v-else-if="scanStatus !== 'done'">
-          <USeparator class="my-4" />
-
           <div class="space-y-3">
-            <div v-for="n in 3" :key="n" class="w-full space-y-2.5">
+            <div v-for="n in 2" :key="n" class="w-full space-y-2.5">
               <USkeleton class="h-3.5 w-24 rounded-md" />
               <USkeleton class="h-9 w-full rounded-md" />
             </div>

@@ -23,7 +23,7 @@ withDefaults(
   defineProps<{
     id?: string
     items: { label: string; value: string }[]
-    valueKey?: string
+    valueKey?: keyof { label: string; value: string }
     placeholder?: string
     required?: boolean
     clearLabel?: string
@@ -67,9 +67,8 @@ const { t } = useI18n()
         icon="i-lucide-x"
         :aria-label="clearLabel || t('form.clear')"
         :ui="{
-          base: 'selectable-focus'
+          base: 'selectable-focus cursor-pointer mr-1'
         }"
-        class="cursor-pointer mr-1"
         @pointerdown.stop
         @click.stop="model = undefined"
         @keydown.enter.stop="model = undefined"
