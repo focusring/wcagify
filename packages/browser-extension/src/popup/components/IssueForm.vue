@@ -66,8 +66,6 @@ const canSubmit = computed(
     title.value.trim() &&
     sc.value.trim() &&
     sample.value &&
-    severity.value &&
-    type.value &&
     description.value.trim() &&
     !submitting.value
 )
@@ -140,7 +138,6 @@ async function submit() {
   <UForm :state="{}" class="space-y-3" @submit="submit">
     <UFormField
       :label="t('form.samplePage')"
-      :hint="`(${t('form.required')})`"
       name="issue-sample"
       :ui="{
         label: 'label-title',
@@ -148,6 +145,9 @@ async function submit() {
         hint: 'label-hint'
       }"
     >
+      <template #hint>
+        <span aria-hidden="true">({{ t('form.required') }})</span>
+      </template>
       <ClearableSelect
         id="issue-sample"
         v-model="sampleModel"
@@ -160,7 +160,6 @@ async function submit() {
 
     <UFormField
       :label="t('form.issueTitle')"
-      :hint="`(${t('form.required')})`"
       name="issue-title"
       :ui="{
         label: 'label-title',
@@ -168,6 +167,9 @@ async function submit() {
         hint: 'label-hint'
       }"
     >
+      <template #hint>
+        <span aria-hidden="true">({{ t('form.required') }})</span>
+      </template>
       <UInput
         id="issue-title"
         v-model="title"
@@ -175,10 +177,10 @@ async function submit() {
         maxlength="200"
         required
         aria-required="true"
-        :placeholder="t('form.issueTitlePlaceholder')"
+        :placeholder="title ? undefined : t('form.issueTitlePlaceholder')"
         :ui="{
-          trailing: 'pe-1.5',
-          base: '[&::placeholder]:text-muted py-2 text-sm hover:bg-accented/75 selectable-focus'
+          trailing: 'pe-2',
+          base: '[&::placeholder]:text-muted py-2 pe-8 text-sm hover:bg-accented/75 selectable-focus'
         }"
         variant="subtle"
         class="w-full"
@@ -201,7 +203,7 @@ async function submit() {
 
     <UFormField
       :label="t('form.sc')"
-      :hint="`(${t('form.required')})`"
+      :aria-label="t('form.scLabel')"
       name="issue-sc"
       :ui="{
         label: 'label-title',
@@ -209,22 +211,23 @@ async function submit() {
         hint: 'label-hint'
       }"
     >
+      <template #hint>
+        <span aria-hidden="true">({{ t('form.required') }})</span>
+      </template>
       <ScCombobox
         id="issue-sc"
         v-model="sc"
         :wcag-version="wcagVersion"
         :target-level="targetLevel"
         required
-        placeholder="2.1.1"
+        :placeholder="t('form.scPlaceholder')"
       />
     </UFormField>
 
-    <div class="flex gap-3">
+    <div class="flex sm:flex-row flex-col gap-3">
       <UFormField
         :label="t('form.severity')"
-        :hint="`(${t('form.required')})`"
         name="issue-severity"
-        required
         :ui="{
           label: 'label-title after:content-none',
           labelWrapper: 'flex items-center justify-start gap-1',
@@ -242,9 +245,7 @@ async function submit() {
       </UFormField>
       <UFormField
         :label="t('form.type')"
-        :hint="`(${t('form.required')})`"
         name="issue-type"
-        required
         :ui="{
           label: 'label-title after:content-none',
           labelWrapper: 'flex items-center justify-start gap-1',
@@ -273,7 +274,14 @@ async function submit() {
         hint: 'label-hint'
       }"
     >
-      <RichTextEditor v-model="description" :placeholder="t('form.descriptionPlaceholder')" />
+      <template #hint>
+        <span aria-hidden="true">({{ t('form.required') }})</span>
+      </template>
+      <RichTextEditor
+        v-model="description"
+        :placeholder="t('form.descriptionPlaceholder')"
+        :label="t('form.description')"
+      />
     </UFormField>
 
     <UButton

@@ -203,7 +203,6 @@ async function fetchReports() {
       <form @submit.prevent="fetchReports">
         <UFormField
           :label="t('connection.url')"
-          :hint="`(${t('connection.required')})`"
           name="wcagify-url"
           :ui="{
             label: 'label-title',
@@ -211,6 +210,9 @@ async function fetchReports() {
             hint: 'label-hint'
           }"
         >
+          <template #hint>
+            <span aria-hidden="true">({{ t('connection.required') }})</span>
+          </template>
           <div class="flex gap-2">
             <UInput
               id="wcagify-url"

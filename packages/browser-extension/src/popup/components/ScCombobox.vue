@@ -72,6 +72,13 @@ watch(isOpen, (open, _, onCleanup) => {
       ui: { base: 'ps-13 mx-1.5 py-2 [&::placeholder]:text-muted selectable-focus' }
     }"
     :placeholder="placeholder"
+    :aria-label="
+      selectedItem
+        ? `${t('form.scLabel')}: ${selectedItem.level} ${selectedItem.sc}, ${selectedItem.name}`
+        : placeholder
+          ? `${t('form.scLabel')}, ${placeholder}`
+          : t('form.scLabel')
+    "
     :ui="{
       base: 'text-left grid grid-cols-[minmax(2rem,auto)_auto_1fr_auto] py-1.5 h-9 pr-7.5 selectable-focus',
       placeholder: 'text-muted',
@@ -102,12 +109,13 @@ watch(isOpen, (open, _, onCleanup) => {
       <UButton
         v-if="model"
         as="span"
+        role="button"
         tabindex="0"
         color="primary"
         variant="ghost"
         size="xs"
         icon="i-lucide-x"
-        :aria-label="t('form.clear')"
+        :aria-label="t('form.clearSc')"
         :ui="{
           base: 'selectable-focus cursor-pointer'
         }"
