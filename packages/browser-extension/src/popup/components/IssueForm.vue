@@ -265,7 +265,6 @@ async function submit() {
 
     <UFormField
       :label="t('form.description')"
-      :hint="`(${t('form.required')})`"
       name="issue-description"
       required
       :ui="{

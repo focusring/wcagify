@@ -300,7 +300,6 @@ async function fetchReports() {
     <UFormField
       v-if="status === 'connected' && reports.length > 0"
       :label="t('connection.report')"
-      :hint="`(${t('connection.required')})`"
       name="wcagify-report"
       :ui="{
         label: 'label-title',
@@ -308,6 +307,9 @@ async function fetchReports() {
         hint: 'label-hint'
       }"
     >
+      <template #hint>
+        <span aria-hidden="true">({{ t('connection.required') }})</span>
+      </template>
       <ClearableSelect
         id="wcagify-report"
         v-model="reportSlug"

@@ -42,7 +42,7 @@ export default {
     issueTitlePlaceholder: 'bijv. Dropdown niet toegankelijk met toetsenbord',
     sc: 'SC',
     scLabel: 'Succescriteria',
-    scPlaceholder: 'bijv. 2.1.1 keyboard',
+    scPlaceholder: 'bijv. 2.1.1 toetsenbord',
     severity: 'Ernst',
     severityDescription: 'Hoe ernstig het probleem gebruikers treft',
     samplePage: 'Voorbeeldpagina',
