@@ -72,7 +72,8 @@ export default {
     content: 'Content',
     design: 'Design',
     technical: 'Technical',
-    unknown: 'Unknown'
+    unknown: 'Unknown',
+    wcagLevel: 'Level'
   },
   editor: {
     undo: 'Undo',

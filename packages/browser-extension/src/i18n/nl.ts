@@ -72,7 +72,8 @@ export default {
     content: 'Content',
     design: 'Ontwerp',
     technical: 'Technisch',
-    unknown: 'Onbekend'
+    unknown: 'Onbekend',
+    wcagLevel: 'Niveau'
   },
   editor: {
     undo: 'Ongedaan maken',
