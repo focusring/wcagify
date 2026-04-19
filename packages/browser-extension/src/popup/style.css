@@ -195,7 +195,7 @@
    Restore the component border using --ui-border instead of the global focus gap. */
 [role='listbox']:focus,
 [data-slot='focusScope']:focus {
-  outline: none;
+  outline: 2px solid transparent;
   box-shadow: 0 0 0 1px var(--ui-border);
 }
 

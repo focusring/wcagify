@@ -1,21 +1,33 @@
 <script setup lang="ts">
-import { ref, watch } from 'vue'
+import { ref, watch, nextTick } from 'vue'
 import { useI18n } from '../../composables/useI18n'
 
 const model = defineModel<string | undefined>()
 
 const isOpen = ref(false)
+const wrapperRef = ref<HTMLElement>()
 
 function onTabKeydown(e: KeyboardEvent) {
   if (e.key === 'Tab') isOpen.value = false
 }
 
-watch(isOpen, (open, _, onCleanup) => {
+watch(isOpen, async (open, _, onCleanup) => {
   if (open) {
     document.addEventListener('keydown', onTabKeydown)
     onCleanup(() => document.removeEventListener('keydown', onTabKeydown))
+    await nextTick()
+    const focusScope = wrapperRef.value?.querySelector<HTMLElement>('[data-slot="focusScope"]')
+    if (focusScope) {
+      focusScope.setAttribute('role', 'dialog')
+      focusScope.setAttribute('aria-modal', 'true')
+    }
   } else {
     document.removeEventListener('keydown', onTabKeydown)
+    const focusScope = wrapperRef.value?.querySelector<HTMLElement>('[data-slot="focusScope"]')
+    if (focusScope) {
+      focusScope.removeAttribute('role')
+      focusScope.removeAttribute('aria-modal')
+    }
   }
 })
 
@@ -39,7 +51,7 @@ const { t } = useI18n()
 </script>
 
 <template>
-  <div class="relative w-full">
+  <div ref="wrapperRef" class="relative w-full">
     <USelectMenu
       :id="id"
       v-model="model"
