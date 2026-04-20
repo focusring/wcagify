@@ -63,6 +63,11 @@ function connectInstance(url: string) {
   }
 }
 
+function clearUrl() {
+  wcagifyUrl.value = ''
+  urlCleared.value = true
+}
+
 function switchToManual() {
   mode.value = 'manual'
 }
@@ -239,10 +244,7 @@ async function fetchReports() {
                   :ui="{
                     base: 'selectable-focus cursor-pointer'
                   }"
-                  @click="
-                    wcagifyUrl = ''
-                    urlCleared = true
-                  "
+                  @click="clearUrl"
                 />
               </template>
             </UInput>

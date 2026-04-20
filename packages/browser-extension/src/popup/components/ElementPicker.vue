@@ -23,8 +23,28 @@ function onMessage(message: { type: string; selector?: string; url?: string; pag
   }
 }
 
-onMounted(() => chrome.runtime.onMessage.addListener(onMessage))
-onUnmounted(() => chrome.runtime.onMessage.removeListener(onMessage))
+async function cancelPicker() {
+  if (!picking.value) return
+  picking.value = false
+  const tabs = await chrome.tabs.query({ active: true, currentWindow: true })
+  const tab = tabs.find(
+    (t) => t.url && !t.url.startsWith('chrome') && !t.url.startsWith('extension')
+  )
+  if (tab?.id) chrome.tabs.sendMessage(tab.id, { type: 'cancel-picker' }).catch(() => {})
+}
+
+function onKeyDown(e: KeyboardEvent) {
+  if (e.key === 'Escape') cancelPicker()
+}
+
+onMounted(() => {
+  chrome.runtime.onMessage.addListener(onMessage)
+  window.addEventListener('keydown', onKeyDown)
+})
+onUnmounted(() => {
+  chrome.runtime.onMessage.removeListener(onMessage)
+  window.removeEventListener('keydown', onKeyDown)
+})
 
 async function pickElement() {
   // Side panel lives in the same window — find the active page tab directly
