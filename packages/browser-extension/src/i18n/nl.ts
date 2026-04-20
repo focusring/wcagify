@@ -41,6 +41,8 @@ export default {
     issueTitle: 'Titel probleem',
     issueTitlePlaceholder: 'bijv. Dropdown niet toegankelijk met toetsenbord',
     sc: 'SC',
+    scLabel: 'Succescriteria',
+    scPlaceholder: 'bijv. 2.1.1 toetsenbord',
     severity: 'Ernst',
     severityDescription: 'Hoe ernstig het probleem gebruikers treft',
     samplePage: 'Voorbeeldpagina',
@@ -54,10 +56,11 @@ export default {
     failedToCreate: 'Probleem aanmaken mislukt',
     required: 'verplicht',
     scSearch: 'Criteria zoeken...',
-    noResults: 'Geen overeenkomende criteria',
+    noResults: 'Geen overeenkomende criteria gevonden',
     clear: 'Wissen',
-    clearTitle: 'Titel wissen',
-    clearPage: 'Pagina wissen',
+    clearTitle: 'Titel probleem wissen',
+    clearSc: 'Succescriteria wissen',
+    clearPage: 'Voorbeeldpagina wissen',
     clearSeverity: 'Ernst wissen',
     clearType: 'Type wissen',
     none: 'Geen',
@@ -69,7 +72,8 @@ export default {
     content: 'Content',
     design: 'Ontwerp',
     technical: 'Technisch',
-    unknown: 'Onbekend'
+    unknown: 'Onbekend',
+    wcagLevel: 'Niveau'
   },
   editor: {
     undo: 'Ongedaan maken',

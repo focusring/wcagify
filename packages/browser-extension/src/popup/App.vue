@@ -29,7 +29,6 @@ const currentView = ref<'main' | 'settings'>('main')
         <UButton
           @click="currentView = 'settings'"
           :aria-label="t('settings.title')"
-          :title="t('settings.title')"
           icon="i-lucide-settings"
           size="xl"
           color="neutral"
