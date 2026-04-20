@@ -1,10 +1,11 @@
 import { ref, computed, watch } from 'vue'
-import { messages, type Locale, type Messages } from '../i18n'
+import type { Locale, Messages } from '../i18n'
+import { messages } from '../i18n'
 
 const locale = ref<Locale>('en')
 
 let ready = false
-let loadPromise: Promise<void> | null = null
+let loadPromise: Promise<void> | undefined = undefined
 
 async function doLoad() {
   const result = await chrome.storage.local.get(['locale'])
@@ -36,7 +37,7 @@ function getNestedValue(obj: Record<string, unknown>, path: string): string {
   const keys = path.split('.')
   let current: unknown = obj
   for (const key of keys) {
-    if (current == null || typeof current !== 'object') return path
+    if (current == undefined || typeof current !== 'object') return path
     current = (current as Record<string, unknown>)[key]
   }
   return typeof current === 'string' ? current : path
@@ -45,9 +46,8 @@ function getNestedValue(obj: Record<string, unknown>, path: string): string {
 export function useI18n() {
   load()
 
-  const t = (key: TranslationKey): string => {
-    return getNestedValue(messages[locale.value] as unknown as Record<string, unknown>, key)
-  }
+  const t = (key: TranslationKey): string =>
+    getNestedValue(messages[locale.value] as unknown as Record<string, unknown>, key)
 
   const currentMessages = computed(() => messages[locale.value])
 

@@ -26,7 +26,11 @@ export default {
     exportReady: "{count} pagina('s) klaar voor export",
     totalSize: 'Geschatte grootte: {size}',
     captureComplete: 'Vastleggen voltooid',
-    captureFailed: 'Vastleggen mislukt'
+    captureFailed: 'Vastleggen mislukt',
+    modeStatic: 'Statisch',
+    modeInteractive: 'Interactief',
+    modeStaticHint: 'Enkel HTML-bestand met ingebedde bronnen',
+    modeInteractiveHint: 'Volledige JS-interactiviteit bewaard (WACZ)'
   },
   settings: {
     title: 'Instellingen',

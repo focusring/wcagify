@@ -1,4 +1,4 @@
-export default {
+const en = {
   app: {
     title: 'WCAGify',
     description: 'WCAG accessibility reporting tool',
@@ -164,3 +164,5 @@ export default {
     back: 'back'
   }
 }
+
+export default en

@@ -1,5 +1,6 @@
 import { zipSync, strToU8 } from 'fflate'
-import type { CapturedPage } from '../types'
+import type { CapturedPage, CdpNetworkRecord } from '../types'
+import { buildWacz, generateViewerHtml } from '../utils/wacz'
 
 function sanitizeFilename(title: string): string {
   return title
@@ -15,15 +16,29 @@ function formatSize(bytes: number): string {
   return `${(bytes / (1024 * 1024)).toFixed(1)} MB`
 }
 
-function generateIndexHtml(pages: CapturedPage[], filenames: Map<string, string>): string {
-  const rows = pages
-    .map((page) => {
-      const filename = filenames.get(page.id) ?? 'page.html'
-      const size = page.sizeBytes ? formatSize(page.sizeBytes) : '-'
+interface PageExportInfo {
+  page: CapturedPage
+  name: string
+  hasStatic: boolean
+  hasInteractive: boolean
+}
+
+function generateIndexHtml(entries: PageExportInfo[]): string {
+  const rows = entries
+    .map((entry) => {
+      const staticLink = entry.hasStatic
+        ? `<a href="static/${entry.name}.html" style="color:#2563EB;text-decoration:underline">Static</a>`
+        : '<span style="color:#9CA3AF">-</span>'
+
+      const interactiveLink = entry.hasInteractive
+        ? `<a href="interactive/${entry.name}.html" style="color:#7C3AED;text-decoration:underline">Interactive</a>`
+        : '<span style="color:#9CA3AF">-</span>'
+
       return `      <tr>
-        <td style="padding:8px 12px"><a href="pages/${filename}" style="color:#2563eb;text-decoration:underline">${escapeHtml(page.title)}</a></td>
-        <td style="padding:8px 12px;color:#6b7280;font-size:0.875rem">${escapeHtml(page.url)}</td>
-        <td style="padding:8px 12px;color:#6b7280;font-size:0.875rem;text-align:right">${size}</td>
+        <td style="padding:8px 12px;font-weight:500">${escapeHtml(entry.page.title)}</td>
+        <td style="padding:8px 12px;color:#6B7280;font-size:0.875rem">${escapeHtml(entry.page.url)}</td>
+        <td style="padding:8px 12px;text-align:center">${staticLink}</td>
+        <td style="padding:8px 12px;text-align:center">${interactiveLink}</td>
       </tr>`
     })
     .join('\n')
@@ -36,15 +51,15 @@ function generateIndexHtml(pages: CapturedPage[], filenames: Map<string, string>
   <title>FocusRing Web Share - Captured Pages</title>
   <style>
     * { margin: 0; padding: 0; box-sizing: border-box; }
-    body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; max-width: 960px; margin: 0 auto; padding: 2rem; color: #1f2937; }
+    body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif; max-width: 1024px; margin: 0 auto; padding: 2rem; color: #1F2937; }
     h1 { font-size: 1.5rem; margin-bottom: 0.5rem; }
-    .subtitle { color: #6b7280; margin-bottom: 2rem; }
+    .subtitle { color: #6B7280; margin-bottom: 2rem; }
     table { width: 100%; border-collapse: collapse; }
-    th { text-align: left; padding: 8px 12px; border-bottom: 2px solid #e5e7eb; font-size: 0.875rem; color: #6b7280; text-transform: uppercase; letter-spacing: 0.05em; }
-    th:last-child { text-align: right; }
-    tr:hover { background: #f9fafb; }
-    td { border-bottom: 1px solid #f3f4f6; }
-    .info { margin-top: 2rem; padding: 1rem; background: #f0f9ff; border: 1px solid #bae6fd; border-radius: 0.375rem; font-size: 0.875rem; color: #0c4a6e; }
+    th { text-align: left; padding: 8px 12px; border-bottom: 2px solid #E5E7EB; font-size: 0.875rem; color: #6B7280; text-transform: uppercase; letter-spacing: 0.05em; }
+    tr:hover { background: #F9FAFB; }
+    td { border-bottom: 1px solid #F3F4F6; }
+    .info { margin-top: 2rem; padding: 1rem; background: #F0F9FF; border: 1px solid #BAE6FD; border-radius: 0.375rem; font-size: 0.875rem; color: #0C4A6E; }
+    .warning { margin-top: 1rem; padding: 1rem; background: #FFFBEB; border: 1px solid #FDE68A; border-radius: 0.375rem; font-size: 0.875rem; color: #92400E; }
   </style>
 </head>
 <body>
@@ -55,7 +70,8 @@ function generateIndexHtml(pages: CapturedPage[], filenames: Map<string, string>
       <tr>
         <th>Page</th>
         <th>Original URL</th>
-        <th>Size</th>
+        <th style="text-align:center">Static</th>
+        <th style="text-align:center">Interactive</th>
       </tr>
     </thead>
     <tbody>
@@ -63,38 +79,45 @@ ${rows}
     </tbody>
   </table>
   <div class="info">
-    <strong>How to use:</strong> Click any page link above to open the captured version. Each page is self-contained with all CSS, images, and fonts embedded. Use your browser's developer tools, screen readers, and keyboard navigation to perform your WCAG audit.
+    <strong>Static captures</strong> open directly in your browser as self-contained HTML files with all CSS, images, and fonts embedded. Use for quick visual inspection and CSS-based WCAG checks.
+  </div>
+  <div class="warning">
+    <strong>Interactive captures</strong> preserve full JavaScript interactivity (forms, modals, keyboard navigation, ARIA). They require a local HTTP server to work. Run <code>npx serve .</code> in this directory and open the served URL.
   </div>
 </body>
 </html>`
 }
 
 function generateReadme(sessionName: string): string {
-  return `# FocusRing Web Share - ${sessionName}
-
-This archive contains captured web pages for WCAG accessibility auditing.
-
-## How to use
-
-1. Open \`index.html\` in your browser
-2. Click on any page to open the captured version
-3. Each page is self-contained (CSS, images, fonts are embedded)
-4. Use browser DevTools, screen readers, and keyboard navigation for your audit
-
-## Contents
-
-- \`index.html\` - Navigation page with links to all captured pages
-- \`pages/\` - Directory containing all captured HTML pages
-
-## Notes
-
-- Pages were captured using SingleFile technology
-- JavaScript may have limited functionality in captured pages
-- All CSS, images, and fonts are inlined for offline use
-- Original URLs are preserved as reference
-
-Generated by [FocusRing Web Share](https://focusring.io)
-`
+  return [
+    `# FocusRing Web Share - ${sessionName}`,
+    '',
+    'This archive contains captured web pages for WCAG accessibility auditing.',
+    'Each page is captured in two formats for comprehensive auditing.',
+    '',
+    '## How to use',
+    '',
+    '### Static captures (static/ folder)',
+    '- Open any HTML file directly in your browser',
+    '- Self-contained with all CSS, images, and fonts embedded',
+    '- Best for: color contrast, text alternatives, semantic structure, focus styles',
+    '',
+    '### Interactive captures (interactive/ folder)',
+    '- Require a local HTTP server (service workers need HTTP, not file://)',
+    '- Run: `npx serve .` in this directory',
+    '- Open the served URL in your browser',
+    '- Full JavaScript interactivity preserved',
+    '- Best for: keyboard navigation, ARIA state toggling, form validation, modals, focus management',
+    '',
+    '## Contents',
+    '',
+    '- `index.html` - Navigation page with links to all captured pages',
+    '- `static/` - Static HTML captures (open directly)',
+    '- `interactive/` - Interactive WACZ captures + viewer HTML (require HTTP server)',
+    '',
+    'Generated by [FocusRing Web Share](https://focusring.io)',
+    ''
+  ].join('\n')
 }
 
 function escapeHtml(str: string): string {
@@ -105,54 +128,109 @@ function escapeHtml(str: string): string {
     .replace(/"/g, '&quot;')
 }
 
-export function useExport() {
-  function exportZip(
-    pages: CapturedPage[],
-    sessionName: string,
-    getHtml: (id: string) => string | undefined
-  ): void {
-    const captured = pages.filter((p) => p.status === 'captured')
-    if (captured.length === 0) return
+/** Resolved data for a single page, ready for export (no callbacks) */
+interface ExportPageData {
+  page: CapturedPage
+  html: string | undefined
+  records: CdpNetworkRecord[] | undefined
+}
 
-    const files: Record<string, Uint8Array> = {}
-    const filenames = new Map<string, string>()
-    const usedNames = new Set<string>()
+/**
+ * Build and download the export ZIP.
+ * Takes pre-resolved data — no callbacks, to avoid Rolldown minifier
+ * variable shadowing bugs with function parameters.
+ */
+async function doExportZip(
+  pageDataList: ExportPageData[],
+  sessionName: string,
+  replayFiles: { sw: Uint8Array; ui: Uint8Array } | undefined
+): Promise<void> {
+  const zipFiles: Record<string, Uint8Array> = {}
+  const indexEntries: PageExportInfo[] = []
+  const usedNames = new Set<string>()
 
-    for (const page of captured) {
-      const html = getHtml(page.id)
-      if (!html) continue
+  // Process each page
+  for (const data of pageDataList) {
+    const pg = data.page
 
-      let name = sanitizeFilename(page.title) || 'page'
-      if (usedNames.has(name)) {
-        name = `${name}-${page.id}`
-      }
-      usedNames.add(name)
+    if (pg.status !== 'captured') continue
 
-      const filename = `${name}.html`
-      filenames.set(page.id, filename)
-      files[`pages/${filename}`] = strToU8(html)
+    let safeName = sanitizeFilename(pg.title) || 'page'
+    if (usedNames.has(safeName)) {
+      safeName = `${safeName}-${pg.id}`
+    }
+    usedNames.add(safeName)
+
+    let didStatic = false
+    let didInteractive = false
+
+    // Static HTML
+    if (pg.staticCaptured && data.html) {
+      zipFiles[`static/${safeName}.html`] = strToU8(data.html)
+      didStatic = true
     }
 
-    files['index.html'] = strToU8(generateIndexHtml(captured, filenames))
-    files['README.md'] = strToU8(generateReadme(sessionName))
+    // Interactive WACZ
+    if (pg.interactiveCaptured && data.records && data.records.length > 0) {
+      try {
+        const waczName = `${safeName}.wacz`
+        const waczBytes = await buildWacz({
+          records: data.records,
+          pageUrl: pg.url,
+          pageTitle: pg.title,
+          captureDate: new Date(pg.addedAt).toISOString()
+        })
+        zipFiles[`interactive/${waczName}`] = waczBytes
+        zipFiles[`interactive/${safeName}.html`] = strToU8(
+          generateViewerHtml(waczName, pg.title, pg.url)
+        )
+        didInteractive = true
+      } catch (error) {
+        console.error('[export] WACZ build failed:', error)
+      }
+    }
 
-    const zipped = zipSync(files, { level: 6 })
-
-    const blob = new Blob([zipped.buffer as ArrayBuffer], { type: 'application/zip' })
-    const url = URL.createObjectURL(blob)
-    const a = document.createElement('a')
-    a.href = url
-    a.download = `${sanitizeFilename(sessionName) || 'web-share'}-capture.zip`
-    a.click()
-    URL.revokeObjectURL(url)
+    if (didStatic || didInteractive) {
+      indexEntries.push({
+        page: pg,
+        name: safeName,
+        hasStatic: didStatic,
+        hasInteractive: didInteractive
+      })
+    }
   }
 
+  if (indexEntries.length === 0) return
+
+  // Include replayweb.page files for interactive captures
+  if (replayFiles) {
+    zipFiles['replay/sw.js'] = replayFiles.sw
+    zipFiles['replay/ui.js'] = replayFiles.ui
+  }
+
+  zipFiles['index.html'] = strToU8(generateIndexHtml(indexEntries))
+  zipFiles['README.md'] = strToU8(generateReadme(sessionName))
+
+  const zipped = zipSync(zipFiles, { level: 6 })
+
+  const blob = new Blob([zipped.buffer as ArrayBuffer], { type: 'application/zip' })
+  const dlUrl = URL.createObjectURL(blob)
+  const anchor = document.createElement('a')
+  anchor.href = dlUrl
+  anchor.download = `${sanitizeFilename(sessionName) || 'web-share'}-capture.zip`
+  anchor.click()
+  URL.revokeObjectURL(dlUrl)
+}
+
+function useExport() {
   function getTotalSize(pages: CapturedPage[]): string {
     const total = pages
       .filter((p) => p.status === 'captured')
-      .reduce((sum, p) => sum + (p.sizeBytes ?? 0), 0)
+      .reduce((sum, p) => sum + (p.staticSizeBytes ?? 0) + (p.interactiveSizeBytes ?? 0), 0)
     return formatSize(total)
   }
 
-  return { exportZip, getTotalSize, formatSize }
+  return { getTotalSize, formatSize }
 }
+
+export { type ExportPageData, doExportZip, useExport }

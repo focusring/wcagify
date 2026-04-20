@@ -17,7 +17,8 @@ const {
   clearAll,
   captureAll,
   cancelCapture,
-  getHtml
+  getHtml,
+  getRecords
 } = useCaptures()
 
 const duplicateWarning = ref(false)
@@ -106,7 +107,12 @@ const hasCaptured = computed(() => pages.value.some((p) => p.status === 'capture
       </div>
 
       <!-- Export section -->
-      <ExportButton v-if="hasCaptured" :pages="pages" :get-html="getHtml" />
+      <ExportButton
+        v-if="hasCaptured"
+        :pages="pages"
+        :get-html="getHtml"
+        :get-records="getRecords"
+      />
     </template>
   </div>
 </template>

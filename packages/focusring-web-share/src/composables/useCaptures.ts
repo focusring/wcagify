@@ -1,25 +1,33 @@
 import { ref, watch } from 'vue'
-import type { CapturedPage } from '../types'
+import type { CapturedPage, CdpNetworkRecord } from '../types'
+import { useCaptureInteractive } from './useCaptureInteractive'
 
 const pages = ref<CapturedPage[]>([])
 const isCapturing = ref(false)
 const captureProgress = ref({ current: 0, total: 0 })
 
-// In-memory store for captured HTML (too large for chrome.storage.local)
+// In-memory stores (too large for chrome.storage.local)
 const capturedHtml = new Map<string, string>()
+const capturedRecords = new Map<string, CdpNetworkRecord[]>()
 
 let ready = false
-let loadPromise: Promise<void> | null = null
+let loadPromise: Promise<void> | undefined = undefined
 
 async function doLoad() {
   const result = await chrome.storage.local.get(['capturePages'])
   if (Array.isArray(result.capturePages)) {
     pages.value = result.capturePages.map((p: CapturedPage) => ({
       ...p,
-      // Reset capturing states from previous sessions
       status: p.status === 'capturing' ? 'pending' : p.status,
-      // HTML is not persisted, so reset captured pages to pending
-      ...(p.status === 'captured' ? { status: 'pending' as const, sizeBytes: undefined } : {})
+      ...(p.status === 'captured'
+        ? {
+            status: 'pending' as const,
+            staticSizeBytes: undefined,
+            interactiveSizeBytes: undefined,
+            staticCaptured: undefined,
+            interactiveCaptured: undefined
+          }
+        : {})
     }))
   }
   ready = true
@@ -30,7 +38,7 @@ function load() {
   return loadPromise
 }
 
-// Persist metadata (not HTML) on changes
+// Persist metadata on changes
 watch(
   pages,
   (val) => {
@@ -48,54 +56,95 @@ watch(
   { deep: true }
 )
 
-// Listen for capture results from content script
-chrome.runtime.onMessage.addListener((message) => {
-  if (message.type === 'capture-complete') {
-    const page = pages.value.find((p) => p.id === message.pageId)
-    if (page) {
-      page.status = 'captured'
-      page.sizeBytes = message.sizeBytes
-      capturedHtml.set(page.id, message.html)
-    }
-  }
-  if (message.type === 'capture-failed') {
-    const page = pages.value.find((p) => p.id === message.pageId)
-    if (page) {
-      page.status = 'failed'
-      page.errorMessage = message.errorMessage
-    }
-  }
-})
-
 function generateId(): string {
   return crypto.randomUUID().slice(0, 8)
 }
 
-function waitForTabLoad(tabId: number): Promise<void> {
-  return new Promise((resolve) => {
-    function listener(updatedTabId: number, changeInfo: { status?: string }) {
-      if (updatedTabId === tabId && changeInfo.status === 'complete') {
-        chrome.tabs.onUpdated.removeListener(listener)
-        resolve()
-      }
-    }
-    chrome.tabs.onUpdated.addListener(listener)
+function getContentScriptPath(): string {
+  const manifest = chrome.runtime.getManifest()
+  const cs = manifest.content_scripts?.[0]?.js?.[0]
+  if (cs) return cs
+  throw new Error('Content script not found in manifest')
+}
+
+async function injectCaptureAgent(tabId: number): Promise<void> {
+  await chrome.scripting.executeScript({
+    target: { tabId },
+    files: [getContentScriptPath()]
   })
 }
 
-function waitForCaptureResult(pageId: string): Promise<void> {
+async function ensureCaptureAgent(tabId: number): Promise<void> {
+  try {
+    await chrome.tabs.sendMessage(tabId, { type: 'ping' })
+  } catch {
+    await injectCaptureAgent(tabId)
+  }
+}
+
+function waitForTabLoad(tabId: number): Promise<void> {
   return new Promise((resolve) => {
-    const check = () => {
-      const page = pages.value.find((p) => p.id === pageId)
-      if (page && (page.status === 'captured' || page.status === 'failed')) {
+    // Check if already loaded
+    chrome.tabs.get(tabId).then((tab) => {
+      if (tab.status === 'complete') {
         resolve()
-      } else {
-        setTimeout(check, 200)
+        return
       }
-    }
-    check()
+      // Otherwise wait for the update event
+      function listener(updatedTabId: number, changeInfo: { status?: string }) {
+        if (updatedTabId === tabId && changeInfo.status === 'complete') {
+          chrome.tabs.onUpdated.removeListener(listener)
+          resolve()
+        }
+      }
+      chrome.tabs.onUpdated.addListener(listener)
+    })
   })
 }
+
+async function retrieveHtml(tabId: number): Promise<string> {
+  const results = await chrome.scripting.executeScript({
+    target: { tabId },
+    func: () => (globalThis as any).__focusringCapturedHtml as string | null
+  })
+  const html = results?.[0]?.result
+  if (!html) {
+    throw new Error('Failed to retrieve captured HTML from tab')
+  }
+  return html
+}
+
+// ── Static capture (SingleFile) ──
+
+async function captureStatic(
+  pageId: string,
+  tabId: number
+): Promise<{ sizeBytes: number; html: string }> {
+  await ensureCaptureAgent(tabId)
+
+  const response = (await chrome.tabs.sendMessage(tabId, {
+    type: 'start-capture',
+    pageId
+  })) as { status: string; sizeBytes?: number; errorMessage?: string }
+
+  if (response.status !== 'captured') {
+    throw new Error(response.errorMessage ?? 'Static capture failed')
+  }
+
+  const html = await retrieveHtml(tabId)
+  return { sizeBytes: response.sizeBytes ?? html.length, html }
+}
+
+// ── Interactive capture (CDP/WARC) ──
+
+async function captureInteractiveMode(
+  tabId: number
+): Promise<{ sizeBytes: number; records: CdpNetworkRecord[] }> {
+  const { captureInteractive } = useCaptureInteractive()
+  return captureInteractive(tabId)
+}
+
+// ── Public API ──
 
 export function useCaptures() {
   load()
@@ -116,11 +165,13 @@ export function useCaptures() {
   function removePage(id: string) {
     pages.value = pages.value.filter((p) => p.id !== id)
     capturedHtml.delete(id)
+    capturedRecords.delete(id)
   }
 
   function clearAll() {
     pages.value = []
     capturedHtml.clear()
+    capturedRecords.clear()
   }
 
   async function captureAll() {
@@ -131,33 +182,63 @@ export function useCaptures() {
     captureProgress.value = { current: 0, total: pending.length }
 
     for (const page of pending) {
-      if (!isCapturing.value) break // cancelled
+      if (!isCapturing.value) break
 
       page.status = 'capturing'
       page.errorMessage = undefined
+      page.staticCaptured = undefined
+      page.interactiveCaptured = undefined
 
       try {
-        // Find the tab with this URL
+        // Find or create the tab
         const tabs = await chrome.tabs.query({ url: page.url })
-        let tabId: number | undefined
+        let tabId: number | undefined = undefined
 
         if (tabs[0]?.id) {
           tabId = tabs[0].id
         } else {
-          // Open the page in a new tab
           const newTab = await chrome.tabs.create({ url: page.url, active: false })
           tabId = newTab.id!
           await waitForTabLoad(tabId)
-          // Small delay to ensure content script is injected
-          await new Promise((r) => setTimeout(r, 500))
         }
 
-        await chrome.tabs.sendMessage(tabId, {
-          type: 'start-capture',
-          pageId: page.id
-        })
+        // Interactive FIRST (reloads page with network capture for full JS interactivity),
+        // Then Static on the freshly loaded page (force-inject content script after reload)
+        const errors: string[] = []
 
-        await waitForCaptureResult(page.id)
+        // 1. Interactive capture (CDP — reloads page, captures ALL network traffic)
+        try {
+          const interactiveResult = await captureInteractiveMode(tabId)
+          capturedRecords.set(page.id, interactiveResult.records)
+          page.interactiveSizeBytes = interactiveResult.sizeBytes
+          page.interactiveCaptured = true
+        } catch (error) {
+          page.interactiveCaptured = false
+          errors.push(`Interactive: ${error instanceof Error ? error.message : String(error)}`)
+        }
+
+        // 2. Static capture (SingleFile on the freshly loaded DOM)
+        //    Force-inject content script since the page was reloaded by interactive capture
+        try {
+          await injectCaptureAgent(tabId)
+          // Small delay for content script to initialize
+          await new Promise((resolve) => setTimeout(resolve, 300))
+          const staticResult = await captureStatic(page.id, tabId)
+          capturedHtml.set(page.id, staticResult.html)
+          page.staticSizeBytes = staticResult.sizeBytes
+          page.staticCaptured = true
+        } catch (error) {
+          page.staticCaptured = false
+          errors.push(`Static: ${error instanceof Error ? error.message : String(error)}`)
+        }
+
+        // Page is "captured" if at least one mode succeeded
+        if (page.staticCaptured || page.interactiveCaptured) {
+          page.status = 'captured'
+        } else {
+          page.status = 'failed'
+          page.errorMessage = errors.join(' | ')
+        }
       } catch (error) {
         page.status = 'failed'
         page.errorMessage = error instanceof Error ? error.message : String(error)
@@ -171,7 +252,6 @@ export function useCaptures() {
 
   function cancelCapture() {
     isCapturing.value = false
-    // Reset any capturing pages back to pending
     for (const page of pages.value) {
       if (page.status === 'capturing') {
         page.status = 'pending'
@@ -183,16 +263,20 @@ export function useCaptures() {
     return capturedHtml.get(id)
   }
 
+  function getRecords(id: string): CdpNetworkRecord[] | undefined {
+    return capturedRecords.get(id)
+  }
+
   return {
     pages,
     isCapturing,
     captureProgress,
-    capturedHtml,
     addCurrentPage,
     removePage,
     clearAll,
     captureAll,
     cancelCapture,
-    getHtml
+    getHtml,
+    getRecords
   }
 }

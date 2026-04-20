@@ -7,15 +7,15 @@ import { useSettings } from '../../../composables/useSettings'
 const props = defineProps<NodeViewProps>()
 const { wcagifyUrl } = useSettings()
 
-const file = ref<File | null>(null)
+const file = ref<File | undefined>(undefined)
 const loading = ref(false)
-const error = ref('')
+const errorMsg = ref('')
 
 watch(file, async (newFile) => {
   if (!newFile) return
 
   loading.value = true
-  error.value = ''
+  errorMsg.value = ''
 
   try {
     const formData = new FormData()
@@ -43,8 +43,8 @@ watch(file, async (newFile) => {
       .deleteRange({ from: pos, to: pos + 1 })
       .setImage({ src: `${baseUrl}${url}` })
       .run()
-  } catch (e) {
-    error.value = e instanceof Error ? e.message : 'Upload failed'
+  } catch (error) {
+    errorMsg.value = error instanceof Error ? error.message : 'Upload failed'
   } finally {
     loading.value = false
   }
@@ -69,6 +69,6 @@ watch(file, async (newFile) => {
         />
       </template>
     </UFileUpload>
-    <p v-if="error" class="mt-1 text-xs text-red-600">{{ error }}</p>
+    <p v-if="errorMsg" class="mt-1 text-xs text-red-600">{{ errorMsg }}</p>
   </NodeViewWrapper>
 </template>

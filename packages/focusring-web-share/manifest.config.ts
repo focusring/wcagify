@@ -21,10 +21,11 @@ export default defineManifest({
     service_worker: 'src/background/service-worker.ts',
     type: 'module'
   },
-  permissions: ['activeTab', 'tabs', 'storage', 'sidePanel'],
+  permissions: ['activeTab', 'tabs', 'storage', 'sidePanel', 'scripting', 'debugger'],
   host_permissions: ['http://*/*', 'https://*/*'],
   content_security_policy: {
-    extension_pages: "script-src 'self'; object-src 'self'; img-src 'self' data: https://*;"
+    extension_pages:
+      "script-src 'self' 'wasm-unsafe-eval'; object-src 'self'; img-src 'self' data: https://*;"
   },
   side_panel: {
     default_path: 'src/panel/index.html'

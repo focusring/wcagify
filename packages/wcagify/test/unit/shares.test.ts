@@ -25,19 +25,19 @@ describe('hashPassword', () => {
 })
 
 describe('verifySharePassword', () => {
-  function makeRow(passwordHash: string | null): ShareRow {
+  function makeRow(passwordHash: string | undefined): ShareRow {
     return {
       token: 'abc',
       report_slug: 'test',
       created_at: '2025-01-01',
-      expires_at: null,
+      expires_at: undefined,
       password_hash: passwordHash,
       delete_token: 'del123'
     }
   }
 
   it('returns true when share has no password', () => {
-    expect(verifySharePassword(makeRow(null), 'anything')).toBe(true)
+    expect(verifySharePassword(makeRow(undefined), 'anything')).toBe(true)
   })
 
   it('returns true for correct password', () => {
@@ -94,7 +94,7 @@ describe('toPublicShare', () => {
   })
 
   it('converts null password_hash to passwordProtected false', () => {
-    const result = toPublicShare({ ...baseRow, password_hash: null })
+    const result = toPublicShare({ ...baseRow, password_hash: undefined })
     expect(result.passwordProtected).toBe(false)
   })
 

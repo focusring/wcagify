@@ -1,5 +1,4 @@
 import { describe, it, expect } from 'vitest'
-import { unzipSync, strFromU8 } from 'fflate'
 import { useExport } from '../src/composables/useExport'
 import type { CapturedPage } from '../src/types'
 
@@ -10,7 +9,10 @@ function makePage(overrides: Partial<CapturedPage> = {}): CapturedPage {
     title: 'Example Page',
     addedAt: Date.now(),
     status: 'captured',
-    sizeBytes: 100,
+    staticCaptured: true,
+    staticSizeBytes: 100,
+    interactiveCaptured: true,
+    interactiveSizeBytes: 200,
     ...overrides
   }
 }
@@ -33,13 +35,23 @@ describe('useExport', () => {
   })
 
   describe('getTotalSize', () => {
-    it('sums captured page sizes', () => {
+    it('sums both static and interactive sizes', () => {
       const pages = [
-        makePage({ sizeBytes: 1000 }),
-        makePage({ id: 'test-2', sizeBytes: 2000 }),
-        makePage({ id: 'test-3', status: 'pending', sizeBytes: undefined })
+        makePage({ staticSizeBytes: 500, interactiveSizeBytes: 500 }),
+        makePage({ id: 'test-2', staticSizeBytes: 1000, interactiveSizeBytes: 1000 })
       ]
       expect(getTotalSize(pages)).toBe('2.9 KB')
+    })
+
+    it('handles pages with only static', () => {
+      const pages = [
+        makePage({
+          staticSizeBytes: 1000,
+          interactiveCaptured: false,
+          interactiveSizeBytes: undefined
+        })
+      ]
+      expect(getTotalSize(pages)).toBe('1000 B')
     })
 
     it('returns 0 B for no captured pages', () => {

@@ -9,8 +9,6 @@ const pageUrl = ref('')
 const pageTitle = ref('')
 const picking = ref(false)
 
-defineExpose({ selector, pageUrl, pageTitle })
-
 function onMessage(message: { type: string; selector?: string; url?: string; pageTitle?: string }) {
   if (message.type === 'element-picked') {
     selector.value = message.selector ?? ''
@@ -30,7 +28,8 @@ async function pickElement() {
   // Side panel lives in the same window — find the active page tab directly
   const tabs = await chrome.tabs.query({ active: true, currentWindow: true })
   const tab = tabs.find(
-    (t) => t.url && !t.url.startsWith('chrome') && !t.url.startsWith('extension')
+    (candidate) =>
+      candidate.url && !candidate.url.startsWith('chrome') && !candidate.url.startsWith('extension')
   )
   if (!tab?.id) return
 
@@ -43,6 +42,8 @@ async function pickElement() {
     picking.value = false
   })
 }
+
+defineExpose({ selector, pageUrl, pageTitle })
 </script>
 
 <template>

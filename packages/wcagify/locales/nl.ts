@@ -1,4 +1,4 @@
-export default {
+const nl = {
   app: {
     title: 'WCAGify',
     description: 'WCAG-toegankelijkheidsrapportagetool',
@@ -167,3 +167,5 @@ export default {
     back: 'terug'
   }
 }
+
+export default nl

@@ -7,6 +7,15 @@ declare module '*.vue' {
 }
 
 declare module 'single-file-core/single-file' {
-  const singleFile: unknown
-  export default singleFile
+  interface GetPageDataOptions extends Record<string, unknown> {
+    initOptions?: Record<string, unknown>
+    doc?: Document
+    win?: Window
+  }
+  function init(options?: Record<string, unknown>): void
+  function getPageData(options?: GetPageDataOptions): Promise<{ content: string; title: string }>
+  const helper: {
+    initDoc(doc: Document): void
+  }
+  export { init, getPageData, helper }
 }

@@ -26,7 +26,11 @@ export default {
     exportReady: '{count} page(s) ready to export',
     totalSize: 'Estimated size: {size}',
     captureComplete: 'Capture complete',
-    captureFailed: 'Capture failed'
+    captureFailed: 'Capture failed',
+    modeStatic: 'Static',
+    modeInteractive: 'Interactive',
+    modeStaticHint: 'Single HTML file with embedded resources',
+    modeInteractiveHint: 'Full JS interactivity preserved (WACZ)'
   },
   settings: {
     title: 'Settings',

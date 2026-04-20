@@ -15,7 +15,7 @@ describe('captureStatusSchema', () => {
 })
 
 describe('capturedPageSchema', () => {
-  it('validates a complete page', () => {
+  it('validates a pending page', () => {
     const page = {
       id: 'abc123',
       url: 'https://example.com/page',
@@ -27,14 +27,31 @@ describe('capturedPageSchema', () => {
     expect(capturedPageSchema.parse(page)).toEqual(page)
   })
 
-  it('validates a page with optional fields', () => {
+  it('validates a captured page with both modes', () => {
     const page = {
       id: 'abc123',
       url: 'https://example.com/page',
       title: 'Example Page',
       addedAt: Date.now(),
       status: 'captured' as const,
-      sizeBytes: 12345
+      staticCaptured: true,
+      staticSizeBytes: 12345,
+      interactiveCaptured: true,
+      interactiveSizeBytes: 54321
+    }
+    expect(capturedPageSchema.parse(page)).toEqual(page)
+  })
+
+  it('validates a page with only static captured', () => {
+    const page = {
+      id: 'abc123',
+      url: 'https://example.com/page',
+      title: 'Example Page',
+      addedAt: Date.now(),
+      status: 'captured' as const,
+      staticCaptured: true,
+      staticSizeBytes: 12345,
+      interactiveCaptured: false
     }
     expect(capturedPageSchema.parse(page)).toEqual(page)
   })

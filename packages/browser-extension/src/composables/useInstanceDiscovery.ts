@@ -35,7 +35,7 @@ export function useInstanceDiscovery() {
   const instances = ref<DiscoveredInstance[]>([])
   const scanStatus = ref<'idle' | 'scanning' | 'done'>('idle')
 
-  let abortController: AbortController | undefined
+  let abortController: AbortController | undefined = undefined
 
   async function scan() {
     abort()

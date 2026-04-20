@@ -9,8 +9,8 @@ interface ShareRow {
   token: string
   report_slug: string
   created_at: string
-  expires_at: string | null
-  password_hash: string | null
+  expires_at: string | undefined
+  password_hash: string | undefined
   delete_token: string
 }
 
@@ -18,7 +18,7 @@ interface Share {
   token: string
   report_slug: string
   created_at: string
-  expires_at: string | null
+  expires_at: string | undefined
   passwordProtected: boolean
   delete_token: string
 }
@@ -53,8 +53,8 @@ const migrations: Migration[] = [
   }
 ]
 
-let db: DbAdapter | undefined
-let dbInit: Promise<DbAdapter> | undefined
+let db: DbAdapter | undefined = undefined
+let dbInit: Promise<DbAdapter> | undefined = undefined
 
 async function getDb(): Promise<DbAdapter> {
   if (db) return db
@@ -130,8 +130,8 @@ async function createShare(
     token,
     report_slug: reportSlug,
     created_at: new Date().toISOString(),
-    expires_at: normalizedExpiry ?? null,
-    password_hash: passwordHash ?? null,
+    expires_at: normalizedExpiry,
+    password_hash: passwordHash,
     delete_token: deleteToken
   })
 }

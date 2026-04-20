@@ -3,8 +3,10 @@ import { ref, computed } from 'vue'
 import type { Report } from '../types'
 import { useColorMode } from '../composables/useColorMode'
 import { useI18n } from '../composables/useI18n'
-import { localeLabels, type Locale } from '../i18n'
+import type { Locale } from '../i18n'
+import { localeLabels } from '../i18n'
 import ConnectionSettings from './components/ConnectionSettings.vue'
+// oxlint-disable-next-line consistent-type-imports -- Used as component in template
 import ElementPicker from './components/ElementPicker.vue'
 import IssueForm from './components/IssueForm.vue'
 

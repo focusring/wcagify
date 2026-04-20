@@ -156,6 +156,8 @@ function formatDate(dateStr: string): string {
             </p>
             <UButton :label="t('share.createLink')" icon="i-lucide-plus" @click="createShareLink" />
           </div>
+
+          <UAlert title="test" description="test" icon="i-lucide:share-2" />
         </div>
 
         <USeparator />

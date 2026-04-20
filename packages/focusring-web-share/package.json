@@ -14,7 +14,8 @@
     "fflate": "^0.8.2",
     "single-file-core": "^1.5.84",
     "vue": "^3.5.32",
-    "zod": "catalog:"
+    "warcio": "^2.4.10",
+    "zod": "catalog:core"
   },
   "devDependencies": {
     "@crxjs/vite-plugin": "^2.4.0",

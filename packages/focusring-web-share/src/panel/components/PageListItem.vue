@@ -17,46 +17,61 @@ const { formatSize } = useExport()
 
 const statusColor = computed(() => {
   switch (props.page.status) {
-    case 'pending':
+    case 'pending': {
       return 'neutral' as const
-    case 'capturing':
+    }
+    case 'capturing': {
       return 'info' as const
-    case 'captured':
+    }
+    case 'captured': {
       return 'success' as const
-    case 'failed':
+    }
+    case 'failed': {
       return 'error' as const
-    default:
+    }
+    default: {
       return 'neutral' as const
+    }
   }
 })
 
 const statusLabel = computed(() => {
   switch (props.page.status) {
-    case 'pending':
+    case 'pending': {
       return t('pages.pending')
-    case 'capturing':
+    }
+    case 'capturing': {
       return t('pages.capturing')
-    case 'captured':
+    }
+    case 'captured': {
       return t('pages.captured')
-    case 'failed':
+    }
+    case 'failed': {
       return t('pages.failed')
-    default:
+    }
+    default: {
       return props.page.status
+    }
   }
 })
 
 const statusIcon = computed(() => {
   switch (props.page.status) {
-    case 'pending':
+    case 'pending': {
       return 'i-lucide-clock'
-    case 'capturing':
+    }
+    case 'capturing': {
       return 'i-lucide-loader'
-    case 'captured':
+    }
+    case 'captured': {
       return 'i-lucide-check-circle'
-    case 'failed':
+    }
+    case 'failed': {
       return 'i-lucide-x-circle'
-    default:
+    }
+    default: {
       return 'i-lucide-circle'
+    }
   }
 })
 
@@ -64,10 +79,15 @@ const truncatedUrl = computed(() => {
   try {
     const url = new URL(props.page.url)
     const path = url.pathname + url.search
-    return path.length > 50 ? path.slice(0, 47) + '...' : path
+    return path.length > 50 ? `${path.slice(0, 47)}...` : path
   } catch {
     return props.page.url
   }
+})
+
+const totalSize = computed(() => {
+  const total = (props.page.staticSizeBytes ?? 0) + (props.page.interactiveSizeBytes ?? 0)
+  return total > 0 ? formatSize(total) : undefined
 })
 </script>
 
@@ -82,12 +102,33 @@ const truncatedUrl = computed(() => {
       <p class="text-xs text-muted truncate" :title="page.url">
         {{ truncatedUrl }}
       </p>
-      <div class="flex items-center gap-2">
+      <div class="flex items-center gap-2 flex-wrap">
         <UBadge :color="statusColor" :icon="statusIcon" size="sm" variant="subtle">
           {{ statusLabel }}
         </UBadge>
-        <span v-if="page.sizeBytes" class="text-xs text-muted">
-          {{ formatSize(page.sizeBytes) }}
+        <!-- Show which captures succeeded when page is captured -->
+        <template v-if="page.status === 'captured'">
+          <UBadge
+            v-if="page.staticCaptured"
+            color="success"
+            icon="i-lucide-file-text"
+            size="sm"
+            variant="outline"
+          >
+            {{ t('pages.modeStatic') }}
+          </UBadge>
+          <UBadge
+            v-if="page.interactiveCaptured"
+            color="info"
+            icon="i-lucide-mouse-pointer-click"
+            size="sm"
+            variant="outline"
+          >
+            {{ t('pages.modeInteractive') }}
+          </UBadge>
+        </template>
+        <span v-if="totalSize" class="text-xs text-muted">
+          {{ totalSize }}
         </span>
       </div>
       <p v-if="page.errorMessage" class="text-xs text-red-600 dark:text-red-400">

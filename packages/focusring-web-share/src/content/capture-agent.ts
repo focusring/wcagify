@@ -1,67 +1,77 @@
-export {}
+import type { init, getPageData, helper } from 'single-file-core/single-file'
 
-let singleFileLoaded = false
-
-async function ensureSingleFile() {
-  if (singleFileLoaded) return
-  // single-file-core registers itself on globalThis when imported
-  await import('single-file-core/single-file')
-  singleFileLoaded = true
+interface SingleFileModule {
+  init: typeof init
+  getPageData: typeof getPageData
+  helper: typeof helper
 }
 
-async function captureCurrentPage(): Promise<{ html: string; sizeBytes: number }> {
+// Store last captured HTML so the side panel can retrieve it via chrome.scripting
+;(globalThis as any).__focusringCapturedHtml = undefined
+
+let singleFile: SingleFileModule | undefined = undefined
+
+async function ensureSingleFile() {
+  if (singleFile) return
+  singleFile = await import('single-file-core/single-file')
+}
+
+const CAPTURE_TIMEOUT_MS = 30_000
+
+async function captureCurrentPage(): Promise<number> {
   await ensureSingleFile()
 
-  const singleFile = (globalThis as any).singleFile
-
-  if (!singleFile) {
-    throw new Error('SingleFile core not available')
-  }
-
-  const options = singleFile.helper.getOptions({
+  const options = {
     removeHiddenElements: false,
     removeUnusedStyles: false,
     removeUnusedFonts: false,
-    removeFrames: false,
+    removeFrames: true,
     compressHTML: false,
-    loadDeferredImages: true,
-    loadDeferredImagesMaxIdleTime: 3000,
+    loadDeferredImages: false,
+    loadDeferredImagesMaxIdleTime: 0,
     filenameTemplate: '{page-title}',
     includeInfobar: false,
     removeScripts: false,
     blockScripts: false,
     saveOriginalURLs: true,
-    insertMetaCSP: false
-  })
+    insertMetaCSP: false,
+    blockVideos: true,
+    blockAudios: true
+  }
 
-  const pageData = await singleFile.getPageData(options)
+  const capturePromise = singleFile!.getPageData(options)
+  const timeoutPromise = new Promise<never>((_, reject) =>
+    setTimeout(() => reject(new Error('Capture timed out after 30 seconds')), CAPTURE_TIMEOUT_MS)
+  )
+
+  const pageData = await Promise.race([capturePromise, timeoutPromise])
   const html = pageData.content as string
   const sizeBytes = new Blob([html]).size
 
-  return { html, sizeBytes }
+  // Store HTML for retrieval by the side panel
+  ;(globalThis as any).__focusringCapturedHtml = html
+
+  return sizeBytes
 }
 
 chrome.runtime.onMessage.addListener((message, _sender, sendResponse) => {
+  if (message.type === 'ping') {
+    sendResponse({ pong: true })
+    return false
+  }
   if (message.type === 'start-capture') {
+    // Return true to keep the message channel open for async sendResponse
     captureCurrentPage()
-      .then(({ html, sizeBytes }) => {
-        // Store captured HTML in session storage via background,
-        // since message passing has size limits
-        chrome.runtime.sendMessage({
-          type: 'capture-complete',
-          pageId: message.pageId,
-          html,
-          sizeBytes
-        })
+      .then((sizeBytes) => {
+        sendResponse({ status: 'captured', sizeBytes })
       })
       .catch((error) => {
-        chrome.runtime.sendMessage({
-          type: 'capture-failed',
-          pageId: message.pageId,
+        sendResponse({
+          status: 'failed',
           errorMessage: error instanceof Error ? error.message : String(error)
         })
       })
-    sendResponse({ ack: true })
+    return true
   }
   return false
 })

@@ -4,7 +4,7 @@ const wcagifyUrl = ref('http://localhost:3000')
 const reportSlug = ref('')
 
 let ready = false
-let loadPromise: Promise<void> | null = null
+let loadPromise: Promise<void> | undefined = undefined
 
 async function doLoad() {
   const result = await chrome.storage.local.get(['wcagifyUrl', 'reportSlug'])
