@@ -8,7 +8,13 @@
 set -euo pipefail
 
 ROBOT_DIR="$(cd "$(dirname "$0")/.." && pwd)"
-VENV_BIN="${ROBOT_DIR}/.venv/bin"
+
+# On Windows (Git Bash / MSYS2) the venv layout uses Scripts/ instead of bin/.
+if [[ -d "${ROBOT_DIR}/.venv/Scripts" ]]; then
+  VENV_BIN="${ROBOT_DIR}/.venv/Scripts"
+else
+  VENV_BIN="${ROBOT_DIR}/.venv/bin"
+fi
 
 if [[ ! -x "$VENV_BIN/robot" ]]; then
   echo "Robot Framework venv not found. Run \`pnpm test:robot:setup\` first." >&2
