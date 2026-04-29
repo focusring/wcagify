@@ -4,7 +4,6 @@ import type { EditorToolbarItem, EditorSuggestionMenuItem, EditorCustomHandlers 
 import type { Editor } from '@tiptap/vue-3'
 import { useI18n } from '../../composables/useI18n'
 import { ImageUpload } from './editor/ImageUploadExtension'
-import { it } from 'zod/locales'
 
 const model = defineModel<string>({ default: '' })
 
