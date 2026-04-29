@@ -390,6 +390,7 @@ async function submit() {
 
           <ClearableSelect
             id="issue-severity"
+            :aria-describedby="'issue-severity-desc'"
             v-model="severity"
             :label="t('form.severity.label')"
             :items="severityOptions"
@@ -439,6 +440,7 @@ async function submit() {
 
           <ClearableSelect
             id="issue-type"
+            :aria-describedby="'issue-type-desc'"
             v-model="type"
             :label="t('form.type.label')"
             :items="typeOptions"
