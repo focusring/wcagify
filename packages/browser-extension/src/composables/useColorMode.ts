@@ -6,7 +6,7 @@ const preference = ref<ColorMode>('system')
 let initialized = false
 
 function getSystemDark(): boolean {
-  return window.matchMedia('(prefers-color-scheme: dark)').matches
+  return globalThis.matchMedia('(prefers-color-scheme: dark)').matches
 }
 
 function apply(pref: ColorMode) {
@@ -23,12 +23,11 @@ export function useColorMode() {
       apply(preference.value)
     })
 
-    window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', () => {
+    globalThis.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', () => {
       if (preference.value === 'system') apply('system')
     })
 
     watch(preference, (val) => {
-      apply(val)
       chrome.storage.local.set({ colorMode: val })
     })
   }
@@ -38,7 +37,8 @@ export function useColorMode() {
   function cycle() {
     const modes: ColorMode[] = ['system', 'light', 'dark']
     const idx = modes.indexOf(preference.value)
-    preference.value = modes[(idx + 1) % modes.length]
+    preference.value = modes[(idx + 1) % modes.length]!
+    apply(preference.value)
   }
 
   return { preference, cycle }

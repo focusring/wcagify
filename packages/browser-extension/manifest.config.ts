@@ -1,10 +1,11 @@
 import { defineManifest } from '@crxjs/vite-plugin'
+import { version } from './package.json'
 
 export default defineManifest({
   manifest_version: 3,
   name: 'WCAGify',
   description: 'WCAG accessibility audit tool',
-  version: '0.4.0',
+  version,
   icons: {
     '16': 'src/assets/wcagify-16.png',
     '48': 'src/assets/wcagify-48.png',
@@ -21,9 +22,10 @@ export default defineManifest({
     type: 'module'
   },
   permissions: ['activeTab', 'tabs', 'storage', 'sidePanel'],
-  host_permissions: ['https://*/*'],
+  host_permissions: ['http://localhost/*', 'https://*/*'],
   content_security_policy: {
-    extension_pages: "script-src 'self'; object-src 'self'; img-src 'self' data: https://*;"
+    extension_pages:
+      "script-src 'self'; object-src 'self'; img-src 'self' data: http://localhost:* https://*;"
   },
   side_panel: {
     default_path: 'src/popup/index.html'

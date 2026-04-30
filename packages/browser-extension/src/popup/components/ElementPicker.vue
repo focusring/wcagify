@@ -26,6 +26,7 @@ const pageTitle = ref('')
 const foregroundColor = ref('')
 const backgroundColor = ref('')
 const picking = ref(false)
+const pickerTabId = ref<number | undefined>()
 
 defineExpose({ selector, pageUrl, pageTitle, foregroundColor, backgroundColor })
 
@@ -44,23 +45,46 @@ function onMessage(message: {
     foregroundColor.value = toHex(message.foregroundColor ?? '')
     backgroundColor.value = toHex(message.backgroundColor ?? '')
     picking.value = false
+    pickerTabId.value = undefined
   }
   if (message.type === 'picker-cancelled') {
     picking.value = false
+    pickerTabId.value = undefined
   }
 }
 
-onMounted(() => chrome.runtime.onMessage.addListener(onMessage))
-onUnmounted(() => chrome.runtime.onMessage.removeListener(onMessage))
+function cancelPicker() {
+  if (!picking.value) return
+  picking.value = false
+  if (pickerTabId.value !== undefined) {
+    chrome.tabs.sendMessage(pickerTabId.value, { type: 'cancel-picker' }).catch(() => {})
+    pickerTabId.value = undefined
+  }
+}
+
+function onKeyDown(e: KeyboardEvent) {
+  if (e.key === 'Escape') cancelPicker()
+}
+
+onMounted(() => {
+  chrome.runtime.onMessage.addListener(onMessage)
+  globalThis.addEventListener('keydown', onKeyDown)
+})
+onUnmounted(() => {
+  cancelPicker()
+  chrome.runtime.onMessage.removeListener(onMessage)
+  globalThis.removeEventListener('keydown', onKeyDown)
+})
 
 async function pickElement() {
   // Side panel lives in the same window — find the active page tab directly
   const tabs = await chrome.tabs.query({ active: true, currentWindow: true })
   const tab = tabs.find(
-    (t) => t.url && !t.url.startsWith('chrome') && !t.url.startsWith('extension')
+    (item) => item.url && !item.url.startsWith('chrome') && !item.url.startsWith('extension')
   )
   if (!tab?.id) return
 
+  pickerTabId.value = tab.id
   picking.value = true
   selector.value = ''
   pageUrl.value = ''
@@ -79,16 +103,14 @@ async function pickElement() {
     <UButton
       @click="pickElement"
       :disabled="picking"
-      color="success"
       variant="outline"
-      class="w-full justify-center cursor-pointer"
       icon="i-lucide-square-mouse-pointer"
       size="xl"
-      :ui="{ leadingIcon: 'size-5', base: 'cursor-pointer' }"
+      :ui="{ leadingIcon: 'size-5', base: 'cursor-pointer selectable-focus w-full justify-center' }"
       :label="picking ? t('picker.picking') : t('picker.pickElement')"
     />
 
-    <div v-if="selector" class="space-y-1 rounded bg-gray-50 dark:bg-gray-800 p-2 text-sm">
+    <div v-if="selector" class="space-y-1 rounded bg-muted p-2 text-sm">
       <div>
         <span class="font-medium text-gray-600 dark:text-gray-400">{{ t('picker.selector') }}</span>
         <code class="ml-1 break-all text-gray-800 dark:text-gray-200">{{ selector }}</code>

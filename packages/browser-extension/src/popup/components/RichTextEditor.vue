@@ -4,11 +4,13 @@ import type { EditorToolbarItem, EditorSuggestionMenuItem, EditorCustomHandlers 
 import type { Editor } from '@tiptap/vue-3'
 import { useI18n } from '../../composables/useI18n'
 import { ImageUpload } from './editor/ImageUploadExtension'
+import { it } from 'zod/locales'
 
 const model = defineModel<string>({ default: '' })
 
 defineProps<{
   placeholder?: string
+  label?: string
 }>()
 
 const { t } = useI18n()
@@ -137,14 +139,15 @@ const suggestionItems = computed(
     :extensions="[ImageUpload]"
     :handlers="customHandlers"
     :placeholder="placeholder"
+    :aria-label="label"
     :ui="{ base: 'px-3 py-2 min-h-32' }"
-    class="bg-elevated hover:bg-accented/75 transition-colors duration-200 w-full rounded-md border input-border focus-within:ring-2 focus-within:ring-inset focus-within:ring-primary focus-within:rounded-sm"
+    class="bg-elevated hover:bg-accented/75 transition-colors duration-200 w-full rounded-md border input-border"
   >
     <UEditorToolbar
       :editor="editor"
       :items="fixedToolbarItems"
       :ui="{ separator: 'bg-slate-300 dark:bg-slate-700' }"
-      class="border-b input-border px-2 py-1 overflow-x-auto"
+      class="editor-toolbar border-b input-border px-2 py-1 overflow-x-auto"
     />
 
     <UEditorDragHandle :editor="editor" />

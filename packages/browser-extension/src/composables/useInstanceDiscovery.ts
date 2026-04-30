@@ -1,9 +1,19 @@
 import { ref } from 'vue'
+import { z } from 'zod'
 import type { Report } from '../types'
+
+const instanceSettingsSchema = z.object({
+  accentColor: z.string(),
+  neutralColor: z.string(),
+  locale: z.string()
+})
+
+type InstanceSettings = z.infer<typeof instanceSettingsSchema>
 
 interface DiscoveredInstance {
   url: string
   reports: Report[]
+  settings?: InstanceSettings
   label: string
 }
 
@@ -25,41 +35,64 @@ async function probePort(
     const reports = data as Report[]
     const count = reports.length
     const label = count === 1 ? `${url} (1 report)` : `${url} (${count} reports)`
-    return { url, reports, label }
+
+    let settings: InstanceSettings | undefined = undefined
+    try {
+      const settingsRes = await fetch(`${url}/api/settings`, { signal })
+      if (settingsRes.ok) {
+        const parsed = instanceSettingsSchema.safeParse(await settingsRes.json())
+        if (parsed.success) settings = parsed.data
+      }
+    } catch {
+      // Settings endpoint may not exist on older instances
+    }
+
+    return { url, reports, settings, label }
   } catch {
     return undefined
   }
 }
 
-export function useInstanceDiscovery() {
-  const instances = ref<DiscoveredInstance[]>([])
-  const scanStatus = ref<'idle' | 'scanning' | 'done'>('idle')
+// Singleton state — shared across all callers
+const instances = ref<DiscoveredInstance[]>([])
+const scanStatus = ref<'idle' | 'scanning' | 'done'>('idle')
+let abortController: AbortController | undefined = undefined
+let scanningPromise: Promise<void> | undefined = undefined
 
-  let abortController: AbortController | undefined
+function scan(): Promise<void> {
+  // Reuse the in-flight scan so concurrent callers don't cancel each other.
+  if (scanningPromise) return scanningPromise
 
-  async function scan() {
-    abort()
-    abortController = new AbortController()
-    const { signal } = abortController
+  abortController = new AbortController()
+  const { signal } = abortController
 
-    scanStatus.value = 'scanning'
-    instances.value = []
+  scanStatus.value = 'scanning'
+  instances.value = []
 
-    const results = await Promise.allSettled(PORTS.map((port) => probePort(port, signal)))
+  scanningPromise = Promise.allSettled(PORTS.map((port) => probePort(port, signal)))
+    .then((results) => {
+      if (signal.aborted) return
+      instances.value = results
+        .map((r) => (r.status === 'fulfilled' ? r.value : undefined))
+        .filter((r): r is DiscoveredInstance => r !== undefined)
+      scanStatus.value = 'done'
+    })
+    .finally(() => {
+      scanningPromise = undefined
+    })
 
-    if (signal.aborted) return
+  return scanningPromise
+}
 
-    instances.value = results
-      .map((r) => (r.status === 'fulfilled' ? r.value : undefined))
-      .filter((r): r is DiscoveredInstance => r !== undefined)
+function abort() {
+  abortController?.abort()
+  abortController = undefined
+  scanningPromise = undefined
+}
 
-    scanStatus.value = 'done'
-  }
-
-  function abort() {
-    abortController?.abort()
-    abortController = undefined
-  }
-
+function useInstanceDiscovery() {
   return { instances, scanStatus, scan, abort }
 }
+
+export { useInstanceDiscovery }
+export type { InstanceSettings }

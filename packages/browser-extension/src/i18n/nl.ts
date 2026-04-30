@@ -9,11 +9,12 @@ export default {
     connect: 'Verbinden',
     connecting: 'Verbinden...',
     connected: 'Verbonden',
+    disconnected: 'Niet verbonden',
     connectionFailed: 'Verbinding mislukt',
     connectionRefused:
       'Kan geen verbinding maken. Controleer of de WCAGify-server draait op deze URL. Voorbeeld: http://localhost:3000',
     connectionHttpError:
-      'Er ging iets mis bij het verbinden. Controleer of de ingevoerde URL een WCAGify-instantie is en correct is. Voorbeeld: http://localhost:3000',
+      'Er ging iets mis bij het verbinden. Controleer of de ingevoerde URL een WCAGify-instantie is en correct is opgemaakt. Bijvoorbeeld: http://localhost:3000.',
     required: 'verplicht',
     scanning: 'Zoeken naar WCAGify-instanties...',
     selectInstance: 'WCAGify-instantie',
@@ -21,6 +22,9 @@ export default {
     change: 'Wijzigen',
     rescan: 'Opnieuw scannen',
     autoConnected: 'Automatisch verbonden met een gevonden draaiende WCAGify-instantie.',
+    connectionSuccess: 'Succesvol verbonden met WCAGify.',
+    urlClearedWarning:
+      'Voer een URL in om verbinding te maken met een WCAGify-rapport. Voorbeeld: http://localhost:3000',
     report: 'Rapport',
     selectReport: 'Selecteer een rapport'
   },
@@ -39,6 +43,8 @@ export default {
     issueTitle: 'Titel probleem',
     issueTitlePlaceholder: 'bijv. Dropdown niet toegankelijk met toetsenbord',
     sc: 'SC',
+    scLabel: 'Succescriteria',
+    scPlaceholder: 'bijv. 2.1.1 toetsenbord',
     severity: 'Ernst',
     severityDescription: 'Hoe ernstig het probleem gebruikers treft',
     samplePage: 'Voorbeeldpagina',
@@ -52,10 +58,11 @@ export default {
     failedToCreate: 'Probleem aanmaken mislukt',
     required: 'verplicht',
     scSearch: 'Criteria zoeken...',
-    noResults: 'Geen overeenkomende criteria',
+    noResults: 'Geen overeenkomende criteria gevonden',
     clear: 'Wissen',
-    clearTitle: 'Titel wissen',
-    clearPage: 'Pagina wissen',
+    clearTitle: 'Titel probleem wissen',
+    clearSc: 'Succescriteria wissen',
+    clearPage: 'Voorbeeldpagina wissen',
     clearSeverity: 'Ernst wissen',
     clearType: 'Type wissen',
     none: 'Geen',
@@ -67,7 +74,8 @@ export default {
     content: 'Content',
     design: 'Ontwerp',
     technical: 'Technisch',
-    unknown: 'Onbekend'
+    unknown: 'Onbekend',
+    wcagLevel: 'Niveau'
   },
   editor: {
     undo: 'Ongedaan maken',
@@ -92,6 +100,38 @@ export default {
     paragraph: 'Paragraaf',
     insert: 'Invoegen'
   },
+  setup: {
+    title: 'Welkom bij WCAGify',
+    description:
+      'Maak verbinding met een draaiende WCAGify-instantie om toegankelijkheidsproblemen direct vanuit je browser te rapporteren.',
+    helpTitle: 'Aan de slag',
+    step1: 'Start je WCAGify-project lokaal (bijv. pnpm dev)',
+    step2: 'Voer de URL in of laat de extensie deze automatisch detecteren',
+    step3: 'Selecteer een rapport en begin met auditen',
+    docsLink: 'Lees de volledige WCAGify handleiding'
+  },
+  language: 'Taal',
+  settings: {
+    title: 'Instellingen',
+    back: 'Terug',
+    appearance: 'Uiterlijk',
+    colorMode: 'Kleurmodus',
+    languageLabel: 'Taal',
+    general: 'Algemeen',
+    wcagifyUrl: 'WCAGify URL',
+    save: 'Opslaan',
+    saved: 'Opgeslagen',
+    accentColor: 'Accentkleur',
+    backgroundShade: 'Achtergrondtint',
+    clearColor: 'Kleur wissen',
+    license: 'is uitgebracht onder de MIT-licentie.',
+    terms: 'Voorwaarden',
+    privacy: 'Privacy',
+    security: 'Beveiliging',
+    madeBy: 'Gemaakt met ❤️ door',
+    inRegion: 'in Europa 🇪🇺',
+    version: 'Versie'
+  },
   contrast: {
     title: 'Contrastcontrole',
     preview: 'Voorbeeldweergave',
@@ -104,6 +144,5 @@ export default {
     eyedropper: 'Kleur van scherm kiezen',
     testOptions: 'Testopties',
     sampleSentence: 'De snelle bruine vos'
-  },
-  language: 'Taal'
+  }
 } as const
